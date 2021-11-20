@@ -75,6 +75,7 @@
   position: relative;
   text-align: center;
   color: white;
+  line-height: 1.5rem;
 }
 
 .body_center {
@@ -82,6 +83,7 @@
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
+    padding-bottom: 12rem;
   }
 
 .img_setting {
