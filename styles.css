@@ -239,6 +239,7 @@
 	align-items: center;
 }
 
+/*
 .main__content h1 {
 	width: 1280px;
 	max-width: 95%;
@@ -258,4 +259,12 @@
 	text-align: center;
 	letter-spacing: 2px;
 	width: 80%;
+    
+} */
+
+.main__content {
+    margin: auto;
+    width: 50%;
+    padding: 10px;
+    padding: 5rem;
 }
