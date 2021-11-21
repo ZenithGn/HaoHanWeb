@@ -182,7 +182,7 @@
     }
 }
 
-.button {
+.button-signin {
 	display: inline-block;
 	line-height: 120%;
 	color: #FFF;
@@ -192,9 +192,29 @@
 	padding: 10px 12px;
 	border-radius: 7px;
 	transition: ease-out 0.3s;
+	text-decoration: none;
 }
 
-.button:hover {
+.button-discord{
+	display: inline-block;
+	line-height: 120%;
+	color: #FFF;
+	background-color: transparent;
+	border: 2px solid #fff;
+    font-size: 16px;
+	padding: 10px 12px;
+	border-radius: 7px;
+	transition: ease-out 0.3s;
+	text-decoration: none;
+}
+.button-signin:hover {
+	transform: scale(1.4);
+	transition: all 0.3s ease;
+	display: inline-block;
+	background-color: #000000;
+	margin: 15px ;
+}
+.button-discord:hover {
 	transform: scale(1.4);
 	transition: all 0.3s ease;
 	display: inline-block;
@@ -238,5 +258,4 @@
 	text-align: center;
 	letter-spacing: 2px;
 	width: 80%;
-	font-family: "Time new roman";
 }
