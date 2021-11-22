@@ -5,6 +5,12 @@
     font-family: 'Kumbh Sans', sans-serif;
     scroll-behavior: smooth;
 }
+
+body {
+    overflow-x: hidden;
+    background-color: #161922;
+}
+
 .navbar {
     background: white;
     height: 80px;
@@ -273,4 +279,13 @@
 .main__content h1 {
 	font-size: 3rem;
 	padding: 3rem;
+}
+
+
+.background-img {
+    width: 100%; 
+    filter: blur(10px); 
+    display: none;
+    width: 1366px;
+    height: 705px;
 }
