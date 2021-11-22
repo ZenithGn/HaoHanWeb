@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scroll Website</title>
+    <title>HaoHan SMP</title>
+    <meta content="Hảo Hán SMP" property="og:title" />
+    <meta content="Website Chính Thức của Hảo Hán SMP" property="og:description" />
+    <meta content="https://discord.gg/bSrCndkHnS" property="og:url" />
+    <meta content="https://cdn.discordapp.com/icons/884993985968484422/a_e9bea086d6cb6077469c33fe342db9f7.gif?size=1024" property="og:image" />
+    <meta content="#FF4500" data-react-helmet="true" name="theme-color" />
     <link rel="stylesheet" href="styles.css">
 
     <!-- Font Insert -->
@@ -17,7 +22,9 @@
     <!--Navbar Section-->
     <nav class="navbar">
         <div class="navbar__container">
-            <a href="#home" id="navbar__logo">HaoHanSMP</a>
+            <b href="#home" style="display: flex; align-items :center; cursor: pointer; text-decoration: none; font-size: 1.5rem; font-family: 'M-Plus-1'; ">
+                <span style="color: orangered; font-size: 30px">HaoHan</span><span style="color: brown; padding-bottom: 15px; font-size: 20px">SMP</span>
+            </b>
             <div class="navbar__toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -42,8 +49,14 @@
 
     <!-- Home -->   
     <div class="body_content" id="home">
-        <img src="img/bg.png" alt="background" style="width:100%; filter: blur(9px);" class="img_setting">
-        <div class="body_center">
+        <script src="cycle.js"></script>
+        <img src="img/bg.png" alt="background" class="background-img img_setting" style="display: block">
+        <img src="img/test.jfif" alt="background" class="background-img img_setting">
+        <img src="img/test2.jfif" alt="background" class="background-img img_setting">
+        <img src="img/test3.png" alt="background" class="background-img img_setting">
+        <img src="img/test4.webp" alt="background" class="background-img img_setting">
+
+        <div class="body_center" style="position: absolute;">
             <h1 class="heading content">Hao Han SMP</h1>
             <br>
             <p class="des1">Một server <b>Roleplay, Sinh Tồn</b> dành cho mọi người </p>
@@ -77,12 +90,13 @@
     <!-- About -->
     <div class="main" id="about">
         <div class="main__container">          
-                    <div class="main__content"><hr>
+                    <div class="main__content"><hr><br>
 						<h1>Hảo Hán SMP là gì?</h1>
 						<p><b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!</p>
                     </div>
         </div>
-    </div>       
+    </div>  
     <script> src="app.js"</script>
-</body>
+    <span class="copyright">HaoHan SMP ©️ 2021</span>
+</body>  
 </html>
