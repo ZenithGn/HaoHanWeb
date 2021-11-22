@@ -288,3 +288,12 @@ body {
     filter: blur(10px); 
     display: none;
 }
+
+.copyright {
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    text-align: center;
+    color: #fff;
+    transform: translate(-50%, -50%);
+}
