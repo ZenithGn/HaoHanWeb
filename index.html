@@ -5,7 +5,12 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Scroll Website</title>
+    <title>HaoHan SMP</title>
+    <meta content="Hảo Hán SMP" property="og:title" />
+    <meta content="Website Chính Thức của Hảo Hán SMP" property="og:description" />
+    <meta content="https://discord.gg/bSrCndkHnS" property="og:url" />
+    <meta content="https://cdn.discordapp.com/icons/884993985968484422/a_e9bea086d6cb6077469c33fe342db9f7.gif?size=1024" property="og:image" />
+    <meta content="#FF4500" data-react-helmet="true" name="theme-color" />
     <link rel="stylesheet" href="styles.css">
 
     <!-- Font Insert -->
@@ -13,15 +18,13 @@
     <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
 </head>
 <body>
-<<<<<<< HEAD
-    <!-- Navbar Section -->
-=======
+    
     <!--Navbar Section-->
->>>>>>> 56bac21571ec3820ab27242b9c81691075c2ab0c
-
     <nav class="navbar">
         <div class="navbar__container">
-            <a href="#home" id="navbar__logo">HaoHanSMP</a>
+            <b href="#home" style="display: flex; align-items :center; cursor: pointer; text-decoration: none; font-size: 1.5rem; font-family: 'M-Plus-1'; ">
+                <span style="color: orangered; font-size: 30px">HaoHan</span><span style="color: brown; padding-bottom: 15px; font-size: 20px">SMP</span>
+            </b>
             <div class="navbar__toggle" id="mobile-menu">
                 <span class="bar"></span>
                 <span class="bar"></span>
@@ -35,33 +38,25 @@
                 <a href="index.html#about" class="navbar__links" id="about-page">ABOUT</a>
             </li>            
             <li class="navber__item">
-                <a href="https://discord.gg/znHfuc6hCR" class="navbar__links" id="discord-page">DISCORD</a>
+                <a href="#" class="navbar__links" id="discord-page">FAQ</a>
             </li>           
             <li class="navber__item">
-                <a href="https://forms.gle/MPDFGzieCLAt8EKG6" class="navbar__links" id="dang-ki-page">SIGN IN</a>
+                <a href="#" class="navbar__links" id="dang-ki-page">MEDIA</a>
             </li>
         </ul>
         </div>
     </nav>
 
-<<<<<<< HEAD
-    <!-- About -->   
-=======
-    <!--
-    <div class="box">
-        <h1 class="box__heading">HaoHanSMP </span></h1>
-        <p class="box__description">Một nơi dành cho những người thích chơi minecraft và thích phiêu lưu</p>
-        <p class="box__description">Một server 100% vanila dành cho những người thích sinh tồn</p>
-        <p class="box__description">Nơi mà bạn có thể Nhập vai vào nhân vật mà bạn muốn</p>
-    </div>
-    <div class="bg">
-        <img src="img/bg.png" alt="background" class="bg_img">
-    </div>-->
-
->>>>>>> 56bac21571ec3820ab27242b9c81691075c2ab0c
+    <!-- Home -->   
     <div class="body_content" id="home">
-        <img src="img/bg.png" alt="background" style="width:100%;" class="img_setting">
-        <div class="body_center">
+        <script src="cycle.js"></script>
+        <img src="img/bg.png" alt="background" class="background-img img_setting" style="display: block">
+        <img src="img/bg1.png" alt="background" class="background-img img_setting">
+        <img src="img/bg2.png" alt="background" class="background-img img_setting">
+        <img src="img/bg3.png" alt="background" class="background-img img_setting">
+        <img src="img/bg4.png" alt="background" class="background-img img_setting">
+
+        <div class="body_center" style="position: absolute;">
             <h1 class="heading content">Hao Han SMP</h1>
             <br>
             <p class="des1">Một server <b>Roleplay, Sinh Tồn</b> dành cho mọi người </p>
@@ -69,36 +64,39 @@
             <p class="des2">Server <b>Hảo Hán SMP</b> là server vanilla chạy cả 2 nên tảng <b>Java và Bedrock tạo ra bởi Ginn</b></p>
             <p class="des3">Hiện đang chạy ở phiên bản <b>Java 1.16.5</b> | <b>Bedrock 1.17.x</b></p>
             <p class="des4"><b>IP:</b> haohansmp.hopto.org hoặc haohansmp.ga | <b>Port bedrock : 19132</b></p>
+		<br>
+			<p class="des5">Giao lưu cùng chúng tôi tại:</p>
+			<br>
+			<div class="buttons">
+			<a href="https://discord.com/invite/znHfuc6hCR" class="button-discord">
+				<span class="button-i">
+					<i class="fab fa-discord"></i>
+				</span>
+				<span class="button-t">
+					Discord
+				</span>
+			</a>
+			<a href="https://docs.google.com/forms/d/e/1FAIpQLSeCG-yayNsa6uFhmptyXxcNK66so0Uo2aWGFrMuj0ma5iQ2dA/viewform?usp=send_form" class="button-signin">
+				<span class="button-i">
+					<i class="fab fa-quinscape"></i>
+				</span>
+				<span class="button-t">
+					Sign In
+				</span>
+			</a>
         </div>
     </div>
 
-<<<<<<< HEAD
-    <!-- Information -->
+    <!-- About -->
     <div class="main" id="about">
-        <div class="main__container">
-            <div class="main__img--container">
-                <div class="main__img--card">                  
-                    <div class="main__content">
-                        <h1>Chúng tôi có những gì trong HaoHanSMP?</h1>
+        <div class="main__container">          
+                    <div class="main__content"><hr><br>
+						<h1>Hảo Hán SMP là gì?</h1>
+						<p><b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!</p>
                     </div>
-                </div>
-            </div>
         </div>
-    </div>        
-=======
-    
-    <div class="main" id="about">
-        <div class="main__container">
-            <div class="main__img--container">
-                <div class="main__img--card"></div>
-            </div>
-            <div class="main__content">
-                <h1>Chúng tôi có những gì trong HaoHanSMP?</h1>
-
-            </div>
-        </div>
-    </div> 
->>>>>>> 56bac21571ec3820ab27242b9c81691075c2ab0c
+    </div>  
     <script> src="app.js"</script>
-</body>
+    <span class="copyright">HaoHan SMP ©️ 2021</span>
+</body>  
 </html>

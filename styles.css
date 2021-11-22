@@ -5,6 +5,12 @@
     font-family: 'Kumbh Sans', sans-serif;
     scroll-behavior: smooth;
 }
+
+body {
+    overflow-x: hidden;
+    background-color: #161922;
+}
+
 .navbar {
     background: white;
     height: 80px;
@@ -155,7 +161,7 @@
     }
     .button {
         display: flex;
-        justify-content: center;
+        justify-content: 50px;
         align-items: center;
         width: 80%;
         height: 80px;
@@ -180,4 +186,113 @@
     #mobile-menu.is-active .bar:nth-child(2) {
         transform: translate(-8px) rotate(-45deg);
     }
+}
+
+.button-signin {
+	display: inline-block;
+	line-height: 120%;
+	color: #FFF;
+	background-color: transparent;
+	border: 2px solid #fff;
+    font-size: 16px;
+	padding: 10px 12px;
+	border-radius: 7px;
+	transition: ease-out 0.3s;
+	transform: translateX(15%);
+	text-decoration: none;
+}
+
+.button-discord{
+	display: inline-block;
+	line-height: 120%;
+	color: #FFF;
+	background-color: transparent;
+	border: 2px solid #fff;
+    font-size: 16px;
+	padding: 10px 12px;
+	border-radius: 7px;
+	transition: ease-out 0.3s;
+	transform: translateX(-15%);
+	text-decoration: none;
+}
+.button-signin:hover {
+	transform: scale(1.4);
+	transition: all 0.3s ease;
+	display: inline-block;
+	background-color: #000000;
+	margin: 15px ;
+}
+.button-discord:hover {
+	transform: scale(1.4);
+	transition: all 0.3s ease;
+	display: inline-block;
+	background-color: #000000;
+	margin: 15px ;
+}
+
+.titile {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80px;
+    margin: 0;
+}
+
+.main {
+	width: 100%;
+	background-color: #161922;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+/*
+.main__content h1 {
+	width: 1280px;
+	max-width: 95%;
+	margin: 0 auto;
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: space-around;
+	font-size: 3rem;
+	color: #ffcc74;
+}
+.main__content p {
+	color: #ffffff;
+	font-size: 2rem;
+	justify-content: center;
+	text-align: center;
+	letter-spacing: 2px;
+	width: 80%;
+    
+} */
+
+.main__content {
+    margin: auto;
+    width: 50%;
+    padding: 20px;
+}
+
+.main__content h1 {
+	font-size: 3rem;
+	padding: 3rem;
+}
+
+
+.background-img {
+    width: 100%; 
+    height: 705px;
+    filter: blur(10px); 
+    display: none;
+}
+
+.copyright {
+    position: absolute;
+    bottom: -10%;
+    left: 50%;
+    text-align: center;
+    color: #fff;
+    transform: translate(-50%, -50%);
 }
