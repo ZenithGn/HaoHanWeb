@@ -247,28 +247,6 @@ body {
 	align-items: center;
 }
 
-/*
-.main__content h1 {
-	width: 1280px;
-	max-width: 95%;
-	margin: 0 auto;
-	display: flex;
-	flex-wrap: wrap;
-	align-items: center;
-	justify-content: space-around;
-	font-size: 3rem;
-	color: #ffcc74;
-}
-.main__content p {
-	color: #ffffff;
-	font-size: 2rem;
-	justify-content: center;
-	text-align: center;
-	letter-spacing: 2px;
-	width: 80%;
-    
-} */
-
 .main__content {
     margin: auto;
     width: 50%;
