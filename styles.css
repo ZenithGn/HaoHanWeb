@@ -69,7 +69,6 @@ body {
     height: 100%;
     font-size: 0.85rem;
     font-style: bold;
-    font-family: "M-Plus-1";
 }
 
 .navbar__links:hover {
@@ -82,6 +81,7 @@ body {
   text-align: center;
   color: white;
   line-height: 1.5rem;
+  height: 1000px;
 }
 
 .body_center {
@@ -271,7 +271,7 @@ body {
 
 .main__content {
     margin: auto;
-    width: 50%;
+    width: 80%;
     padding: 20px;
 }
 
@@ -290,9 +290,96 @@ body {
 
 .copyright {
     position: absolute;
-    bottom: -10%;
+    bottom: -59%;
     left: 50%;
     text-align: center;
     color: #fff;
     transform: translate(-50%, -50%);
+}   
+
+ul li:hover {
+    text-decoration: underline;
+}
+
+
+.section {
+	font-family: "M-Plus-1"; 
+	background-color: #161922;
+}
+
+h1{
+	font-size: 3rem;
+	height: 100px;
+	text-align: center;
+}
+
+.traloicauhoi {
+  width: 82%;
+  margin: 90px auto;
+  color: white;
+  background-color: #161922;
+  padding: 45px 45px;
+}
+
+.traloicauhoi .container {
+  position: relative;
+  margin: 10px 10px;
+}
+
+.traloicauhoi .hoi {
+  position: relative;
+  padding: 10px 0;
+  font-size: 2rem;
+  color: white;
+  cursor: pointer;
+}
+
+.traloicauhoi .hoi::before {
+  color: white;
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  font-size: 30px;
+  transform: translateY(-50%);
+}
+
+.traloicauhoi .traloi1 {
+  position: relative;
+  background: #161922;
+  height: 0;
+  font-size: 20px;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.4s;
+  border-bottom: 4px solid #10161f;
+}
+
+.traloicauhoi .traloi2 {
+  position: relative;
+  background: #161922;
+  height: 0;
+  font-size: 20px;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.5s;
+  border-bottom: 4px solid #10161f;
+}
+
+.traloicauhoi hr {
+  width: 100;
+  margin-left: 0;
+  border: 1px solid grey;
+  color: #000000;
+}
+
+.traloicauhoi .container.active .traloi1 {
+  height: 90px;
+}
+
+.traloicauhoi .container.active .traloi2 {
+  height: 35px;
+}
+
+.traloicauhoi .container.active .hoi::before {
+  font-size: 30px;
 }
