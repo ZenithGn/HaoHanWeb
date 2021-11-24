@@ -12,13 +12,12 @@
     <meta content="https://cdn.discordapp.com/icons/884993985968484422/a_e9bea086d6cb6077469c33fe342db9f7.gif?size=1024" property="og:image" />
     <meta content="#FF4500" data-react-helmet="true" name="theme-color" />
     <link rel="stylesheet" href="styles.css">
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
 
     <!-- Font Insert -->
     <link href="https://fonts.googleapis.com/css?family=M+PLUS+1p" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css2?family=Merriweather&display=swap" rel="stylesheet">
 </head>
 <body>
-    
     <!--Navbar Section-->
     <nav class="navbar">
         <div class="navbar__container">
@@ -30,7 +29,7 @@
                 <span class="bar"></span>
                 <span class="bar"></span>
             </div>
-        <ul class="navbar__menu">
+        <ul class="navbar__menu" style="font-family: Arial, Helvetica, sans-serif;">
              <li class="navber__item">
                 <a href="index.html#home" class="navbar__links" id="home-page">HOME</a>
             </li>            
@@ -38,10 +37,10 @@
                 <a href="index.html#about" class="navbar__links" id="about-page">ABOUT</a>
             </li>            
             <li class="navber__item">
-                <a href="#" class="navbar__links" id="discord-page">FAQ</a>
+                <a href="index.html#faq" class="navbar__links" id="faq-page">FAQ</a>
             </li>           
             <li class="navber__item">
-                <a href="#" class="navbar__links" id="dang-ki-page">MEDIA</a>
+                <a href="index.html#meodia" class="navbar__links" id="meodia-page">MEDIA</a>
             </li>
         </ul>
         </div>
@@ -57,9 +56,9 @@
         <img src="img/bg4.png" alt="background" class="background-img img_setting">
 
         <div class="body_center" style="position: absolute;">
-            <h1 class="heading content">Hao Han SMP</h1>
+            <h1 class="heading content" id="destypewrite"></h1>
             <br>
-            <p class="des1">Một server <b>Roleplay, Sinh Tồn</b> dành cho mọi người </p>
+            <p class="des1">Một server <b>Roleplay</b>, <b>Sinh Tồn</b> dành cho mọi người</p>
             <br>
             <p class="des2">Server <b>Hảo Hán SMP</b> là server vanilla chạy cả 2 nên tảng <b>Java và Bedrock tạo ra bởi Ginn</b></p>
             <p class="des3">Hiện đang chạy ở phiên bản <b>Java 1.16.5</b> | <b>Bedrock 1.17.x</b></p>
@@ -88,15 +87,92 @@
     </div>
 
     <!-- About -->
-    <div class="main" id="about">
+    <div class="main" id="about" style="padding-top: 20px;">
         <div class="main__container">          
-                    <div class="main__content"><hr><br>
-						<h1>Hảo Hán SMP là gì?</h1>
-						<p><b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!</p>
-                    </div>
+                <div class="main__content"><b data-aos="fade-up" data-aos-duration="2000" style="font-size: 48px; font-family: 'Courier New', Courier, monospace;"></b><hr data-aos="zoom-in" data-aos-duration="3000"><br>
+					<h1 data-aos="fade-up" data-aos-easing="linear" data-aos-duration="5000">Hảo Hán SMP là gì?</h1>
+					<div data-aos="fade-up" data-aos-duration="2000"><b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!</div>
+                </div>
         </div>
     </div>  
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/jquery.typeit/4.4.0/typeit.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
+    <script>AOS.init();</script>
     <script> src="app.js"</script>
-    <span class="copyright">HaoHan SMP ©️ 2021</span>
-</body>  
+    <script>
+        new $("#destypewrite").typeIt({
+            strings: [
+                "<b>Hảo Hán SMP</b>",
+                "<b style='font-size: 48px'>Sinh tồn ― Khám phá</b>",
+                "<b style='font-size: 48px'>Vui chơi ― Roleplay</b>",
+            ],
+            speed: 150,
+            breakLines: false,
+            autoStart: false,
+            loop: true,
+            delay: 200,
+            startDelay: 150,
+            startDelete: false,
+        })
+    </script>
+ 
+    <!--FAQ-->
+   <section class="sub_content">
+	   <div class="traloicauhoi" id="faq"> <hr>
+    <div class="container">
+		<div class="hoi">
+			Server có cấu hình như thế nào, có đủ để cân được server SMP?
+		</div>
+      <div class="traloi">
+		  <div class="traloi1">
+		  Server hiện tại đang xài CPU : --Intel Xeon Platium 8124M @ 3.00Ghz--, với cpu đó thì đủ để cân được server --20TPS đều khi dưới hoặc bằng 15 players (Nếu có đủ ram có thể cân tầm 20 - > 25 players trong khoảng 19TPS)--. Ram của server là 8G RAM	
+		  </div>
+	  </div>
+    </div>
+    <div class="container">
+      <div class="hoi">
+		  Server có backup gì không? 
+	</div>
+      <div class="traloi">
+		  <div class="traloi2">
+		  Server có auto backup mỗi 2 tiếng nên không lo mất world, đồ của người chơi.
+		  </div>
+	  </div>
+    </div>
+	    <div class="container">
+      <div class="hoi">
+		  Làm sao để vào server?
+	  </div>
+      <div class="traloi">
+		  <div class="traloi2">
+		  Trả lời các câu hỏi trong phần Sign Up rồi vào discord để xem IP.
+		  </div>
+	  </div>
+    </div> 
+    <div class="container">
+      <div class="hoi">
+		  Donate cho server sao?
+	  </div>
+      <div class="traloi">
+		  <div class="traloi2">
+		  Các bạn có thể liên hệ riêng cho Ginn#2005 bằng các phương thức MoMo, Paypal, Card.
+		  </div>
+	  </div>
+    </div>
+    <div class="container">
+      <div class="hoi">
+		  Tại sao đăng kí rồi mà không vào được server?
+	  </div>
+      <div class="traloi">
+		  <div class="traloi2">
+		  Do các mod chưa đọc hoặc do bài của ban!
+		  </div>
+	  </div>
+    </div>
+  </div>
+</body>
+  <script src="app.js" type="text/javascript"></script>
+  </section>
+</footer>
 </html>
