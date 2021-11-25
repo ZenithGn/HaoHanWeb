@@ -102,9 +102,9 @@ body {
 
 .body_center h1 {
     font-size: 4rem;
-    font-family: 'Merriweather', serif;
     font-weight: bold;
     margin-bottom: 0;
+  	font-family: 'Merriweather', serif;
   }
 
 @media screen and (max-width: 960px){
@@ -326,6 +326,8 @@ ul li:hover {
   font-size: 2rem;
   color: white;
   cursor: pointer;
+  font-family: 'Merriweather', serif;
+  font-size: 1.6rem;
 }
 
 .traloicauhoi .hoi::before {
@@ -341,22 +343,24 @@ ul li:hover {
   position: relative;
   background: #161922;
   height: 0;
-  font-size: 20px;
+  font-size: 1rem;
   text-align: center;
   overflow: hidden;
   transition: 0.4s;
   border-bottom: 4px solid #10161f;
+  font-family: 'Fira Sans', sans-serif;
 }
 
 .traloicauhoi .traloi2 {
   position: relative;
   background: #161922;
   height: 0;
-  font-size: 20px;
+  font-size: 1rem;
   text-align: center;
   overflow: hidden;
   transition: 0.5s;
   border-bottom: 4px solid #10161f;
+  font-family: 'Fira Sans', sans-serif;
 }
 
 .traloicauhoi hr {
@@ -367,7 +371,7 @@ ul li:hover {
 }
 
 .traloicauhoi .container.active .traloi1 {
-  height: 90px;
+  height: 70px;
 }
 
 .traloicauhoi .container.active .traloi2 {
@@ -385,7 +389,7 @@ ul li:hover {
 
 .scroll-down {
     position:absolute;
-    bottom: -35rem;
+    bottom: -9rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
