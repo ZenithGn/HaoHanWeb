@@ -318,6 +318,7 @@ ul li:hover {
 .traloicauhoi .container {
   position: relative;
   margin: 10px 10px;
+  transition: all 0.7s ease-in-out;
 }
 
 .traloicauhoi .hoi {

@@ -15,3 +15,12 @@ for (i=0; i<accordion.length; i++) {
     this.classList.toggle('active')
   })
 }
+
+window.addEventListener('animation', ()=>{
+	let content =document.querySelector ('.container');
+	let contentPosition = content.getBoundigClientReact().top;
+	let screenPosition = window.innerHeight;
+	if(contentPosition < screenPosition){
+		content.classList.add('active');
+	}
+});
