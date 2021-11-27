@@ -390,6 +390,10 @@ ul li:hover {
   height: 35px;
 }
 
+.traloicauhoi .container.active .traloi3 {
+  height: 35px;
+}
+
 .traloicauhoi .container.active .hoi::before {
   font-size: 30px;
 }
