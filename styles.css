@@ -100,7 +100,7 @@ body {
     filter: blur(1.5px);
 }
 
-.body_center h1 {
+.body_center . {
     font-size: 4rem;
     font-weight: bold;
     margin-bottom: 0;
@@ -347,7 +347,7 @@ ul li:hover {
   font-size: 1rem;
   text-align: center;
   overflow: hidden;
-  transition: 0.4s;
+  transition: 0.5s;
   border-bottom: 4px solid #10161f;
   font-family: 'Fira Sans', sans-serif;
 }
@@ -364,6 +364,17 @@ ul li:hover {
   font-family: 'Fira Sans', sans-serif;
 }
 
+.traloicauhoi .traloi3 {
+  position: relative;
+  background: #161922;
+  height: 0;
+  font-size: 1rem;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.5s;
+  border-bottom: 4px solid #10161f;
+  font-family: 'Fira Sans', sans-serif;
+}
 .traloicauhoi hr {
   width: 100;
   margin-left: 0;
@@ -455,4 +466,276 @@ ul li:hover {
     100% {
         opacity: 1;
     }    
+}
+
+@media screen and (max-width: 720px) {
+	.button-signin {
+	display: inline-block;
+	line-height: 120%;
+	color: #FFF;
+	background-color: transparent;
+	border: 2px solid #fff;
+    font-size: 16px;
+	padding: 5px 6px;
+	border-radius: 7px;
+	transition: ease-out 0.3s;
+	transform: translateX(15%);
+	text-decoration: none;
+}
+.body_center .typeIt {
+    position: absolute;
+    top: 8%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    padding-bottom: 12rem;
+	font-size: 18px;
+  }
+
+.button-discord{
+	display: inline-block;
+	line-height: 120%;
+	color: #FFF;
+	background-color: transparent;
+	border: 2px solid #fff;
+    font-size: 16px;
+	padding: 5px 6px;
+	border-radius: 7px;
+	transition: ease-out 0.3s;
+	transform: translateX(-15%);
+	text-decoration: none;
+}
+.button-signin:hover {
+	transform: scale(1.2);
+	transition: all 0.3s ease;
+	display: inline-block;
+	background-color: #000000;
+	margin: 7px ;
+}
+.button-discord:hover {
+	transform: scale(1.2);
+	transition: all 0.3s ease;
+	display: inline-block;
+	background-color: #000000;
+	margin: 7px ;
+}
+
+.titile {
+	display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 80%;
+    height: 80px;
+    margin: 0;
+}
+
+.main {
+	width: 100%;
+	background-color: #161922;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.main__content {
+    margin: auto;
+    width: 80%;
+    padding: 10px;
+}
+
+.main__content h1 {
+	font-size: 1.5rem;
+	padding: 1.5rem;
+}
+
+
+.background-img {
+    width: 100%; 
+    height: 705px;
+    filter: blur(10px); 
+    display: none;
+}
+
+.copyright {
+    position: absolute;
+    bottom: -59%;
+    left: 50%;
+    text-align: center;
+    color: #fff;
+    transform: translate(-50%, -50%);
+}   
+
+ul li:hover {
+    text-decoration: underline;
+}
+
+
+.section {
+	font-family: "M-Plus-1"; 
+	background-color: #161922;
+}
+
+.traloicauhoi {
+  width: 82%;
+  margin: 45 auto;
+  color: white;
+  background-color: #161922;
+  padding: 22px 22px;
+}
+
+.traloicauhoi .container {
+  position: relative;
+  margin: 5px 5px;
+  transition: all 0.7s ease-in-out;
+}
+
+.traloicauhoi .hoi {
+  position: relative;
+  padding: 5px 0;
+  font-size: 1rem;
+  color: white;
+  cursor: pointer;
+  font-family: 'Merriweather', serif;
+  font-size: 0.8rem;
+}
+
+.traloicauhoi .hoi::before {
+  color: white;
+  position: absolute;
+  top: 50%;
+  right: -5px;
+  font-size: 15px;
+  transform: translateY(-50%);
+}
+
+.traloicauhoi .traloi1 {
+  position: relative;
+  background: #161922;
+  height: 0;
+  font-size: 0.68rem;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.5s;
+  border-bottom: 4px solid #10161f;
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.traloicauhoi .traloi2 {
+  position: relative;
+  background: #161922;
+  height: 0;
+  font-size: 0.8rem;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.5s;
+  border-bottom: 2px solid #10161f;
+  font-family: 'Fira Sans', sans-serif;
+}
+.traloicauhoi .traloi3 {
+  position: relative;
+  background: #161922;
+  height: 0;
+  font-size: 0.8rem;
+  text-align: center;
+  overflow: hidden;
+  transition: 0.5s;
+  border-bottom: 2px solid #10161f;
+  font-family: 'Fira Sans', sans-serif;
+}
+
+.traloicauhoi hr {
+  width: 100;
+  margin-left: 0;
+  border: 1px solid grey;
+  color: #000000;
+}
+
+.traloicauhoi .container.active .traloi1 {
+  height: 100px;
+}
+
+.traloicauhoi .container.active .traloi2 {
+  height: 50px;
+}
+
+.traloicauhoi .container.active .traloi3 {
+  height: 30px;
+}
+.traloicauhoi .container.active .hoi::before {
+  font-size: 60px;
+}
+
+.hero {
+    width: 100%;
+    height: 100vh;
+}
+
+.scroll-down {
+    position:absolute;
+    bottom: -8rem;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.mouse {
+    width: 2.5rem;
+    height: 5rem;
+    border: 2px solid rgb(255, 255, 255);
+    border-radius: 2rem;
+    margin-bottom: .5rem;
+    display: flex;
+}
+
+.mouse span {
+    width: 1rem;
+    height: 1rem;
+    background-color: rgb(255, 255, 255);
+    display : block;
+    border-radius: 50%;
+    margin: auto;
+    animation: move-wheel 1s linear infinite;
+}
+
+.arrow span {
+    display: inline-block;
+    width: 1rem;
+    height: 1rem;
+    border: 4px solid transparent;
+    border-right-color: #fff;
+    border-bottom-color: #fff;
+    transform: rotate(-495deg);
+    animation: arrow-down 0.5s alternate infinite;
+}
+
+@keyframes move-wheel { 
+    100% {
+        opacity: 1;
+        transform: translateY(1rem);
+    }   
+    0% {
+        opacity: 0;
+        transform: translateY(-1rem);
+    }  
+}
+
+@keyframes arrow-down { 
+    0% {
+        opacity: 0;
+    }   
+    25% {
+        opacity: .25;
+    }  
+    50% {
+        opacity: .5;
+    }  
+    75% {
+        opacity: .75;
+    }
+    100% {
+        opacity: 1;
+    }    
+}
+
 }
