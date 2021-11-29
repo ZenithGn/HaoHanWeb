@@ -100,7 +100,7 @@ body {
     filter: blur(1.5px);
 }
 
-.body_center . {
+.body_center {
     font-size: 4rem;
     font-weight: bold;
     margin-bottom: 0;
