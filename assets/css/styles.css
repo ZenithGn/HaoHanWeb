@@ -187,11 +187,11 @@ body {
 	color: #FFF;
 	background-color: transparent;
 	border: 2px solid #fff;
-    font-size: 16px;
+	font-size: 16px;
 	padding: 10px 12px;
 	border-radius: 7px;
 	transition: ease-out 0.3s;
-	transform: translateX(15%);
+	transform: translateX(10%);
 	text-decoration: none;
 }
 
@@ -201,22 +201,22 @@ body {
 	color: #FFF;
 	background-color: transparent;
 	border: 2px solid #fff;
-    font-size: 16px;
+	font-size: 16px;
 	padding: 10px 12px;
 	border-radius: 7px;
 	transition: ease-out 0.3s;
-	transform: translateX(10%);
+	transform: translateX(-10%);
 	text-decoration: none;
 }
 .button-signin:hover {
-	transform: scale(0.9);
+	transform: scale(1.4);
 	transition: all 0.3s ease;
 	display: inline-block;
 	background-color: #000000;
 	margin: 15px ;
 }
 .button-discord:hover {
-	transform: scale(0.9);
+	transform: scale(1.4);
 	transition: all 0.3s ease;
 	display: inline-block;
 	background-color: #000000;
@@ -399,7 +399,7 @@ ul li:hover {
 
 .scroll-down {
     position:absolute;
-    bottom: -9rem;
+    bottom: -65rem;
     left: 50%;
     transform: translateX(-50%);
     display: flex;
