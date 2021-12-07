@@ -25,4 +25,4 @@ window.addEventListener('animation', ()=>{
 	}
 });
 
-document.getElementById("myAudio").volume = 0.5; 
+document.getElementById("music").volume = 0.5; 
