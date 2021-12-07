@@ -24,3 +24,5 @@ window.addEventListener('animation', ()=>{
 		content.classList.add('active');
 	}
 });
+
+document.getElementById("myAudio").volume = 0.5; 
