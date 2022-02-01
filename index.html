@@ -100,11 +100,11 @@
 
 
     <!-- About - start -->
-    <div class="main" id="about" style="padding-top: 20px;">
-        <div class="main__container">          
-            <div class="main__content"><b data-aos="fade-up" data-aos-duration="2000" style="font-size: 48px; font-family: 'Courier New', Courier, monospace;"></b><hr data-aos="zoom-in" data-aos-duration="3000"><br>
-                <h1 data-aos="fade-up" data-aos-easing="linear" data-aos-duration="5000">HẢO HÁN SMP LÀ GÌ?</h1>
-                <div data-aos="fade-up" data-aos-duration="2000"><b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!</div>
+    <div class="main">
+        <div class="main__content"><b data-aos="fade-up" data-aos-duration="2000"></b><hr data-aos="zoom-in" data-aos-duration="3000"><br>
+            <h1 data-aos="fade-up" data-aos-easing="linear" data-aos-duration="5000">HẢO HÁN SMP LÀ GÌ?</h1>
+            <div data-aos="fade-up" data-aos-duration="2000">
+                <b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!
             </div>
         </div>
     </div>
@@ -196,7 +196,24 @@
     <!-- FAQ - end -->
 
 
+    <!--wave-->
+    <div class="wavemove">
+    <div class="wave-transition">
+        <svg class="waves" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" viewBox="0 24 150 28" preserveAspectRatio="none" shape-rendering="auto">
+            <defs>
+                <path id="gentle-wave" d="M-160 44c30 0 58-18 88-18s 58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
+            </defs>
+            <g class="parallax">
+                <use xlink:href="#gentle-wave" x="48" y="0" fill="rgba(62,62,62,0.7" />
+                <use xlink:href="#gentle-wave" x="48" y="3" fill="rgba(62,62,62,0.5)" />
+                <use xlink:href="#gentle-wave" x="48" y="5" fill="rgba(62,62,62,0.3)" />
+                <use xlink:href="#gentle-wave" x="48" y="7" fill="#3e3e3e" />
+            </g>
+        </svg>
+    </div>
+    </div>
     <!-- Checking status server - start -->
+    <div class="color"></div>
 	<div class="checking-status">
 		<div class="icon">
             <img src="./favicon/android-chrome-192x192.png" id="favicon">
@@ -210,15 +227,6 @@
         <div id="rest">Loading ...</div>
     </div>
     <script src="./assets/js/check-status.js"></script>
-				<a href="#" class="scroll-down">
-                    <div class="mouse">
-                        <span></span>
-                    </div>
-                    <div class="arrow">
-                        <span></span>
-                    </div>
-                </a>
-
     <!-- Checking status server - end -->
     
 </div>
