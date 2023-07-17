@@ -1,4 +1,4 @@
-var url = "https://api.minetools.eu/ping/haohansmp.ga/25565";
+var url = "https://api.minetools.eu/ping/haohanmc.com/25565";
  
 $.getJSON(url, function(r) {
  if(r.error){
