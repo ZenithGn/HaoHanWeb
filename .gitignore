@@ -38,3 +38,7 @@ backend/.env.*
 .DS_Store
 Thumbs.db
 desktop.ini
+
+# Whitelist env examples
+!.env.example
+!backend/.env.example
