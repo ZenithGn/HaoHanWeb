@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "HOME",
+    "about": "ABOUT",
+    "faq": "FAQ",
+    "media": "MEDIA",
+    "donate": "DONATE"
+  },
+  "home": {
+    "title": "HaoHan SMP",
+    "survival": "Sinh tồn ― Khám phá",
+    "fun": "Vui chơi ― Roleplay",
+    "desc1": "Một server <b>Roleplay</b>, <b>Sinh Tồn</b> dành cho mọi người",
+    "desc2": "Server <b>Hảo Hán SMP</b> là server vanilla chạy cả 2 nên tảng <b>Java và Bedrock tạo ra bởi Ginn</b>",
+    "desc3": "Hiện đang chạy ở phiên bản <b>Java 1.17.1</b> | <b>Bedrock 1.17.x</b>",
+    "desc4": "<b>IP:</b> haohansmp.hopto.org hoặc haohansmp.ga | <b>Port bedrock : 19132</b>",
+    "connect": "Giao lưu cùng chúng tôi tại:",
+    "discord": "Discord",
+    "signup": "Sign Up"
+  },
+  "about": {
+    "title": "HẢO HÁN SMP LÀ GÌ?",
+    "desc": "<b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!"
+  },
+  "faq": {
+    "q1": "Server có cấu hình như thế nào, có đủ để cân được server SMP?",
+    "a1": "Server hiện tại đang xài CPU : --Intel Xeon Platium 8124M @ 3.00Ghz--, với cpu đó thì đủ để cân được server --20TPS đều khi dưới hoặc bằng 15 players (Nếu có đủ ram có thể cân tầm 20 - > 25 players trong khoảng 19TPS) --. Ram của server là 8G RAM.",
+    "q2": "Server có backup gì không?",
+    "a2": "Server có auto backup mỗi 2 tiếng nên không lo mất world, đồ của người chơi.",
+    "q3": "Làm sao để vào server?",
+    "a3": "Trả lời các câu hỏi trong phần Sign Up rồi vào discord để xem IP.",
+    "q4": "Donate cho server sao?",
+    "a4": "Các bạn có thể liên hệ riêng cho Ginn#2005 bằng các phương thức MoMo, Paypal, Card.",
+    "q5": "Tại sao đăng kí rồi mà không vào được server?",
+    "a5": "Do các mod chưa đọc hoặc do bài của bạn!"
+  },
+  "signup": {
+    "title": "Đăng Ký - HaoHan SMP",
+    "step1": "<b>Bước 1: </b>Vào haohansmp.ga (phiên bản 1.16.5-1.19.x)",
+    "step2": "<b>Bước 2: </b>Tạo mật khẩu bằng cách nhập lệnh /register <mk của bạn> <mk của bạn>",
+    "step3": "<b>Bước 3: </b>Nhấn vào ngôi sao rồi chọn Server vanilla",
+    "step4": "<b>Bước 4: </b>Gửi mã 4 số mà bạn nhận được cho con Hảo Bot#5483 (lưu ý vào discord để gửi)",
+    "step5": "<b>Bước 5: </b>Vào server mình muốn rồi chơi 😎",
+    "joke": "Dan chuyen toan thi ko design",
+    "back": "← Trở về trang chủ"
+  },
+  "donate": {
+    "title": "Donate - HaoHan SMP",
+    "heading": "Donate cho Server",
+    "desc": "Các bạn có thể liên hệ riêng cho Ginn#2005 bằng các phương thức MoMo, Paypal, Card.",
+    "name_label": "Điền Tên của bạn:",
+    "name_placeholder": "Nhập tên Minecraft của bạn...",
+    "submit": "Xác Nhận Donate",
+    "sending": "Đang gửi yêu cầu cho: ",
+    "success": "Thành công! Cảm ơn {name} đã donate.",
+    "error1": "Lỗi: Không thể kết nối với server. (Demo: Cảm ơn {name})",
+    "error2": "Lỗi kết nối. (Demo: Cảm ơn {name} đã muốn donate!)",
+    "back": "← Trở về trang chủ"
+  }
+}

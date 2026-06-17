@@ -1,0 +1,60 @@
+{
+  "nav": {
+    "home": "HOME",
+    "about": "ABOUT",
+    "faq": "FAQ",
+    "media": "MEDIA",
+    "donate": "DONATE"
+  },
+  "home": {
+    "title": "HaoHan SMP",
+    "survival": "Survival ― Exploration",
+    "fun": "Fun ― Roleplay",
+    "desc1": "A <b>Roleplay</b> and <b>Survival</b> server for everyone",
+    "desc2": "<b>HaoHan SMP</b> is a vanilla server supporting both <b>Java and Bedrock</b> platforms, created by <b>Ginn</b>",
+    "desc3": "Currently running on <b>Java 1.17.1</b> | <b>Bedrock 1.17.x</b>",
+    "desc4": "<b>IP:</b> haohansmp.hopto.org or haohansmp.ga | <b>Bedrock Port: 19132</b>",
+    "connect": "Connect with us at:",
+    "discord": "Discord",
+    "signup": "Sign Up"
+  },
+  "about": {
+    "title": "WHAT IS HAOHAN SMP?",
+    "desc": "<b>HaoHan SMP</b> is a multiplayer Minecraft survival server created by <b>Ginn (the server owner)</b>. It was made as a chill place to play with friends after getting tired of <b>2y2c - an anarchy server!</b>"
+  },
+  "faq": {
+    "q1": "What are the server specs, and is it enough to handle an SMP?",
+    "a1": "The server currently uses an Intel Xeon Platinum 8124M @ 3.00GHz CPU, which is enough to maintain a stable 20 TPS for up to 15 players. With 8GB of RAM, it can handle 20-25 players smoothly at around 19 TPS.",
+    "q2": "Does the server have backups?",
+    "a2": "The server auto-backups every 2 hours, so you don't need to worry about losing your items or the world.",
+    "q3": "How do I join the server?",
+    "a3": "Answer the questions in the Sign Up section, then join the Discord to see the IP.",
+    "q4": "How can I donate to the server?",
+    "a4": "You can contact Ginn#2005 directly via MoMo, PayPal, or Cards.",
+    "q5": "Why can't I join the server even after signing up?",
+    "a5": "It's either because the mods haven't read your application yet, or your application was rejected!"
+  },
+  "signup": {
+    "title": "Sign Up - HaoHan SMP",
+    "step1": "<b>Step 1: </b>Join haohansmp.ga (version 1.16.5-1.19.x)",
+    "step2": "<b>Step 2: </b>Create a password by typing /register <your_password> <your_password>",
+    "step3": "<b>Step 3: </b>Click the star and select Vanilla Server",
+    "step4": "<b>Step 4: </b>Send the 4-digit code you received to Hao Bot#5483 (make sure to do this on Discord)",
+    "step5": "<b>Step 5: </b>Join the server you want and play 😎",
+    "joke": "Math majors don't do design",
+    "back": "← Return to home page"
+  },
+  "donate": {
+    "title": "Donate - HaoHan SMP",
+    "heading": "Donate to the Server",
+    "desc": "You can contact Ginn#2005 directly via MoMo, PayPal, or Cards.",
+    "name_label": "Enter your name:",
+    "name_placeholder": "Enter your Minecraft name...",
+    "submit": "Confirm Donation",
+    "sending": "Sending request for: ",
+    "success": "Success! Thank you {name} for donating.",
+    "error1": "Error: Cannot connect to server. (Demo: Thank you {name})",
+    "error2": "Connection error. (Demo: Thank you {name} for wanting to donate!)",
+    "back": "← Return to home page"
+  }
+}
