@@ -1,0 +1,28 @@
+# Git
+.git
+.gitignore
+
+# Node / Next.js
+**/node_modules
+**/.next
+**/out
+**/build
+npm-debug.log*
+
+# Ruby on Rails (Backend)
+backend/log/*
+backend/tmp/*
+backend/storage/*
+backend/.bundle/
+backend/vendor/bundle
+backend/.env
+backend/.env.*
+
+# IDEs and OS files
+.vscode
+.idea
+.DS_Store
+Thumbs.db
+desktop.ini
+Postman_Testing_Guide.md
+HaoHanDB.sql
