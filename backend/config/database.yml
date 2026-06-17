@@ -1,0 +1,22 @@
+default: &default
+  adapter: sqlserver
+  host: <%= ENV.fetch("DB_HOST") { "localhost" } %>
+  port: <%= ENV.fetch("DB_PORT") { 1433 } %>
+  database: <%= ENV.fetch("DB_NAME") { "HaoHanDB" } %>
+  encoding: CP1258
+  trust_server_certificate: true
+  <% if ENV["DB_USERNAME"].present? %>
+  username: <%= ENV["DB_USERNAME"] %>
+  password: <%= ENV["DB_PASSWORD"] %>
+  <% end %>
+  timeout: 5000
+
+development:
+  <<: *default
+
+test:
+  <<: *default
+  database: HaoHanDB_test
+
+production:
+  <<: *default

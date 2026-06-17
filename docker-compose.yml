@@ -1,0 +1,39 @@
+version: '3.8'
+
+services:
+  db:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: haohan-mssql
+    environment:
+      - ACCEPT_EULA=Y
+      - MSSQL_SA_PASSWORD=YourPassword123
+      - MSSQL_PID=Developer
+    ports:
+      - "1433:1433"
+    volumes:
+      - mssql_data:/var/opt/mssql
+    restart: always
+
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: haohan-backend
+    ports:
+      - "8080:8080"
+    environment:
+      - RAILS_ENV=development
+      - PORT=8080
+      - DB_HOST=db
+      - DB_PORT=1433
+      - DB_NAME=HaoHanDB
+      - DB_USERNAME=sa
+      - DB_PASSWORD=YourPassword123
+      - JWT_SECRET=super_secret_jwt_key_987
+      - GAME_SERVER_TOKEN=super_secure_server_token_123
+    depends_on:
+      - db
+    restart: always
+
+volumes:
+  mssql_data:
