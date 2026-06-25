@@ -1,10 +1,15 @@
 {
   "nav": {
     "home": "HOME",
-    "about": "ABOUT",
-    "faq": "FAQ",
-    "media": "MEDIA",
-    "donate": "DONATE"
+    "gallery": "GALLERY",
+    "rule": "RULE",
+    "smpinfo": "SMP INFO",
+    "donate": "DONATE",
+    "profile": "PROFILE"
+  },
+  "hero": {
+    "get_started": "Get Started",
+    "hello": "Hello, {name}"
   },
   "home": {
     "title": "HaoHan SMP",
@@ -19,8 +24,218 @@
     "signup": "Sign Up"
   },
   "about": {
-    "title": "WHAT IS HAOHAN SMP?",
-    "desc": "<b>HaoHan SMP</b> is a multiplayer Minecraft survival server created by <b>Ginn (the server owner)</b>. It was made as a chill place to play with friends after getting tired of <b>2y2c - an anarchy server!</b>"
+    "title": "About Us",
+    "desc": "<b>HaoHan SMP</b> is a Minecraft server community created by Ginn. You can join the server to play with friends, participate in events, and explore the Minecraft world together! Everything is free and everyone is welcome.",
+    "join_discord": "Join Discord",
+    "contribute": "Contribute"
+  },
+  "servers": {
+    "title": "Our Servers",
+    "survival": {
+      "name": "Survival",
+      "ip": "IP: haohansmp.hopto.org",
+      "desc": "Survive with friends with exciting features and community events."
+    },
+    "build": {
+      "name": "Build",
+      "ip": "IP: haohansmp.hopto.org",
+      "desc": "Freely create and build amazing structures with everyone on the server."
+    },
+    "archive": {
+      "name": "Archive",
+      "ip": "IP: haohansmp.hopto.org",
+      "desc": "Explore builds and worlds from previous seasons in our archive."
+    }
+  },
+  "gallery": {
+    "title": "Gallery",
+    "subtitle": "Explore the world of HaoHan SMP through memorable moments."
+  },
+  "rule": {
+    "title": "HaoHan Criminal Code",
+    "sections": [
+      {
+        "heading": "I. SMP",
+        "subsections": [
+          {
+            "title": "1. Use Common Sense:",
+            "items": [
+              {
+                "text": "1.1. No hacking/cheating for any reason.",
+                "sub": "If you suspect someone is hacking/cheating, please report it to an admin."
+              },
+              {
+                "text": "1.2. No stealing/griefing other players' bases.",
+                "sub": "If you enter someone's base or team area, do not loot or destroy anything, whether or not anyone is there."
+              },
+              {
+                "text": "1.3. No random killing without reason.",
+                "sub": ""
+              },
+              {
+                "text": "1.4. Protect and maintain spawn.",
+                "sub": "Spawn is shared by everyone. If a creeper blows a hole, please fill it back. Community builds by players or admins for events must not be looted."
+              },
+              {
+                "text": "1.5. Follow Minecraft EULA.",
+                "sub": ""
+              },
+              {
+                "text": "1.6. Respect each other in the SMP.",
+                "sub": ""
+              }
+            ]
+          },
+          {
+            "title": "2. Allowed and Disallowed Clients/Mods:",
+            "items": [
+              {
+                "text": "2.1. Allowed clients/mods:",
+                "sub": "Clients: Vanilla, Optifine, Fabric, Forge. Mods: Schematica, Litematica, Freelook, Autofish. Note: Using these features through a hack client is considered hacking."
+              },
+              {
+                "text": "2.2. Disallowed clients/mods:",
+                "sub": "Cheat clients, hack mods; VPN/Proxy."
+              }
+            ]
+          },
+          {
+            "title": "3. Issue Resolution:",
+            "items": [
+              {
+                "text": "If you lost items without clear cause / your pets were killed for no reason / your base was griefed...",
+                "sub": "You can report to admin by creating a ticket (🎫┋create-ticket) to get it resolved."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "II. Discord",
+        "subsections": [
+          {
+            "title": "1. Chat:",
+            "items": [
+              {
+                "text": "No NSFW/18+ content, bot abuse, spam, or advertising links in 💬┋chat.",
+                "sub": ""
+              },
+              {
+                "text": "Respect each other, no insults or hate speech.",
+                "sub": ""
+              },
+              {
+                "text": "No discussion of politics or religion.",
+                "sub": ""
+              },
+              {
+                "text": "Follow Discord TOS.",
+                "sub": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "III. Punishments",
+        "subsections": [
+          {
+            "title": "1. SMP:",
+            "items": [
+              {
+                "text": "1.1. Hacking/cheating:",
+                "sub": "1st offense: IP-Ban 3 days · 2nd offense: IP-Ban 30 days · 3rd offense: Permanent IP-Ban."
+              },
+              {
+                "text": "1.2. Lack of common sense:",
+                "sub": "1st offense: Warning · 2nd offense: Warning · 3rd offense: IP-Ban 3 days · 4th offense: Permanent IP-Ban."
+              }
+            ]
+          },
+          {
+            "title": "2. Discord:",
+            "items": [
+              {
+                "text": "Handled based on severity of violation.",
+                "sub": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "IV. Final Notes",
+        "subsections": [
+          {
+            "title": "",
+            "items": [
+              {
+                "text": "The criminal code may be updated at any time.",
+                "sub": ""
+              },
+              {
+                "text": "Acknowledging your mistake and accepting correction will reduce punishment.",
+                "sub": ""
+              },
+              {
+                "text": "If you're wrong, don't try to deny it — it won't help you.",
+                "sub": ""
+              },
+              {
+                "text": "By playing on the SMP, you have read, understood, and agreed to the HaoHan Criminal Code.",
+                "sub": ""
+              },
+              {
+                "text": "And one thing — if you play legit and are friendly, you don't even need to read any of this.",
+                "sub": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "smpinfo": {
+    "title": "SMP Info",
+    "desc": "Everything you need to know about HaoHan SMP.",
+    "faq_title": "Frequently Asked Questions",
+    "q1": "What are the server specs, and is it enough to handle an SMP?",
+    "a1": "The server currently uses an Intel Xeon Platinum 8124M @ 3.00GHz CPU, which is enough to maintain a stable 20 TPS for up to 15 players. With 8GB of RAM, it can handle 20-25 players smoothly at around 19 TPS.",
+    "q2": "Does the server have backups?",
+    "a2": "The server auto-backups every 2 hours, so you don't need to worry about losing your items or the world.",
+    "q3": "How do I join the server?",
+    "a3": "Answer the questions in the Sign Up section, then join the Discord to see the IP.",
+    "q4": "How can I donate to the server?",
+    "a4": "You can contact Ginn#2005 directly via MoMo, PayPal, or Cards.",
+    "q5": "Why can't I join the server even after signing up?",
+    "a5": "It's either because the mods haven't read your application yet, or your application was rejected!"
+  },
+  "features": {
+    "title": "Features",
+    "f1": {
+      "name": "Explore the world",
+      "desc": "Discover a vast Minecraft world, mine resources and build your base."
+    },
+    "f2": {
+      "name": "Survive and thrive",
+      "desc": "Survive with friends, fight monsters, and connect with other players."
+    },
+    "f3": {
+      "name": "Discover wildlife",
+      "desc": "Meet new creatures, tame and nurture pets in your own world."
+    },
+    "f4": {
+      "name": "Custom mechanics",
+      "desc": "Experience unique custom features, rank systems, and much more."
+    },
+    "f5": {
+      "name": "Get our modpack",
+      "desc": "Download our custom modpack, including shaders and additional mods."
+    },
+    "f6": {
+      "name": "Learn more",
+      "desc": "Explore server guides, history, and the latest updates."
+    }
   },
   "faq": {
     "q1": "What are the server specs, and is it enough to handle an SMP?",
@@ -33,6 +248,53 @@
     "a4": "You can visit the Donate page or contact Ginn#2005 directly to support the server.",
     "q5": "Why can't I join the server even after signing up?",
     "a5": "Registration requests require validation time by the system, or your account was not properly linked!"
+  },
+  "login": {
+    "title": "Login - HaoHan SMP",
+    "heading": "Welcome Back",
+    "subtitle": "Log in to Hảo Hán SMP to continue your adventure.",
+    "back_to_home": "Back to Home",
+    "username_label": "Username or Email",
+    "username_placeholder": "Enter email address",
+    "password_label": "Password",
+    "forgot_password": "Forgot password?",
+    "remember_me": "Remember me",
+    "submit": "Login to Server",
+    "or": "OR",
+    "discord_login": "Login with Discord",
+    "no_account": "New to the server?",
+    "register_link": "Register here",
+    "error_empty": "Username/Email and password are required!",
+    "error_invalid": "Invalid username/Email or password!",
+    "error_connection": "Connection error. Please try again."
+  },
+  "register": {
+    "title": "Register - HaoHan SMP",
+    "heading": "Hảo Hán SMP",
+    "subtitle": "Join the adventure. Create your account.",
+    "email_label": "Email Address",
+    "email_placeholder": "Enter your email address",
+    "username_label": "Username",
+    "username_placeholder": "Enter your username",
+    "password_label": "Password",
+    "password_placeholder": "Create a strong password",
+    "confirm_password_label": "Confirm Password",
+    "confirm_password_placeholder": "Repeat your password",
+    "agree_rules": "I agree to the",
+    "server_rules": "Server Rules",
+    "agree_privacy": "I have read and accept the",
+    "privacy_policy": "Privacy Policy",
+    "submit": "Create Account →",
+    "close_modal": "Close",
+    "has_account": "Already have an account?",
+    "login_link": "Login here",
+    "error_empty": "Please fill in all fields!",
+    "error_invalid_email": "Invalid email format!",
+    "error_password_mismatch": "Passwords do not match!",
+    "error_password_short": "Password must be at least 6 characters!",
+    "error_username_long": "Username must not exceed 16 characters!",
+    "error_agree": "You must agree to the server rules and privacy policy!",
+    "error_connection": "Connection error. Please try again."
   },
   "signup": {
     "title": "Sign Up - HaoHan SMP",
@@ -165,6 +427,24 @@
         "By playing on the SMP, you confirm you have read, understood, and agreed to the HaoHan Criminal Code.",
         "And one more thing: if you play legit and friendly, you don't even need to read this."
       ]
-    }
+    },
+  "profile": {
+    "title": "Account Profile",
+    "unlinked_discord": "Not connected to Discord",
+    "linked_discord": "Connected to Discord",
+    "link_discord_btn": "Connect Discord",
+    "role_label": "Discord Role",
+    "minecraft_status": "Minecraft Status",
+    "unlinked_minecraft": "Has not played Minecraft on server",
+    "linked_minecraft": "Verified Minecraft Account",
+    "playtime_label": "Playtime",
+    "playtime_value": "{hours} hours {minutes} minutes",
+    "uuid_label": "Minecraft UUID",
+    "sync_btn": "Sync Discord",
+    "syncing": "Syncing...",
+    "sync_success": "Synced successfully!",
+    "logout_btn": "Logout Account",
+    "minecraft_link_tip": "Join the Minecraft server and type `/link` to get your link code and verify your account!",
+    "join_discord_required": "You must join the HaoHan SMP Discord server before linking!"
   }
 }

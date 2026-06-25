@@ -1,10 +1,15 @@
 {
   "nav": {
     "home": "HOME",
-    "about": "ABOUT",
-    "faq": "FAQ",
-    "media": "MEDIA",
-    "donate": "DONATE"
+    "gallery": "GALLERY",
+    "rule": "RULE",
+    "smpinfo": "SMP INFO",
+    "donate": "DONATE",
+    "profile": "PROFILE"
+  },
+  "hero": {
+    "get_started": "Bắt Đầu",
+    "hello": "Xin chào, {name}"
   },
   "home": {
     "title": "HaoHan SMP",
@@ -19,8 +24,218 @@
     "signup": "Sign Up"
   },
   "about": {
-    "title": "HẢO HÁN SMP LÀ GÌ?",
-    "desc": "<b>Hảo Hán SMP</b> là một server sinh tồn Minecraft cho nhiều người chơi được tạo ra bởi <b>Ginn - server owner</b> server được tạo ra sau khi anh đã chán <b>2y2c - một server không luật lệ</b> với mục đích chill với những người bạn của anh!"
+    "title": "Về chúng tôi",
+    "desc": "<b>Hảo Hán SMP</b> là một cộng đồng server Minecraft được tạo bởi Ginn. Bạn có thể tham gia server để chơi cùng bạn bè, tham gia các sự kiện và khám phá thế giới Minecraft cùng chúng tôi! Tất cả đều miễn phí và chào đón mọi người.",
+    "join_discord": "Tham Gia Discord",
+    "contribute": "Đóng Góp"
+  },
+  "servers": {
+    "title": "Server của chúng tôi",
+    "survival": {
+      "name": "Survival",
+      "ip": "IP: haohansmp.hopto.org",
+      "desc": "Sinh tồn cùng bạn bè với các tính năng và sự kiện thú vị trong cộng đồng."
+    },
+    "build": {
+      "name": "Build",
+      "ip": "IP: haohansmp.hopto.org",
+      "desc": "Tự do sáng tạo, xây dựng những công trình tuyệt vời cùng mọi người trên server."
+    },
+    "archive": {
+      "name": "Archive",
+      "ip": "IP: haohansmp.hopto.org",
+      "desc": "Kho lưu trữ, khám phá các công trình và thế giới từ các mùa trước."
+    }
+  },
+  "gallery": {
+    "title": "Thư Viện Ảnh",
+    "subtitle": "Khám phá thế giới HaoHan SMP qua những khoảnh khắc đáng nhớ."
+  },
+  "rule": {
+    "title": "Hảo Hán Hình Sự",
+    "sections": [
+      {
+        "heading": "I. SMP",
+        "subsections": [
+          {
+            "title": "1. Hãy có ý thức chung:",
+            "items": [
+              {
+                "text": "1.1. Không hack/ cheat dưới bất kì lý do nào.",
+                "sub": "Nếu bạn nghi vấn ai đang hack/cheat thì có thể báo lại với admin."
+              },
+              {
+                "text": "1.2. Không trộm cắp vặt/ phá hoại base của người khác.",
+                "sub": "Nếu có vào base người khác hoặc team nào đó thì bạn không được cướp đồ, phá hoại ở đó kể cả khi có hoặc không có ai ở đó."
+              },
+              {
+                "text": "1.3. Không giết người mà không có lý do.",
+                "sub": ""
+              },
+              {
+                "text": "1.4. Giữ gìn, bảo vệ spawn.",
+                "sub": "Spawn là của chung, hãy biết bảo tồn: nếu có bị creeper nổ 1 hố thì đừng lười và lấp nó lại. Các công trình cộng đồng do player build hoặc admin xây nhằm phục vụ các event, tuyệt đối không ăn trộm đồ từ đó."
+              },
+              {
+                "text": "1.5. Tuân thủ Minecraft EULA.",
+                "sub": ""
+              },
+              {
+                "text": "1.6. Tôn trọng lẫn nhau trong SMP.",
+                "sub": ""
+              }
+            ]
+          },
+          {
+            "title": "2. Các client/mod được cho phép và không cho phép:",
+            "items": [
+              {
+                "text": "2.1. Client/mod được cho phép:",
+                "sub": "Clients: Vanilla, optifine, fabric, forge. Mods: Schematica, litematica, freelook, autofish. Lưu ý: Nếu bạn sử dụng các chức năng này trong hack sẽ đồng nghĩa với việc sử dụng hack."
+              },
+              {
+                "text": "2.2. Client/mod không được cho phép:",
+                "sub": "Các cheat clients, hack mods; VPN/Proxy."
+              }
+            ]
+          },
+          {
+            "title": "3. Giải quyết các vấn đề:",
+            "items": [
+              {
+                "text": "Nếu bạn bị mất đồ không rõ nguyên nhân/ vật nuôi của bạn bị giết không lý do/ base của bạn bị phá,...",
+                "sub": "Bạn có thể: Báo lại cho admin bằng cách tạo một ticket (🎫┋tạo-ticket) để được giải quyết."
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "II. Discord",
+        "subsections": [
+          {
+            "title": "1. Chat:",
+            "items": [
+              {
+                "text": "Không NSFW/18+, sử dụng bot, spam, gửi link quảng cáo trong 💬┋chat.",
+                "sub": ""
+              },
+              {
+                "text": "Tôn trọng lẫn nhau, không xúc phạm lẫn nhau gây thù hằn.",
+                "sub": ""
+              },
+              {
+                "text": "Không bàn về các vấn đề chính trị, tôn giáo.",
+                "sub": ""
+              },
+              {
+                "text": "Tuân thủ Discord TOS.",
+                "sub": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "III. Xử lý",
+        "subsections": [
+          {
+            "title": "1. SMP:",
+            "items": [
+              {
+                "text": "1.1. Hack/cheat:",
+                "sub": "Lần 1: IP-Ban 3 ngày · Lần 2: IP-Ban 30 ngày · Lần 3: IP-Ban vĩnh viễn."
+              },
+              {
+                "text": "1.2. Không có ý thức chung:",
+                "sub": "Lần 1: Cảnh cáo · Lần 2: Cảnh cáo · Lần 3: IP-Ban 3 ngày · Lần 4: IP-Ban vĩnh viễn."
+              }
+            ]
+          },
+          {
+            "title": "2. Discord:",
+            "items": [
+              {
+                "text": "Xử lý theo mức độ vi phạm.",
+                "sub": ""
+              }
+            ]
+          }
+        ]
+      },
+      {
+        "heading": "IV. Lời nhắn cuối",
+        "subsections": [
+          {
+            "title": "",
+            "items": [
+              {
+                "text": "Luật hình sự có thể cập nhật bất lúc nào.",
+                "sub": ""
+              },
+              {
+                "text": "Biết nhận lỗi của mình và chấp nhận sửa sai thì hình phạt sẽ giảm.",
+                "sub": ""
+              },
+              {
+                "text": "Nếu đã sai thì đừng cố phủ nhận là mình không làm, không giúp ích bạn được gì đâu.",
+                "sub": ""
+              },
+              {
+                "text": "Bằng việc vào SMP chơi là bạn đã đọc, hiểu và đồng ý chấp thuận theo Hảo Hán Hình Sự.",
+                "sub": ""
+              },
+              {
+                "text": "Và 1 điều nếu các bạn chơi legit và thân thiện thì bạn chả cần đọc mấy cái này đâu.",
+                "sub": ""
+              }
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "smpinfo": {
+    "title": "Thông Tin SMP",
+    "desc": "Tất cả những gì bạn cần biết về HaoHan SMP.",
+    "faq_title": "Câu Hỏi Thường Gặp",
+    "q1": "Server có cấu hình như thế nào, có đủ để cân được server SMP?",
+    "a1": "Server hiện tại đang xài CPU : --Intel Xeon Platium 8124M @ 3.00Ghz--, với cpu đó thì đủ để cân được server --20TPS đều khi dưới hoặc bằng 15 players (Nếu có đủ ram có thể cân tầm 20 -> 25 players trong khoảng 19TPS) --. Ram của server là 8G RAM.",
+    "q2": "Server có backup gì không?",
+    "a2": "Server có auto backup mỗi 2 tiếng nên không lo mất world, đồ của người chơi.",
+    "q3": "Làm sao để vào server?",
+    "a3": "Trả lời các câu hỏi trong phần Sign Up rồi vào discord để xem IP.",
+    "q4": "Donate cho server sao?",
+    "a4": "Các bạn có thể liên hệ riêng cho Ginn#2005 bằng các phương thức MoMo, Paypal, Card.",
+    "q5": "Tại sao đăng kí rồi mà không vào được server?",
+    "a5": "Do các mod chưa đọc hoặc do bài của bạn!"
+  },
+  "features": {
+    "title": "Tính năng",
+    "f1": {
+      "name": "Khám phá thế giới",
+      "desc": "Khám phá thế giới Minecraft rộng lớn, khai thác tài nguyên và xây dựng căn cứ của bạn."
+    },
+    "f2": {
+      "name": "Sinh tồn & PvP",
+      "desc": "Sinh tồn cùng bạn bè, chiến đấu với quái vật và giao lưu với người chơi khác."
+    },
+    "f3": {
+      "name": "Khám phá sinh vật",
+      "desc": "Gặp gỡ các sinh vật mới, thuần hóa và nuôi dưỡng thú cưng trong thế giới của bạn."
+    },
+    "f4": {
+      "name": "Cơ chế tùy chỉnh",
+      "desc": "Trải nghiệm các tính năng tùy chỉnh độc đáo, hệ thống rank và nhiều hơn nữa."
+    },
+    "f5": {
+      "name": "Tải Modpack",
+      "desc": "Tải modpack tùy chỉnh của chúng tôi, bao gồm cả shader và các mod bổ sung."
+    },
+    "f6": {
+      "name": "Tìm hiểu thêm",
+      "desc": "Khám phá hướng dẫn về server, lịch sử và các bản cập nhật mới nhất."
+    }
   },
   "faq": {
     "q1": "Server có cấu hình như thế nào, có đủ để cân được server SMP?",
@@ -33,6 +248,53 @@
     "a4": "Bạn có thể truy cập trang Donate của web hoặc liên hệ Ginn#2005 để ủng hộ server.",
     "q5": "Tại sao đăng kí rồi mà không vào được server?",
     "a5": "Yêu cầu đăng ký cần thời gian để hệ thống duyệt hoặc do tài khoản của bạn chưa được liên kết chính xác!"
+  },
+  "login": {
+    "title": "Đăng Nhập - HaoHan SMP",
+    "heading": "Chào Mừng Trở Lại",
+    "subtitle": "Đăng nhập vào Hảo Hán SMP để tiếp tục cuộc phiêu lưu.",
+    "back_to_home": "Quay lại trang chủ",
+    "username_label": "Tên đăng nhập hoặc Email",
+    "username_placeholder": "Nhập email của bạn",
+    "password_label": "Mật khẩu",
+    "forgot_password": "Quên mật khẩu?",
+    "remember_me": "Ghi nhớ đăng nhập",
+    "submit": "Đăng Nhập Vào Server",
+    "or": "HOẶC",
+    "discord_login": "Đăng nhập bằng Discord",
+    "no_account": "Chưa có tài khoản?",
+    "register_link": "Đăng ký tại đây",
+    "error_empty": "Tên đăng nhập/Email và mật khẩu không được để trống!",
+    "error_invalid": "Tên đăng nhập/Email hoặc mật khẩu không chính xác!",
+    "error_connection": "Lỗi kết nối. Vui lòng thử lại."
+  },
+  "register": {
+    "title": "Đăng Ký - HaoHan SMP",
+    "heading": "Hảo Hán SMP",
+    "subtitle": "Tham gia cuộc phiêu lưu. Tạo tài khoản của bạn.",
+    "email_label": "Địa chỉ Email",
+    "email_placeholder": "Nhập email của bạn",
+    "username_label": "Tên nhân vật",
+    "username_placeholder": "Nhập tên tài khoản",
+    "password_label": "Mật khẩu",
+    "password_placeholder": "Tạo mật khẩu mạnh",
+    "confirm_password_label": "Xác nhận mật khẩu",
+    "confirm_password_placeholder": "Nhập lại mật khẩu",
+    "agree_rules": "Tôi đồng ý với",
+    "server_rules": "Luật Server",
+    "agree_privacy": "Tôi đã đọc và chấp nhận",
+    "privacy_policy": "Chính Sách Bảo Mật",
+    "submit": "Tạo Tài Khoản →",
+    "close_modal": "Đóng",
+    "has_account": "Đã có tài khoản?",
+    "login_link": "Đăng nhập tại đây",
+    "error_empty": "Vui lòng điền đầy đủ thông tin!",
+    "error_invalid_email": "Địa chỉ email không đúng định dạng!",
+    "error_password_mismatch": "Mật khẩu không khớp!",
+    "error_password_short": "Mật khẩu phải từ 6 ký tự trở lên!",
+    "error_username_long": "Tên nhân vật không được vượt quá 16 ký tự!",
+    "error_agree": "Bạn phải đồng ý với luật server và chính sách bảo mật!",
+    "error_connection": "Lỗi kết nối. Vui lòng thử lại."
   },
   "signup": {
     "title": "Đăng Ký - HaoHan SMP",
@@ -165,6 +427,24 @@
         "Bằng việc vào SMP chơi là bạn đã đọc, hiểu và đồng ý chấp thuận theo Hảo Hán Hình Sự.",
         "Và 1 điều nếu các bạn chơi legit và thân thiện thì bạn chả cần đọc mấy cái này đâu."
       ]
-    }
+    },
+  "profile": {
+    "title": "Thông Tin Tài Khoản",
+    "unlinked_discord": "Chưa kết nối Discord",
+    "linked_discord": "Đã kết nối Discord",
+    "link_discord_btn": "Kết nối Discord",
+    "role_label": "Chức vụ Discord",
+    "minecraft_status": "Trạng thái Minecraft",
+    "unlinked_minecraft": "Chưa chơi Minecraft trên server",
+    "linked_minecraft": "Đã liên kết Minecraft chính chủ",
+    "playtime_label": "Thời gian chơi",
+    "playtime_value": "{hours} giờ {minutes} phút",
+    "uuid_label": "Minecraft UUID",
+    "sync_btn": "Đồng bộ Discord",
+    "syncing": "Đang đồng bộ...",
+    "sync_success": "Đồng bộ thành công!",
+    "logout_btn": "Đăng xuất tài khoản",
+    "minecraft_link_tip": "Hãy vào game Minecraft gõ lệnh `/link` để nhận mã liên kết và xác thực tài khoản của bạn!",
+    "join_discord_required": "Bạn phải tham gia server Discord của Hảo Hán SMP trước khi liên kết!"
   }
 }

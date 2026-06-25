@@ -1,30 +1,60 @@
 "use client";
 
 import { usePathname } from 'next/navigation';
-import Link from 'next/link';
+import { useEffect } from 'react';
 
 export default function LanguageSwitcher({ lang }) {
   const pathname = usePathname();
+
+  useEffect(() => {
+    const savedScroll = sessionStorage.getItem('scrollPosition');
+    if (savedScroll) {
+      const scrollPos = parseInt(savedScroll, 10);
+      window.scrollTo(0, scrollPos);
+      
+      // Secondary check to ensure scroll is restored after layout render
+      const timer = setTimeout(() => {
+        window.scrollTo(0, scrollPos);
+        sessionStorage.removeItem('scrollPosition');
+      }, 50);
+
+      return () => clearTimeout(timer);
+    }
+  }, []);
   
   const switchLang = (e, locale) => {
     e.preventDefault();
     if (!pathname) return;
+    
+    // Save current scroll position before redirection
+    sessionStorage.setItem('scrollPosition', window.scrollY);
+    
     const segments = pathname.split('/');
     segments[1] = locale;
-    const newPath = segments.join('/') + window.location.hash;
+    
+    const hash = typeof window !== 'undefined' ? window.location.hash : '';
+    const newPath = segments.join('/') + hash;
     window.location.href = newPath;
   };
 
   return (
-    <div style={{ display: 'flex', gap: '8px', alignItems: 'center', marginLeft: '20px' }}>
-      <i className="fas fa-globe" style={{ color: 'white', fontSize: '1.2rem', marginRight: '5px' }}></i>
-      <a href="#" onClick={(e) => switchLang(e, 'vi')} style={{ color: lang === 'vi' ? 'orangered' : 'gray', textDecoration: 'none', fontWeight: lang === 'vi' ? 'bold' : 'normal' }}>
+    <div className="floating-lang-switcher" aria-label="Language Selector">
+      <i className="fas fa-globe" />
+      <button
+        onClick={(e) => switchLang(e, 'vi')}
+        className={`floating-lang-btn ${lang === 'vi' ? 'floating-lang-btn--active' : ''}`}
+        aria-current={lang === 'vi' ? 'page' : undefined}
+      >
         VI
-      </a>
-      <span style={{ color: 'white' }}>|</span>
-      <a href="#" onClick={(e) => switchLang(e, 'en')} style={{ color: lang === 'en' ? 'orangered' : 'gray', textDecoration: 'none', fontWeight: lang === 'en' ? 'bold' : 'normal' }}>
+      </button>
+      <span className="floating-lang-divider">|</span>
+      <button
+        onClick={(e) => switchLang(e, 'en')}
+        className={`floating-lang-btn ${lang === 'en' ? 'floating-lang-btn--active' : ''}`}
+        aria-current={lang === 'en' ? 'page' : undefined}
+      >
         EN
-      </a>
+      </button>
     </div>
   );
 }

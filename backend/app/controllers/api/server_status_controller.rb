@@ -44,7 +44,27 @@ class Api::ServerStatusController < ApplicationController
         player ||= Player.find_by(username: p_username) if p_username.present?
 
         if player
-          player.update!(play_time: p_playtime.to_i)
+          updates = { play_time: p_playtime.to_i }
+          if player.uuid.blank? && p_uuid.present?
+            updates[:uuid] = p_uuid
+            updates[:is_linked] = true if player.discord_id.present?
+          end
+          player.update!(updates)
+
+          if updates.key?(:uuid)
+            ActionCable.server.broadcast("roles_channel_#{player.id}", {
+              id: player.id,
+              username: player.username,
+              email: player.email,
+              uuid: player.uuid,
+              role: player.role,
+              is_linked: player.is_linked ? 1 : 0,
+              discord_id: player.discord_id,
+              avatar_url: player.avatar_url,
+              play_time: player.play_time
+            }) rescue nil
+          end
+
           updated_count += 1
         else
           # Create a ghost profile if they don't exist yet but play on server

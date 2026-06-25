@@ -93,7 +93,7 @@ class Api::GameLinkController < ApplicationController
           id: current_user.id,
           username: current_user.username,
           uuid: current_user.uuid,
-          is_linked: current_user.is_linked,
+          is_linked: current_user.is_linked ? 1 : 0,
           total_donated: current_user.total_donated,
           play_time: current_user.play_time
         }

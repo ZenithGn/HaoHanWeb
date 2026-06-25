@@ -1,8 +1,10 @@
 import "../globals.css";
-import { getDictionary } from "@/dictionaries/get-dictionary";
+import { getDictionary } from "../../dictionaries/get-dictionary";
+import LanguageSwitcher from "../components/LanguageSwitcher";
+import { AuthProvider } from "../components/AuthContext";
 
 export const viewport = {
-  themeColor: "#FF4500",
+  themeColor: "#1a1a2e",
 };
 
 export async function generateMetadata({ params }) {
@@ -10,7 +12,7 @@ export async function generateMetadata({ params }) {
   const dict = await getDictionary(lang);
   return {
     title: dict.home.title,
-    description: dict.about.title, // Simplified for brevity
+    description: dict.about.title,
     openGraph: {
       title: dict.home.title,
       description: dict.about.title,
@@ -35,10 +37,16 @@ export default async function RootLayout({ children, params }) {
       <head>
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
-        <title></title>
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://unpkg.com/aos@next/dist/aos.css" />
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
       </head>
-      <body suppressHydrationWarning>{children}</body>
+      <body suppressHydrationWarning>
+        <AuthProvider>
+          {children}
+          <LanguageSwitcher lang={lang} />
+        </AuthProvider>
+      </body>
     </html>
   );
 }

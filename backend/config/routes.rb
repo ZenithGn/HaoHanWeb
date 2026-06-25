@@ -15,6 +15,12 @@ Rails.application.routes.draw do
   post '/api/game/generate-link-code', to: 'api/game_link#generate_link_code'
   post '/api/auth/link', to: 'api/game_link#link'
 
+  # Discord Authentication & Linking API
+  get '/api/auth/discord/url', to: 'api/discord#url'
+  post '/api/auth/discord/callback', to: 'api/discord#callback'
+  post '/api/auth/discord/sync', to: 'api/discord#sync'
+  post '/api/discord/role-update', to: 'api/discord#role_update'
+
   # Donation Integration API
   post '/api/donations/payos/create', to: 'api/donations#payos_create'
   post '/api/donations/payos/webhook', to: 'api/donations#payos_webhook'
