@@ -673,10 +673,10 @@ button {
 
 .server-card,
 .info-card {
-  border: 1px solid rgba(255, 255, 255, 0.16);
+  border: 1px solid rgba(255, 255, 255, 0.28);
   border-radius: 8px;
-  background: linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.02)), rgba(64, 64, 72, 0.74);
-  box-shadow: inset 0 1px rgba(255, 255, 255, 0.05), 0 10px 22px rgba(0, 0, 0, 0.24);
+  background: linear-gradient(145deg, rgba(255, 255, 255, 0.09), rgba(255, 255, 255, 0.02)), rgba(24, 25, 30, 0.85);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.08), 0 12px 28px rgba(0, 0, 0, 0.45);
 }
 
 .server-card {
@@ -690,22 +690,25 @@ button {
 
 .server-card h3 {
   margin: 0;
-  font-size: 17px;
-  line-height: 1;
+  font-size: 22px;
+  font-weight: 800;
+  line-height: 1.1;
+  color: #ffffff;
 }
 
 .server-card span {
   display: block;
-  margin-top: 3px;
-  color: #dedfe3;
-  font-size: 11px;
+  margin-top: 5px;
+  color: #ff952e;
+  font-size: 16px;
+  font-weight: 700;
 }
 
 .server-card p {
-  margin: 10px 0 9px;
-  color: #eeeeef;
-  font-size: 10px;
-  line-height: 1.3;
+  margin: 12px 0 9px;
+  color: #d7d8dc;
+  font-size: 13.5px;
+  line-height: 1.45;
 }
 
 .block {
@@ -762,17 +765,17 @@ button {
   position: relative;
   min-height: 130px;
   overflow: hidden;
-  border: 1px solid rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.25);
   border-radius: 8px;
-  background: #272a31;
-  box-shadow: 0 10px 18px rgba(0, 0, 0, 0.28);
+  background: #1b1d24;
+  box-shadow: 0 12px 28px rgba(0, 0, 0, 0.4);
 }
 
 .feature::after {
   content: "";
   position: absolute;
   inset: 35% 0 0;
-  background: linear-gradient(transparent, rgba(0, 0, 0, 0.7));
+  background: linear-gradient(transparent, rgba(0, 0, 0, 0.75));
 }
 
 .feature img {
@@ -781,22 +784,24 @@ button {
   min-height: 130px;
   object-fit: cover;
   display: block;
-  transition: transform 180ms ease;
+  transition: transform 300ms cubic-bezier(0.25, 1, 0.5, 1);
 }
 
 .feature strong {
   position: absolute;
   z-index: 1;
-  left: 10px;
-  right: 8px;
-  bottom: 11px;
-  font-size: 14px;
-  line-height: 1.1;
-  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.7);
+  left: 14px;
+  right: 12px;
+  bottom: 14px;
+  font-size: 18.5px;
+  font-weight: 800;
+  line-height: 1.2;
+  text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
+  color: #ffffff;
 }
 
 .feature:hover img {
-  transform: scale(1.04);
+  transform: scale(1.08);
 }
 
 .faq {
