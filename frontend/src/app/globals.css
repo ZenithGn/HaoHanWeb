@@ -573,7 +573,7 @@ button {
 
 .intro h1 {
   font-family: 'Be Vietnam Pro', 'Outfit', sans-serif;
-  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-size: clamp(1.8rem, 4.5vw, 3rem);
   font-weight: 900;
   letter-spacing: 0.5px;
   background: linear-gradient(135deg, #ff952e 0%, #ffd085 100%);
@@ -582,6 +582,12 @@ button {
   background-clip: text;
   margin-bottom: 24px;
   filter: drop-shadow(0 4px 15px rgba(255, 149, 46, 0.15));
+}
+
+@media (min-width: 768px) {
+  .intro h1 {
+    white-space: nowrap;
+  }
 }
 
 .intro p {
