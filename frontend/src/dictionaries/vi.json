@@ -336,13 +336,13 @@
     "rules_close": "Đóng"
   },
   "features_list": {
-    "title": "Tính năng",
-    "explore": "Khám phá thế giới",
-    "survival": "Sinh tồn và phát triển",
-    "wildlife": "Động vật hoang dã",
-    "custom": "Cơ chế tuỳ chỉnh",
-    "modpack": "Nhận Modpack",
-    "more": "Tìm hiểu thêm"
+    "title": "Thư viện ảnh",
+    "explore": "Khám phá thế giới rộng lớn",
+    "survival": "Sinh tồn cùng bạn bè",
+    "wildlife": "Động vật hoang dã phong phú",
+    "custom": "Cơ chế tùy chỉnh độc đáo",
+    "modpack": "Hệ thống Modpack đa dạng",
+    "more": "Khu di tích cổ kính"
   },
   "footer": {
     "disclaimer": "Hảo Hán SMP không liên kết với Mojang hoặc Microsoft. NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.",
@@ -432,7 +432,7 @@
   },
   "home_labels": {
     "nav_home": "Trang chủ",
-    "nav_gallery": "Tính năng",
+    "nav_gallery": "Thư viện ảnh",
     "nav_rules": "Luật",
     "nav_wiki": "Wiki",
     "signup": "Đăng ký",
@@ -442,7 +442,7 @@
     "join_discord": "Tham gia Discord",
     "donate": "Ủng hộ chúng tôi",
     "servers_title": "Danh sách máy chủ",
-    "features_title": "Tính năng",
+    "features_title": "Thư viện ảnh",
     "faq_title": "FAQ",
     "server_ip": "IP máy chủ:",
     "copied": "Đã copy",

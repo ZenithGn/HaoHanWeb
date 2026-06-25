@@ -7,6 +7,7 @@ const serverIp = "haohansmp.io.vn";
 export default function HomeClient({ dict, lang }) {
   const [currentLang, setCurrentLang] = useState(lang);
   const [copiedIp, setCopiedIp] = useState(false);
+  const [activeImgIndex, setActiveImgIndex] = useState(null);
   const haohanNavRef = useRef(null);
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
@@ -264,7 +265,21 @@ export default function HomeClient({ dict, lang }) {
           <div className="wrap">
             <h2>{labels.featuresTitle}</h2>
             <div className="feature-grid">
-              {featuresTranslated.map(([src, title]) => <a className="feature" href="#gallery" key={title}><img src={src} alt="" /><strong>{title}</strong></a>)}
+              {featuresTranslated.map(([src, title], index) => (
+                <a
+                  className="feature"
+                  href="#gallery"
+                  key={title}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    setActiveImgIndex(index);
+                  }}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={src} alt="" />
+                  <strong>{title}</strong>
+                </a>
+              ))}
             </div>
           </div>
         </section>
@@ -354,6 +369,18 @@ export default function HomeClient({ dict, lang }) {
           </p>
         </div>
       </footer>
+      {activeImgIndex !== null && (
+        <div className="lightbox-overlay" onClick={() => setActiveImgIndex(null)}>
+          <button className="lightbox-close" onClick={() => setActiveImgIndex(null)} aria-label="Close lightbox">&times;</button>
+          <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); setActiveImgIndex((prev) => (prev > 0 ? prev - 1 : featuresTranslated.length - 1)); }} aria-label="Previous image">&#10094;</button>
+          <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img src={featuresTranslated[activeImgIndex][0]} alt={featuresTranslated[activeImgIndex][1]} />
+            <div className="lightbox-caption">{featuresTranslated[activeImgIndex][1]}</div>
+          </div>
+          <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); setActiveImgIndex((prev) => (prev < featuresTranslated.length - 1 ? prev + 1 : 0)); }} aria-label="Next image">&#10095;</button>
+        </div>
+      )}
     </>
   );
 }

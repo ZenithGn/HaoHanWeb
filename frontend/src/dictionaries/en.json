@@ -336,13 +336,13 @@
     "rules_close": "Close"
   },
   "features_list": {
-    "title": "Features",
-    "explore": "Explore the World",
-    "survival": "Survival & Progress",
-    "wildlife": "Wild Animals",
-    "custom": "Custom Mechanics",
-    "modpack": "Get Modpack",
-    "more": "Learn More"
+    "title": "Gallery",
+    "explore": "Explore the vast world",
+    "survival": "Survival with friends",
+    "wildlife": "Rich wildlife",
+    "custom": "Unique custom mechanics",
+    "modpack": "Diverse Modpack system",
+    "more": "Ancient ruins"
   },
   "footer": {
     "disclaimer": "HaoHan SMP is not affiliated with Mojang Studios or Microsoft. NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.",
@@ -432,7 +432,7 @@
   },
   "home_labels": {
     "nav_home": "Home",
-    "nav_gallery": "Features",
+    "nav_gallery": "Gallery",
     "nav_rules": "Rules",
     "nav_wiki": "Wiki",
     "signup": "Sign up",
@@ -442,7 +442,7 @@
     "join_discord": "Join Discord",
     "donate": "Support us",
     "servers_title": "Our Servers",
-    "features_title": "Features",
+    "features_title": "Gallery",
     "faq_title": "FAQ",
     "server_ip": "Server IP:",
     "copied": "Copied",
