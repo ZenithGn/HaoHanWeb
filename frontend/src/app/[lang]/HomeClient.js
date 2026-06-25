@@ -8,7 +8,7 @@ export default function HomeClient({ dict, lang }) {
   const [copiedIp, setCopiedIp] = useState(false);
   const [activeImgIndex, setActiveImgIndex] = useState(null);
   const [activeTab, setActiveTab] = useState("home");
-  const [isTopNavOpen, setIsTopNavOpen] = useState(false);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const haohanNavRef = useRef(null);
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
@@ -22,14 +22,13 @@ export default function HomeClient({ dict, lang }) {
     return text.split('\n').map((line, idx) => {
       if (line.trim().startsWith('•')) {
         return (
-          <span key={idx} style={{ display: 'block', marginTop: '6px', color: '#a0a5b5', paddingLeft: '15px', position: 'relative' }}>
-            <span style={{ position: 'absolute', left: '0', color: '#ff952e' }}>•</span>
+          <span key={idx} className="rules-sub-rule">
             {line.substring(line.indexOf('•') + 1).trim()}
           </span>
         );
       }
       return (
-        <span key={idx} style={{ display: 'block', marginTop: idx > 0 ? '6px' : '0' }}>
+        <span key={idx} className="rules-main-rule">
           {line}
         </span>
       );
@@ -322,24 +321,24 @@ export default function HomeClient({ dict, lang }) {
   };
   const handleLogout = () => {
     logout();
+    setMobileMenuOpen(false);
     setActiveTab("home");
     window.location.href = `/${currentLang}`;
   };
   const renderTools = (topbar = false) => (
-    <div className={`topbar-tools${topbar ? " topbar__actions" : ""}`}>
+    <div className={`topbar-tools${topbar ? " topbar__actions" : ""}${topbar && mobileMenuOpen ? " topbar__actions--open" : ""}`}>
       {isLoggedIn && user ? (
-        <button
-          className="topbar-auth-message"
-          type="button"
-          onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
-          aria-label={dict.hero.hello.replace('{name}', user.username)}
-        >
-          <span className="topbar-auth-message__phrase topbar-auth-message__phrase--hello">
-            Xin Chào <span className="topbar-auth-message__user">{user.username}</span>
-          </span>
-          <span className="topbar-auth-message__phrase topbar-auth-message__phrase--welcome">
-            Chào mừng đến với Hảo Hán SMP
-          </span>
+        <button className="tool-pill tool-auth" onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '8px',
+          color: '#fff',
+          cursor: 'pointer',
+          padding: '7px 14px',
+          fontWeight: 600,
+          fontFamily: "'Outfit', 'Inter', sans-serif"
+        }}>
+          <span className="tool-text">{dict.hero.hello.replace('{name}', user.username)}</span>
         </button>
       ) : (
         <>
@@ -368,29 +367,27 @@ export default function HomeClient({ dict, lang }) {
   }, [labels, isLoggedIn]);
   return (
     <>
-      <div className={`topbar ${isTopNavOpen ? "topbar--nav-open" : ""}`} id="topbar">
-        <div className="topbar__brand">
-          <button
-            className="topbar__logo-toggle"
-            type="button"
-            aria-label={isTopNavOpen ? "Close navigation" : "Open navigation"}
-            aria-expanded={isTopNavOpen}
-            onClick={() => setIsTopNavOpen((open) => !open)}
-          >
-            {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img className="topbar__logo" src="/assets/img/logo.png" alt="HaoHan" />
-            <i className={`fa-solid ${isTopNavOpen ? "fa-xmark" : "fa-bars"} topbar__logo-toggle-icon`}></i>
-          </button>
-          <nav className="topbar__nav" ref={topbarNavRef} aria-label="Quick navigation">
-            <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
-            {navLinks.map(([href, text, icon]) => (
-              <a key={href} href={href} title={text} onClick={() => setIsTopNavOpen(false)}>
-                {icon && <i className={icon}></i>}
-                <span className="nav-text">{text}</span>
-              </a>
-            ))}
-          </nav>
-        </div>
+      <div className={`topbar${mobileMenuOpen ? " topbar--menu-open" : ""}`} id="topbar" aria-hidden="true">
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img className="topbar__logo" src="/assets/img/logo.png" alt="HaoHan" />
+        <button
+          className="topbar__menu-toggle"
+          type="button"
+          aria-label={mobileMenuOpen ? "Close navigation" : "Open navigation"}
+          aria-expanded={mobileMenuOpen}
+          onClick={() => setMobileMenuOpen((open) => !open)}
+        >
+          <i className={`fa-solid ${mobileMenuOpen ? "fa-xmark" : "fa-bars"}`}></i>
+        </button>
+        <nav className={`topbar__nav${mobileMenuOpen ? " topbar__nav--open" : ""}`} ref={topbarNavRef} aria-label="Quick navigation">
+          <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
+          {navLinks.map(([href, text, icon]) => (
+            <a key={href} href={href} onClick={() => setMobileMenuOpen(false)}>
+              {icon && <i className={icon}></i>}
+              <span className="nav-text">{text}</span>
+            </a>
+          ))}
+        </nav>
         {renderTools(true)}
       </div>
       {activeTab === "home" && (
@@ -541,9 +538,11 @@ export default function HomeClient({ dict, lang }) {
 
             <div className="wrap rules-page__body">
               <section className="rules-line-section">
-                <span className="rules-line-section__num">1</span>
-                <div className="rules-line-section__content">
+                <div className="rules-line-section__header">
+                  <span className="rules-line-section__num">1</span>
                   <h2><i className="fa-solid fa-clover"></i> {dict.rules.smp.title.replace('I. ', '')}</h2>
+                </div>
+                <div className="rules-line-section__content">
                   <ul>
                     {dict.rules.smp.rules_list[0]?.sub_rules.map((rule, idx) => (
                       <li key={idx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
@@ -553,9 +552,11 @@ export default function HomeClient({ dict, lang }) {
               </section>
 
               <section className="rules-line-section">
-                <span className="rules-line-section__num">2</span>
-                <div className="rules-line-section__content">
+                <div className="rules-line-section__header">
+                  <span className="rules-line-section__num">2</span>
                   <h2><i className="fa-solid fa-clover"></i> Client/Mod</h2>
+                </div>
+                <div className="rules-line-section__content">
                   <ul>
                     {dict.rules.smp.rules_list[1]?.sub_rules.map((rule, idx) => (
                       <li key={idx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
@@ -565,21 +566,25 @@ export default function HomeClient({ dict, lang }) {
               </section>
 
               <section className="rules-line-section">
-                <span className="rules-line-section__num">3</span>
-                <div className="rules-line-section__content">
+                <div className="rules-line-section__header">
+                  <span className="rules-line-section__num">3</span>
                   <h2><i className="fa-solid fa-clover"></i> {dict.rules.discord.title.replace('II. ', '')}</h2>
+                </div>
+                <div className="rules-line-section__content">
                   <ul>
                     {dict.rules.discord.rules_list.map((rule, idx) => (
-                      <li key={idx}>{rule}</li>
+                      <li key={idx}>{formatText(rule)}</li>
                     ))}
                   </ul>
                 </div>
               </section>
 
               <section className="rules-line-section">
-                <span className="rules-line-section__num">4</span>
-                <div className="rules-line-section__content">
+                <div className="rules-line-section__header">
+                  <span className="rules-line-section__num">4</span>
                   <h2><i className="fa-solid fa-clover"></i> {isVi ? "Giải quyết vấn đề" : "Issue resolution"}</h2>
+                </div>
+                <div className="rules-line-section__content">
                   <ul>
                     {dict.rules.smp.rules_list[2]?.sub_rules.map((rule, idx) => (
                       <li key={idx}>{formatText(rule)}</li>
