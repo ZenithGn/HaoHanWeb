@@ -89,7 +89,7 @@ export default function HomeClient({ dict, lang }) {
       title: dict.servers.community_title || "Community",
       address: "Discord HaoHan SMP",
       body: dict.servers.community_desc || "Discord community.",
-      block: "block--chest",
+      block: "block--fox",
       oneIcon: true,
     },
   ], [dict]);
@@ -130,6 +130,29 @@ export default function HomeClient({ dict, lang }) {
     isVi ? "Khu di tích cổ kính" : "Ancient ruins",
     isVi ? "Bảng trạng thái máy chủ" : "Server status board"
   ], [isVi]);
+
+  const galleryAlbums = useMemo(() => [
+    {
+      year: "2024",
+      items: [
+        { index: 9, title: "7 year anniversary", subtitle: "Screenshot competition" },
+        { index: 1, title: "Artworks", subtitle: "Artworks made by members of the community" },
+        { index: 10, title: "Website originals", subtitle: "Images originally used in the website redesign" },
+      ],
+    },
+    {
+      year: "2021",
+      items: [
+        { index: 2, title: "4 Year anniversary", subtitle: "Community memories" },
+      ],
+    },
+    {
+      year: "2020",
+      items: [
+        { index: 4, title: "Survival world", subtitle: "From the early days of the server" },
+      ],
+    },
+  ], []);
 
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
@@ -353,12 +376,7 @@ export default function HomeClient({ dict, lang }) {
         </button>
       ) : (
         <>
-          <a href={`/${currentLang}/login`} className="tool-pill tool-auth btn-login" style={{
-            marginRight: '8px',
-            backgroundColor: 'rgba(255, 255, 255, 0.05)',
-            border: '1px solid rgba(255, 255, 255, 0.15)',
-            borderRadius: '8px'
-          }}>
+          <a href={`/${currentLang}/login`} className="tool-pill tool-auth btn-login">
             <span className="tool-text">{labels.login}</span>
           </a>
           <a href={`/${currentLang}/signup`} className="tool-pill tool-auth btn-signup">
@@ -369,16 +387,19 @@ export default function HomeClient({ dict, lang }) {
     </div>
   );
 
-  const navLinks = [
-    ["#home", labels.navHome],
-    ["#gallery", labels.navGallery],
-    ["#rules", labels.navRules],
-    ["#wiki", labels.navWiki],
-    ["#donate", labels.donate],
-  ];
-  if (isLoggedIn) {
-    navLinks.push(["#profile", labels.navProfile]);
-  }
+  const navLinks = useMemo(() => {
+    const list = [
+      ["#home", labels.navHome, "fa-solid fa-campground"],
+      ["#gallery", labels.navGallery, "fa-solid fa-images"],
+      ["#rules", labels.navRules, "fa-solid fa-scroll"],
+      ["#wiki", labels.navWiki, "fa-solid fa-circle-question"],
+      ["#donate", labels.donate, "fa-solid fa-heart"],
+    ];
+    if (isLoggedIn) {
+      list.push(["#profile", labels.navProfile, "fa-solid fa-user"]);
+    }
+    return list;
+  }, [labels, isLoggedIn]);
 
   return (
     <>
@@ -387,53 +408,56 @@ export default function HomeClient({ dict, lang }) {
         <img className="topbar__logo" src="/assets/img/logo.png" alt="HaoHan" />
         <nav className="topbar__nav" ref={topbarNavRef} aria-label="Quick navigation">
           <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
-          {navLinks.map(([href, text]) => <a key={href} href={href}>{text}</a>)}
+          {navLinks.map(([href, text, icon]) => (
+            <a key={href} href={href}>
+              {icon && <i className={icon} style={{ marginRight: '6px' }}></i>}
+              {text}
+            </a>
+          ))}
         </nav>
         {renderTools(true)}
       </div>
 
       {activeTab === "home" && (
         <header className="haohan" id="home">
-          <div className="haohan__top-tools wrap">{renderTools()}</div>
           <div className="haohan__shade"></div>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img className="haohan__logo" src="/assets/img/logo.png" alt="HaoHan SMP" />
-          <nav className="nav" ref={haohanNavRef} aria-label="Main navigation">
-            <span className="nav__indicator" ref={haohanIndicatorRef}></span>
-            {navLinks.map(([href, text], index) => <a key={href} className={index === 0 ? "active" : ""} href={href}>{text}</a>)}
-          </nav>
+          <div className="haohan__content wrap">
+            <div className="haohan__welcome">
+              <span className="haohan__subtitle-green">
+                <i className="fa-solid fa-leaf"></i> CHÀO MỪNG ĐẾN VỚI <i className="fa-solid fa-leaf"></i>
+              </span>
+              <img className="haohan__logo-main" src="/assets/img/logo.png" alt="HaoHan SMP" />
+              <p className="haohan__desc">{labels.haohanDesc}</p>
+              
+              <div className="haohan__actions">
+                <a className="haohan__btn-discord" href="https://discord.com/invite/znHfuc6hCR">
+                  <i className="fab fa-discord"></i> {labels.discord}
+                </a>
+                <button className="haohan__btn-ip" onClick={copyServerIp}>
+                  <i className="fa-solid fa-cube"></i> IP: {serverIp} <i className={`fa-solid ${copiedIp ? "fa-check" : "fa-copy"}`} style={{ marginLeft: '4px' }}></i>
+                </button>
+              </div>
+            </div>
+          </div>
         </header>
       )}
 
       <main style={{ paddingTop: activeTab === "home" ? "0" : "80px" }}>
         {activeTab === "home" && (
           <>
-            <section className="intro section section--tight reveal visible">
-              <div className="wrap">
-                <h1>{labels.haohanTitle}</h1>
-                <p>{labels.haohanDesc}</p>
-                <div className="actions intro-actions">
-                  <a className="button button--discord" href="https://discord.com/invite/znHfuc6hCR">{labels.discord}</a>
-                </div>
-                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-                  <div className="server-ip intro-server-ip">
-                    <span>{labels.serverIpLabel}</span>
-                    <strong>{serverIp}</strong>
-                    <button type="button" aria-label="Copy server IP" onClick={copyServerIp}>
-                      {copiedIp ? labels.copied : "Copy"}
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </section>
-
             <section className="section section--panel reveal visible" id="servers">
               <div className="wrap">
                 <h2>{labels.serversTitle}</h2>
                 <div className="server-grid">
                   {serverCardsTranslated.map((server) => (
                     <article className="server-card" key={server.title}>
-                      <div className={`block ${server.block}`} aria-hidden="true"></div>
+                      {server.block === "block--fox" ? (
+                        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'center', width: '44px', height: '44px' }}>
+                          <img src="/assets/img/logo.png" alt="" style={{ width: '40px', height: '40px', objectFit: 'contain', imageRendering: 'pixelated' }} />
+                        </div>
+                      ) : (
+                        <div className={`block ${server.block}`} aria-hidden="true"></div>
+                      )}
                       <div>
                         <h3>{server.title}</h3>
                         <span>{server.address}</span>
@@ -445,7 +469,7 @@ export default function HomeClient({ dict, lang }) {
               </div>
             </section>
 
-            <section className="section reveal visible" id="features">
+            <section className="section section--panel reveal visible" id="features">
               <div className="wrap">
                 <h2>{labels.featuresTitle}</h2>
                 <div className="feature-grid">
@@ -462,6 +486,20 @@ export default function HomeClient({ dict, lang }) {
 
             <section className="section section--panel faq reveal visible">
               <div className="wrap faq__wrap">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="faq__fox faq__fox--left"
+                  src="/assets/img/Fox_with_emerald.webp"
+                  alt=""
+                  aria-hidden="true"
+                />
+                {/* eslint-disable-next-line @next/next/no-img-element */}
+                <img
+                  className="faq__fox faq__fox--right"
+                  src="/assets/img/Fox_with_emerald.webp"
+                  alt=""
+                  aria-hidden="true"
+                />
                 <div className="faq__content">
                   <h2>{labels.faqTitle}</h2>
                   {[1, 2, 3, 4, 5].map((item) => (
@@ -477,24 +515,41 @@ export default function HomeClient({ dict, lang }) {
         )}
 
         {activeTab === "gallery" && (
-          <section className="section reveal visible" id="gallery" style={{ minHeight: 'calc(100vh - 400px)' }}>
-            <div className="wrap">
-              <h2>{labels.galleryTitle}</h2>
-              <div className="feature-grid">
-                {galleryImages.map((src, index) => (
-                  <a
-                    className="feature"
-                    href="#gallery"
-                    key={src}
-                    onClick={(e) => {
-                      e.preventDefault();
-                      setActiveImgIndex(index);
-                    }}
-                  >
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src={src} alt="" />
-                    <strong>{galleryCaptions[index]}</strong>
-                  </a>
+          <section className="section section--panel gallery-page reveal visible" id="gallery" style={{ minHeight: 'calc(100vh - 400px)' }}>
+            <div className="wrap gallery-page__wrap">
+              <header className="gallery-page__header">
+                <h2>{labels.galleryTitle}</h2>
+                <p>
+                  Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP.
+                  Click any image to view a full size version.
+                </p>
+              </header>
+
+              <div className="gallery-albums">
+                {galleryAlbums.map((album) => (
+                  <section className="gallery-year" key={album.year}>
+                    <h3>{album.year}</h3>
+                    <div className="gallery-album-grid">
+                      {album.items.map((item) => (
+                        <a
+                          className="gallery-album-card"
+                          href="#gallery"
+                          key={`${album.year}-${item.index}`}
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setActiveImgIndex(item.index);
+                          }}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img src={galleryImages[item.index]} alt="" />
+                          <span className="gallery-album-card__text">
+                            <strong>{item.title}</strong>
+                            <em>{item.subtitle}</em>
+                          </span>
+                        </a>
+                      ))}
+                    </div>
+                  </section>
                 ))}
               </div>
             </div>
@@ -872,9 +927,9 @@ export default function HomeClient({ dict, lang }) {
                     <div className={`profile-discord-badge ${!user.discord_id ? "profile-discord-badge--unlinked" : ""}`}>
                       {user.discord_id && user.avatar_url ? (
                         /* eslint-disable-next-line @next/next/no-img-element */
-                        <img 
-                          src={user.avatar_url} 
-                          alt="Discord avatar" 
+                        <img
+                          src={user.avatar_url}
+                          alt="Discord avatar"
                           style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
                         />
                       ) : (
@@ -983,19 +1038,19 @@ export default function HomeClient({ dict, lang }) {
       </main>
 
       <footer style={{
-        backgroundColor: '#0c0d10',
-        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
-        padding: '50px 20px 40px 20px',
-        color: '#888',
+        backgroundColor: '#18120c',
+        padding: '0 0 40px 0',
+        color: '#c7c8ce',
         fontSize: '0.95rem',
         width: '100%',
         fontFamily: "'Outfit', 'Inter', sans-serif"
       }}>
+        <div className="footer-grass"></div>
         <div className="wrap" style={{
           display: 'grid',
           gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
           gap: '40px',
-          paddingBottom: '30px',
+          padding: '50px 20px 30px 20px',
           borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
         }}>
           {/* Column 1 */}
@@ -1005,34 +1060,50 @@ export default function HomeClient({ dict, lang }) {
               <img src="/assets/img/logo.png" alt="HaoHan SMP" style={{ width: '40px', height: '40px' }} />
               <strong style={{ color: '#fff', fontSize: '1.2rem' }}>HaoHan SMP</strong>
             </div>
-            <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: '1.6', color: '#6e717d' }}>
+            <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: '1.6', color: '#c7c8ce' }}>
               {labels.haohanDesc}
             </p>
           </div>
 
           {/* Column 2 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <strong style={{ color: '#fff', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <strong style={{ color: '#ff952e', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {labels.exploreHeader}
             </strong>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
-              <a href="#home" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navHome}</a>
-              <a href="#gallery" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navGallery}</a>
-              <a href={`/${currentLang}/rules`} style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navRules}</a>
-              <a href={`/${currentLang}/donate`} style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.donate}</a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
+              <a href="#home" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fa-solid fa-house" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navHome}
+              </a>
+              <a href="#gallery" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fa-solid fa-images" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navGallery}
+              </a>
+              <a href={`/${currentLang}/rules`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fa-solid fa-scroll" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navRules}
+              </a>
+              <a href={`/${currentLang}/donate`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fa-solid fa-heart" style={{ width: '16px', color: '#ff952e' }}></i> {labels.donate}
+              </a>
             </div>
           </div>
 
           {/* Column 3 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
-            <strong style={{ color: '#fff', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+            <strong style={{ color: '#ff952e', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
               {labels.communityHeader}
             </strong>
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
-              <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Discord</a>
-              <a href="#" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Facebook</a>
-              <a href="#" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Youtube</a>
-              <a href="#" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>TikTok</a>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
+              <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fab fa-discord" style={{ width: '16px', color: '#ff952e' }}></i> Discord
+              </a>
+              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fab fa-facebook" style={{ width: '16px', color: '#ff952e' }}></i> Facebook
+              </a>
+              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fab fa-youtube" style={{ width: '16px', color: '#ff952e' }}></i> YouTube
+              </a>
+              <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+                <i className="fab fa-tiktok" style={{ width: '16px', color: '#ff952e' }}></i> TikTok
+              </a>
             </div>
           </div>
         </div>
