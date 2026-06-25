@@ -2,6 +2,7 @@
 CREATE TABLE players (
     id INT IDENTITY(1,1) PRIMARY KEY,
     username VARCHAR(16) NOT NULL UNIQUE,
+    email VARCHAR(255) NULL UNIQUE,
     uuid VARCHAR(36) UNIQUE, -- Khóa vạn năng (Offline UUID)
     password_hash VARCHAR(255) NOT NULL, -- 'UNREGISTERED_GHOST' nếu nạp trước khi tạo web
     discord_id VARCHAR(20) NULL UNIQUE, -- Lưu ID Discord (Snowflake ID) để đồng bộ cộng đồng
@@ -68,6 +69,7 @@ CREATE TABLE server_status_logs (
 GO
 
 CREATE NONCLUSTERED INDEX IX_Players_Username ON players(username);
+CREATE NONCLUSTERED INDEX IX_Players_Email ON players(email);
 CREATE NONCLUSTERED INDEX IX_Players_UUID ON players(uuid);
 CREATE NONCLUSTERED INDEX IX_Players_Discord ON players(discord_id);
 CREATE NONCLUSTERED INDEX IX_Donations_TxRef ON donations(tx_ref);

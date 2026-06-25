@@ -4,81 +4,71 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 const serverIp = "haohansmp.io.vn";
 
-const serverCards = [
-  {
-    title: "Survival",
-    address: "haohansmp.hopto.org",
-    body: "Java 1.17.1 va Bedrock 1.17.x cho nguoi choi yeu sinh ton, xay dung va roleplay lau dai.",
-    block: "block--grass",
-  },
-  {
-    title: "Bedrock",
-    address: "haohansmp.ga:19132",
-    body: "Cong dong chung cho Java va Bedrock, de ket noi voi ban be va cung tao nen can cu rieng.",
-    block: "block--wood",
-  },
-  {
-    title: "Community",
-    address: "Discord HaoHan SMP",
-    body: "Dang ky, hoi dap, bao loi va cap nhat thong tin may chu thong qua Discord chinh thuc.",
-    block: "block--chest",
-    oneIcon: true,
-  },
-];
-
-const features = [
-  ["/assets/img/bg.png", "Kham pha the gioi"],
-  ["/assets/img/bg1.png", "Sinh ton va phat trien"],
-  ["/assets/img/bg3.png", "Dong vat hoang da"],
-  ["/assets/img/bg2.png", "Co che tuy chinh"],
-  ["/assets/img/bg4.png", "Nhan Modpack"],
-  ["/assets/img/bg-checking-status.jpg", "Tim hieu them"],
-];
-
-const musicTracks = [
-  "/assets/music/music.mp3",
-  "/assets/music/music1.mp3",
-];
-
 export default function HomeClient({ dict, lang }) {
   const [currentLang, setCurrentLang] = useState(lang);
-  const [isMusicPlaying, setIsMusicPlaying] = useState(false);
-  const [currentTrack, setCurrentTrack] = useState(0);
-  const [musicVolume, setMusicVolume] = useState(0.45);
   const [copiedIp, setCopiedIp] = useState(false);
-  const audioRef = useRef(null);
   const haohanNavRef = useRef(null);
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
   const topbarIndicatorRef = useRef(null);
 
+  const isVi = currentLang === "vi";
+
   const labels = useMemo(() => {
-    const isVi = currentLang === "vi";
     return {
-      navHome: isVi ? "Trang chu" : "Home",
-      navGallery: isVi ? "Tinh nang" : "Features",
-      navRules: isVi ? "May chu" : "Servers",
+      navHome: isVi ? "Trang chủ" : "Home",
+      navGallery: dict.features_list.title || (isVi ? "Tính năng" : "Features"),
+      navRules: isVi ? "Luật" : "Rules",
       navWiki: "Wiki",
-      signup: isVi ? "Dang ky" : "Sign up",
-      musicTitle: isVi ? "Nhac nen" : "BGM",
-      musicSub: isMusicPlaying
-        ? (isVi ? `Dang phat ${currentTrack + 1}/2` : `Playing ${currentTrack + 1}/2`)
-        : (isVi ? "Sanh cho" : "Lobby"),
-      haohanTitle: isVi ? "Chao mung den voi HaoHan SMP" : "Welcome to HaoHan SMP",
+      signup: isVi ? "Đăng ký" : "Sign up",
+      login: isVi ? "Đăng nhập" : "Login",
+      haohanTitle: isVi ? "Chào mừng đến với HaoHan SMP" : "Welcome to HaoHan SMP",
       haohanDesc: isVi
-        ? "Cong dong Minecraft sinh ton do nguoi choi van hanh, mang den trai nghiem sinh ton cot loi, roleplay va phat trien lau dai."
+        ? "Cộng đồng Minecraft sinh tồn do người chơi vận hành, mang đến trải nghiệm sinh tồn cốt lõi, roleplay và phát triển lâu dài."
         : "A community-run Minecraft survival server offering a focused co-op, roleplay and long-term survival experience.",
       discord: isVi ? "Tham gia Discord" : "Join Discord",
-      donate: isVi ? "Giup do chung toi" : "Support us",
-      serversTitle: isVi ? "May chu" : "Our Servers",
-      featuresTitle: isVi ? "Tinh nang" : "Features",
+      donate: isVi ? "Ủng hộ chúng tôi" : "Support us",
+      serversTitle: dict.servers.title || (isVi ? "Danh sách máy chủ" : "Our Servers"),
+      featuresTitle: dict.features_list.title || (isVi ? "Tính năng" : "Features"),
       faqTitle: "FAQ",
-      moreTitle: isVi ? "Thong tin them" : "More info",
-      supportTitle: isVi ? "Ung ho chung toi" : "Support us",
-      serverIpLabel: isVi ? "IP may chu:" : "Server IP:",
-      copied: isVi ? "Da copy" : "Copied",
+      serverIpLabel: isVi ? "IP máy chủ:" : "Server IP:",
+      copied: isVi ? "Đã copy" : "Copied",
+      discordBtn: isVi ? "Kết nối Discord" : "Discord Connect",
+      rights: dict.footer.rights,
+      disclaimer: dict.footer.disclaimer
     };
-  }, [currentLang, currentTrack, isMusicPlaying]);
+  }, [currentLang, dict]);
+
+  const serverCardsTranslated = useMemo(() => [
+    {
+      title: dict.servers.survival_title || "Survival",
+      address: "haohansmp.hopto.org",
+      body: dict.servers.survival_desc || "Survival server.",
+      block: "block--grass",
+    },
+    {
+      title: dict.servers.bedrock_title || "Bedrock",
+      address: "haohansmp.ga:19132",
+      body: dict.servers.bedrock_desc || "Bedrock server.",
+      block: "block--wood",
+    },
+    {
+      title: dict.servers.community_title || "Community",
+      address: "Discord HaoHan SMP",
+      body: dict.servers.community_desc || "Discord community.",
+      block: "block--chest",
+      oneIcon: true,
+    },
+  ], [dict]);
+
+  const featuresTranslated = useMemo(() => [
+    ["/assets/img/bg.png", dict.features_list.explore || "Explore"],
+    ["/assets/img/bg1.png", dict.features_list.survival || "Survival"],
+    ["/assets/img/bg3.png", dict.features_list.wildlife || "Wildlife"],
+    ["/assets/img/bg2.png", dict.features_list.custom || "Custom"],
+    ["/assets/img/bg4.png", dict.features_list.modpack || "Modpack"],
+    ["/assets/img/bg-checking-status.jpg", dict.features_list.more || "More"],
+  ], [dict]);
 
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
@@ -116,6 +106,11 @@ export default function HomeClient({ dict, lang }) {
       });
       link.addEventListener("click", (event) => {
         const href = link.getAttribute("href");
+        if (href === "#") {
+          event.preventDefault();
+          return;
+        }
+        if (!href.startsWith("#")) return;
         const target = document.querySelector(href);
         if (!target) return;
         event.preventDefault();
@@ -165,30 +160,6 @@ export default function HomeClient({ dict, lang }) {
     window.history.replaceState(null, "", `/${next}`);
   };
 
-  const toggleMusic = async () => {
-    const audio = audioRef.current;
-    if (!audio) return;
-
-    if (isMusicPlaying) {
-      audio.pause();
-      setIsMusicPlaying(false);
-      return;
-    }
-
-    try {
-      await audio.play();
-      setIsMusicPlaying(true);
-    } catch (error) {
-      setIsMusicPlaying(false);
-      console.warn("Audio playback was blocked by the browser.", error);
-    }
-  };
-
-  const handleTrackEnded = () => {
-    setCurrentTrack((track) => (track + 1) % musicTracks.length);
-    setIsMusicPlaying(true);
-  };
-
   const copyServerIp = async () => {
     try {
       await navigator.clipboard.writeText(serverIp);
@@ -199,50 +170,20 @@ export default function HomeClient({ dict, lang }) {
     }
   };
 
-  useEffect(() => {
-    const audio = audioRef.current;
-    if (!audio || !isMusicPlaying) return;
-
-    audio.load();
-    audio.play().catch((error) => {
-      setIsMusicPlaying(false);
-      console.warn("Audio playback was blocked by the browser.", error);
-    });
-  }, [currentTrack, isMusicPlaying]);
-
-  useEffect(() => {
-    if (audioRef.current) audioRef.current.volume = musicVolume;
-  }, [musicVolume]);
-
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}`}>
       <button className="tool-pill tool-lang" type="button" aria-label="Switch language" onClick={toggleLang}>
         <span className={`lang-opt${currentLang === "vi" ? " active" : ""}`}>VI</span>
         <span className={`lang-opt${currentLang === "en" ? " active" : ""}`}>EN</span>
       </button>
-      <button
-        className={`tool-pill tool-music${isMusicPlaying ? " tool-music--playing" : ""}`}
-        type="button"
-        aria-label={labels.musicTitle}
-        aria-pressed={isMusicPlaying}
-        onClick={toggleMusic}
-      >
-        <span className="music-icon">{isMusicPlaying ? "||" : ">"}</span>
-        <span className="music-text"><strong>{labels.musicTitle}</strong><span>{labels.musicSub}</span></span>
-        <span className="music-wave" aria-hidden="true"><i></i><i></i><i></i><i></i></span>
-        <span className="volume-control" onClick={(event) => event.stopPropagation()}>
-          <span className="volume-control__icon" aria-hidden="true">Vol</span>
-          <input
-            type="range"
-            min="0"
-            max="1"
-            step="0.01"
-            value={musicVolume}
-            aria-label="Music volume"
-            onChange={(event) => setMusicVolume(Number(event.target.value))}
-          />
-        </span>
-      </button>
+      <a href={`/${currentLang}/login`} className="tool-pill tool-auth btn-login" style={{
+        marginRight: '8px',
+        backgroundColor: 'rgba(255, 255, 255, 0.05)',
+        border: '1px solid rgba(255, 255, 255, 0.15)',
+        borderRadius: '8px'
+      }}>
+        <span className="tool-text">{labels.login}</span>
+      </a>
       <a href={`/${currentLang}/signup`} className="tool-pill tool-auth btn-signup">
         <span className="tool-text">{labels.signup}</span>
       </a>
@@ -252,13 +193,12 @@ export default function HomeClient({ dict, lang }) {
   const navLinks = [
     ["#home", labels.navHome],
     ["#gallery", labels.navGallery],
-    ["#rules", labels.navRules],
-    ["#wiki", labels.navWiki],
+    [`/${currentLang}/rules`, labels.navRules],
+    ["#", labels.navWiki],
   ];
 
   return (
     <>
-      <audio ref={audioRef} src={musicTracks[currentTrack]} preload="auto" onEnded={handleTrackEnded} />
       <div className="topbar" id="topbar" aria-hidden="true">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img className="topbar__logo" src="/assets/img/logo.png" alt="HaoHan" />
@@ -288,6 +228,9 @@ export default function HomeClient({ dict, lang }) {
             <div className="actions intro-actions">
               <a className="button button--discord" href="https://discord.com/invite/znHfuc6hCR">{labels.discord}</a>
               <a className="button button--orange" href={`/${currentLang}/donate`}>{labels.donate}</a>
+              <a className="button button--features" href="#gallery">{labels.featuresTitle}</a>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <div className="server-ip intro-server-ip">
                 <span>{labels.serverIpLabel}</span>
                 <strong>{serverIp}</strong>
@@ -303,7 +246,7 @@ export default function HomeClient({ dict, lang }) {
           <div className="wrap">
             <h2>{labels.serversTitle}</h2>
             <div className="server-grid">
-              {serverCards.map((server) => (
+              {serverCardsTranslated.map((server) => (
                 <article className="server-card" key={server.title}>
                   <div className={`block ${server.block}`} aria-hidden="true"></div>
                   <div>
@@ -324,7 +267,7 @@ export default function HomeClient({ dict, lang }) {
           <div className="wrap">
             <h2>{labels.featuresTitle}</h2>
             <div className="feature-grid">
-              {features.map(([src, title]) => <a className="feature" href="#wiki" key={title}><img src={src} alt="" /><strong>{title}</strong></a>)}
+              {featuresTranslated.map(([src, title]) => <a className="feature" href="#gallery" key={title}><img src={src} alt="" /><strong>{title}</strong></a>)}
             </div>
           </div>
         </section>
@@ -342,25 +285,78 @@ export default function HomeClient({ dict, lang }) {
             </div>
           </div>
         </section>
+      </main>
 
-        <section className="section more reveal visible" id="wiki">
-          <div className="wrap">
-            <h2>{labels.moreTitle}</h2>
-            <div className="info-grid">
-              <article className="info-card"><span className="info-card__icon info-card__icon--discord"></span><h3>Discord</h3><p>Dang ky, trao doi voi quan tri vien va theo doi thong bao cong dong.</p></article>
-              <article className="info-card"><span className="info-card__icon info-card__icon--social"></span><h3>Social</h3><p>Theo doi cap nhat ve may chu, su kien va nhung thay doi moi.</p></article>
-              <article className="info-card"><span className="info-card__icon info-card__icon--feedback"></span><h3>Feedback</h3><p>Gui gop y de server tot hon qua tung mua choi.</p></article>
+      <footer style={{
+        backgroundColor: '#0c0d10',
+        borderTop: '1px solid rgba(255, 255, 255, 0.06)',
+        padding: '50px 20px 40px 20px',
+        color: '#888',
+        fontSize: '0.95rem',
+        width: '100%',
+        fontFamily: "'Outfit', 'Inter', sans-serif"
+      }}>
+        <div className="wrap" style={{
+          display: 'grid',
+          gridTemplateColumns: 'repeat(auto-fit, minmax(200px, 1fr))',
+          gap: '40px',
+          paddingBottom: '30px',
+          borderBottom: '1px solid rgba(255, 255, 255, 0.05)'
+        }}>
+          {/* Column 1 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              <img src="/assets/img/logo.png" alt="HaoHan SMP" style={{ width: '40px', height: '40px' }} />
+              <strong style={{ color: '#fff', fontSize: '1.2rem' }}>HaoHan SMP</strong>
             </div>
-            <div className="support">
-              <h2>{labels.supportTitle}</h2>
-              <div className="actions">
-                <a className="button button--patreon" href={`/${currentLang}/donate`}><span></span>Donate</a>
-                <a className="button button--kofi" href="https://discord.com/invite/znHfuc6hCR"><span></span>Discord</a>
-              </div>
+            <p style={{ margin: 0, fontSize: '0.85rem', lineHeight: '1.6', color: '#6e717d' }}>
+              {labels.haohanDesc}
+            </p>
+          </div>
+
+          {/* Column 2 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <strong style={{ color: '#fff', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {isVi ? "Khám Phá" : "Explore"}
+            </strong>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
+              <a href="#home" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navHome}</a>
+              <a href="#gallery" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navGallery}</a>
+              <a href={`/${currentLang}/rules`} style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navRules}</a>
+              <a href={`/${currentLang}/donate`} style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.donate}</a>
             </div>
           </div>
-        </section>
-      </main>
+
+          {/* Column 3 */}
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
+            <strong style={{ color: '#fff', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
+              {isVi ? "Liên Kết Cộng Đồng" : "Community Links"}
+            </strong>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
+              <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Discord</a>
+              <a href="#" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Facebook</a>
+              <a href="#" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Youtube</a>
+              <a href="#" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>TikTok</a>
+            </div>
+          </div>
+        </div>
+
+        <div className="wrap" style={{
+          marginTop: '30px',
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          gap: '15px',
+          textAlign: 'center'
+        }}>
+          <p style={{ margin: 0, fontSize: '0.8rem', color: '#444', lineHeight: '1.5' }}>
+            {labels.disclaimer}
+          </p>
+          <p style={{ margin: 0, fontSize: '0.85rem', color: '#6e717d' }}>
+            {labels.rights}
+          </p>
+        </div>
+      </footer>
     </>
   );
 }

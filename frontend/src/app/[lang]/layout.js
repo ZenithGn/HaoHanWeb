@@ -33,7 +33,9 @@ export default async function RootLayout({ children, params }) {
   return (
     <html lang={lang} suppressHydrationWarning>
       <head>
-        <link rel="preconnect" href="https://fonts.gstatic.com/" crossOrigin="anonymous" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
+        <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Outfit:wght@600;700;800&display=swap" rel="stylesheet" />
         <title></title>
       </head>
       <body suppressHydrationWarning>{children}</body>

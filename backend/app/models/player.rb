@@ -10,27 +10,32 @@ class Player < ApplicationRecord
   validates :password_hash, presence: true
   validates :uuid, uniqueness: true, allow_nil: true
   validates :discord_id, uniqueness: true, allow_nil: true
+  validates :email, uniqueness: { case_sensitive: false }, allow_nil: true, format: { with: URI::MailTo::EMAIL_REGEXP }, if: -> { email.present? }
+  validates :email, presence: true, if: :is_linked
 
   before_validation :set_offline_uuid, on: :create
 
-  # Helper to generate AuthMe SHA256 compatible hash
-  # Format: $SHA$salt$hash where hash = SHA256(SHA256(password) + salt)
-  def self.hash_password(password, salt = SecureRandom.hex(8))
-    first_hash = Digest::SHA256.hexdigest(password)
-    second_hash = Digest::SHA256.hexdigest(first_hash + salt)
-    "$SHA$#{salt}$#{second_hash}"
+  # Helper to generate BCrypt password hash
+  def self.hash_password(password)
+    BCrypt::Password.create(password).to_s
   end
 
-  # Verify password against stored AuthMe SHA256 hash
+  # Verify password against stored hash (supports both BCrypt and AuthMe SHA256 legacy format)
   def valid_password?(password)
     return false if password_hash == 'UNREGISTERED_GHOST'
     return false if password_hash.blank?
 
+    # Check if it is a BCrypt hash
+    if password_hash.start_with?('$2a$') || password_hash.start_with?('$2b$') || password_hash.start_with?('$2y$')
+      begin
+        return BCrypt::Password.new(password_hash) == password
+      rescue BCrypt::Errors::InvalidHash
+        return false
+      end
+    end
+
+    # Fallback to AuthMe SHA256 legacy format
     parts = password_hash.split('$')
-    # parts[0] is empty (because string starts with $)
-    # parts[1] is 'SHA'
-    # parts[2] is the salt
-    # parts[3] is the hash
     return false unless parts[1] == 'SHA' && parts[2].present? && parts[3].present?
 
     salt = parts[2]

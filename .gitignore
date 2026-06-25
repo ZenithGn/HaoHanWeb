@@ -42,3 +42,5 @@ desktop.ini
 # Whitelist env examples
 !.env.example
 !backend/.env.example
+package-lock.json
+Tài liệu không có tiêu đề.md
