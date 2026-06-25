@@ -11,7 +11,7 @@ class Api::LeaderboardsController < ApplicationController
                            uuid: p.uuid,
                            total_donated: p.total_donated,
                            role: p.role,
-                           avatar_url: p.avatar_url || "https://playerdb.co/avatar/player/#{p.username}"
+                           avatar_url: p.avatar_url || "https://minotar.net/avatar/#{p.username}/120"
                          }
                        end
 
@@ -25,7 +25,7 @@ class Api::LeaderboardsController < ApplicationController
                              uuid: p.uuid,
                              play_time: p.play_time,
                              role: p.role,
-                             avatar_url: p.avatar_url || "https://playerdb.co/avatar/player/#{p.username}"
+                             avatar_url: p.avatar_url || "https://minotar.net/avatar/#{p.username}/120"
                            }
                          end
 

@@ -349,7 +349,7 @@
     "rights": "© 2026 HaoHan SMP. All rights reserved. Created by Ginn."
   },
   "rules": {
-    "title": "HaoHan Criminal Code",
+    "title": "HaoHan SMP Rules",
     "smp": {
       "title": "I. SMP",
       "rules_list": [
@@ -413,6 +413,8 @@
   },
   "profile": {
     "title": "Account Profile",
+    "username_label": "Minecraft Account",
+    "discord_status_label": "Discord Connection",
     "unlinked_discord": "Not connected to Discord",
     "linked_discord": "Connected to Discord",
     "link_discord_btn": "Connect Discord",
@@ -436,6 +438,7 @@
     "nav_gallery": "Gallery",
     "nav_rules": "Rules",
     "nav_wiki": "Wiki",
+    "nav_profile": "Profile",
     "signup": "Sign up",
     "login": "Login",
     "title": "Welcome to HaoHan SMP",

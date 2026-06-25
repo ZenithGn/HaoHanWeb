@@ -413,6 +413,8 @@
   },
   "profile": {
     "title": "Thông Tin Tài Khoản",
+    "username_label": "Tài khoản Minecraft",
+    "discord_status_label": "Liên kết Discord",
     "unlinked_discord": "Chưa kết nối Discord",
     "linked_discord": "Đã kết nối Discord",
     "link_discord_btn": "Kết nối Discord",
@@ -436,6 +438,7 @@
     "nav_gallery": "Thư viện",
     "nav_rules": "Luật",
     "nav_wiki": "Wiki",
+    "nav_profile": "Profile",
     "signup": "Đăng ký",
     "login": "Đăng nhập",
     "title": "Chào mừng đến với HaoHan SMP",

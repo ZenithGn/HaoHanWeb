@@ -1,8 +1,10 @@
 "use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
+import { useAuth } from "../components/AuthContext";
 
 const serverIp = "haohansmp.io.vn";
+const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
 export default function HomeClient({ dict, lang }) {
   const [currentLang, setCurrentLang] = useState(lang);
@@ -16,6 +18,29 @@ export default function HomeClient({ dict, lang }) {
 
   const isVi = currentLang === "vi";
 
+  const { user, isLoggedIn, logout, login, getToken } = useAuth();
+  const [syncing, setSyncing] = useState(false);
+  const [syncMsg, setSyncMsg] = useState("");
+  const [syncSuccess, setSyncSuccess] = useState(true);
+
+  const formatText = (text) => {
+    return text.split('\n').map((line, idx) => {
+      if (line.trim().startsWith('•')) {
+        return (
+          <span key={idx} style={{ display: 'block', marginTop: '6px', color: '#a0a5b5', paddingLeft: '15px', position: 'relative' }}>
+            <span style={{ position: 'absolute', left: '0', color: '#ff952e' }}>•</span>
+            {line.substring(line.indexOf('•') + 1).trim()}
+          </span>
+        );
+      }
+      return (
+        <span key={idx} style={{ display: 'block', marginTop: idx > 0 ? '6px' : '0' }}>
+          {line}
+        </span>
+      );
+    });
+  };
+
   const labels = useMemo(() => {
     const hl = dict.home_labels || {};
     return {
@@ -24,6 +49,7 @@ export default function HomeClient({ dict, lang }) {
       navGallery: hl.nav_gallery || (isVi ? "Thư viện" : "Gallery"),
       navRules: hl.nav_rules || (isVi ? "Luật" : "Rules"),
       navWiki: hl.nav_wiki || "Wiki",
+      navProfile: hl.nav_profile || "Profile",
       signup: hl.signup || (isVi ? "Đăng ký" : "Sign up"),
       login: hl.login || (isVi ? "Đăng nhập" : "Login"),
       haohanTitle: hl.title || (isVi ? "Chào mừng đến với HaoHan SMP" : "Welcome to HaoHan SMP"),
@@ -44,7 +70,7 @@ export default function HomeClient({ dict, lang }) {
       exploreHeader: hl.explore_header || (isVi ? "Khám Phá" : "Explore"),
       communityHeader: hl.community_header || (isVi ? "Liên Kết Cộng Đồng" : "Community Links")
     };
-  }, [currentLang, dict]);
+  }, [dict, isVi]);
 
   const serverCardsTranslated = useMemo(() => [
     {
@@ -132,11 +158,7 @@ export default function HomeClient({ dict, lang }) {
       });
     };
 
-    if (activeTab === "home") {
-      setActive("#home");
-    } else {
-      setActive("#gallery");
-    }
+    setActive(`#${activeTab}`);
 
     [...haohanLinks, ...topLinks].forEach((link) => {
       link.addEventListener("mouseenter", () => {
@@ -175,6 +197,18 @@ export default function HomeClient({ dict, lang }) {
               window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
             }
           }
+        } else if (href === "#rules") {
+          setActiveTab("rules");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (href === "#wiki") {
+          setActiveTab("wiki");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (href === "#donate") {
+          setActiveTab("donate");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (href === "#profile") {
+          setActiveTab("profile");
+          window.scrollTo({ top: 0, behavior: "smooth" });
         }
       });
     });
@@ -207,7 +241,7 @@ export default function HomeClient({ dict, lang }) {
       document.querySelectorAll("section[id], header[id]").forEach((section) => sectionObserver.observe(section));
     }
 
-    const onResize = () => setActive(activeTab === "home" ? "#home" : "#gallery");
+    const onResize = () => setActive(`#${activeTab}`);
     window.addEventListener("resize", onResize);
 
     return () => {
@@ -215,11 +249,11 @@ export default function HomeClient({ dict, lang }) {
       sectionObserver.disconnect();
       window.removeEventListener("resize", onResize);
     };
-  }, [currentLang, activeTab]);
+  }, [currentLang, activeTab, isLoggedIn]);
 
   useEffect(() => {
     const topbar = document.getElementById("topbar");
-    if (activeTab === "gallery") {
+    if (activeTab !== "home") {
       topbar?.classList.add("topbar--visible");
       topbar?.setAttribute("aria-hidden", "false");
     } else {
@@ -245,33 +279,106 @@ export default function HomeClient({ dict, lang }) {
     }
   };
 
+  const handleLinkDiscord = async () => {
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/discord/url`);
+      const data = await response.json();
+      if (response.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        alert(isVi ? "Không thể tải URL liên kết Discord." : "Could not load Discord link URL.");
+      }
+    } catch (error) {
+      console.error("Error fetching Discord URL:", error);
+      alert(isVi ? "Lỗi kết nối khi lấy URL Discord." : "Connection error getting Discord URL.");
+    }
+  };
+
+  const handleSyncDiscord = async () => {
+    setSyncing(true);
+    setSyncMsg("");
+    try {
+      const token = getToken();
+      const response = await fetch(`${API_BASE}/api/auth/discord/sync`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`
+        }
+      });
+      const data = await response.json();
+      if (response.ok) {
+        setSyncSuccess(true);
+        setSyncMsg(data.message || dict.profile.sync_success);
+        if (data.user) {
+          login(token, data.user);
+        }
+      } else {
+        setSyncSuccess(false);
+        setSyncMsg(data.error || (isVi ? "Đồng bộ thất bại." : "Sync failed."));
+      }
+    } catch (error) {
+      console.error("Error syncing Discord:", error);
+      setSyncSuccess(false);
+      setSyncMsg(isVi ? "Lỗi kết nối." : "Connection error.");
+    } finally {
+      setSyncing(false);
+    }
+  };
+
+  const handleLogout = () => {
+    logout();
+    setActiveTab("home");
+    window.location.href = `/${currentLang}`;
+  };
+
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}`}>
       <button className="tool-pill tool-lang" type="button" aria-label="Switch language" onClick={toggleLang}>
         <span className={`lang-opt${currentLang === "vi" ? " active" : ""}`}>VI</span>
         <span className={`lang-opt${currentLang === "en" ? " active" : ""}`}>EN</span>
       </button>
-      <a href={`/${currentLang}/login`} className="tool-pill tool-auth btn-login" style={{
-        marginRight: '8px',
-        backgroundColor: 'rgba(255, 255, 255, 0.05)',
-        border: '1px solid rgba(255, 255, 255, 0.15)',
-        borderRadius: '8px'
-      }}>
-        <span className="tool-text">{labels.login}</span>
-      </a>
-      <a href={`/${currentLang}/signup`} className="tool-pill tool-auth btn-signup">
-        <span className="tool-text">{labels.signup}</span>
-      </a>
+      {isLoggedIn && user ? (
+        <button className="tool-pill tool-auth" onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{
+          backgroundColor: 'rgba(255, 255, 255, 0.05)',
+          border: '1px solid rgba(255, 255, 255, 0.15)',
+          borderRadius: '8px',
+          color: '#fff',
+          cursor: 'pointer',
+          padding: '7px 14px',
+          fontWeight: 600,
+          fontFamily: "'Outfit', 'Inter', sans-serif"
+        }}>
+          <span className="tool-text">{dict.hero.hello.replace('{name}', user.username)}</span>
+        </button>
+      ) : (
+        <>
+          <a href={`/${currentLang}/login`} className="tool-pill tool-auth btn-login" style={{
+            marginRight: '8px',
+            backgroundColor: 'rgba(255, 255, 255, 0.05)',
+            border: '1px solid rgba(255, 255, 255, 0.15)',
+            borderRadius: '8px'
+          }}>
+            <span className="tool-text">{labels.login}</span>
+          </a>
+          <a href={`/${currentLang}/signup`} className="tool-pill tool-auth btn-signup">
+            <span className="tool-text">{labels.signup}</span>
+          </a>
+        </>
+      )}
     </div>
   );
 
   const navLinks = [
     ["#home", labels.navHome],
-    ["#features", labels.navFeatures],
     ["#gallery", labels.navGallery],
-    [`/${currentLang}/rules`, labels.navRules],
-    ["#", labels.navWiki],
+    ["#rules", labels.navRules],
+    ["#wiki", labels.navWiki],
+    ["#donate", labels.donate],
   ];
+  if (isLoggedIn) {
+    navLinks.push(["#profile", labels.navProfile]);
+  }
 
   return (
     <>
@@ -298,8 +405,8 @@ export default function HomeClient({ dict, lang }) {
         </header>
       )}
 
-      <main style={{ paddingTop: activeTab === "gallery" ? "80px" : "0" }}>
-        {activeTab === "home" ? (
+      <main style={{ paddingTop: activeTab === "home" ? "0" : "80px" }}>
+        {activeTab === "home" && (
           <>
             <section className="intro section section--tight reveal visible">
               <div className="wrap">
@@ -320,7 +427,7 @@ export default function HomeClient({ dict, lang }) {
               </div>
             </section>
 
-            <section className="section section--panel reveal visible" id="rules">
+            <section className="section section--panel reveal visible" id="servers">
               <div className="wrap">
                 <h2>{labels.serversTitle}</h2>
                 <div className="server-grid">
@@ -367,7 +474,9 @@ export default function HomeClient({ dict, lang }) {
               </div>
             </section>
           </>
-        ) : (
+        )}
+
+        {activeTab === "gallery" && (
           <section className="section reveal visible" id="gallery" style={{ minHeight: 'calc(100vh - 400px)' }}>
             <div className="wrap">
               <h2>{labels.galleryTitle}</h2>
@@ -387,6 +496,486 @@ export default function HomeClient({ dict, lang }) {
                     <strong>{galleryCaptions[index]}</strong>
                   </a>
                 ))}
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeTab === "rules" && (
+          <section className="section reveal visible" id="rules" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
+            <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{
+                maxWidth: '850px',
+                width: '100%',
+                backgroundColor: '#161922',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '40px',
+                boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5)',
+                position: 'relative',
+                overflow: 'hidden',
+                textAlign: 'left'
+              }}>
+                {/* Accent Top Gradient Line */}
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '4px',
+                  background: 'linear-gradient(90deg, #ff952e, #f37b18)'
+                }}></div>
+
+                <h2 style={{
+                  fontSize: '2.5rem',
+                  fontWeight: '800',
+                  textAlign: 'center',
+                  color: '#ff952e',
+                  marginBottom: '40px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.5px',
+                  background: 'linear-gradient(to right, #ff952e, #fff)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  border: 'none',
+                  padding: 0
+                }}>
+                  {dict.rules.title}
+                </h2>
+
+                <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
+                  {/* SECTION I: SMP */}
+                  <section style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderRadius: '12px',
+                    padding: '25px',
+                    transition: 'border-color 0.2s'
+                  }}>
+                    <h3 style={{
+                      color: '#ff952e',
+                      fontSize: '1.6rem',
+                      fontWeight: '700',
+                      marginTop: 0,
+                      marginBottom: '20px',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                      paddingBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px'
+                    }}>
+                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>I</span>
+                      {dict.rules.smp.title.replace('I. ', '')}
+                    </h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
+                      {dict.rules.smp.rules_list.map((group, idx) => (
+                        <div key={idx}>
+                          <h4 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: '600', margin: '0 0 12px 0' }}>
+                            {group.num}
+                          </h4>
+                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingLeft: '15px', borderLeft: '2px solid rgba(255, 149, 46, 0.2)' }}>
+                            {dict.rules.smp.rules_list[idx].sub_rules.map((subRule, sIdx) => (
+                              <div key={sIdx} style={{ fontSize: '0.98rem', lineHeight: '1.6', color: '#e4e4e7' }}>
+                                {formatText(subRule)}
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+                  </section>
+
+                  {/* SECTION II: Discord */}
+                  <section style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderRadius: '12px',
+                    padding: '25px'
+                  }}>
+                    <h3 style={{
+                      color: '#ff952e',
+                      fontSize: '1.6rem',
+                      fontWeight: '700',
+                      marginTop: 0,
+                      marginBottom: '20px',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                      paddingBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px'
+                    }}>
+                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>II</span>
+                      {dict.rules.discord.title.replace('II. ', '')}
+                    </h3>
+                    <ul style={{
+                      paddingLeft: '20px',
+                      margin: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      lineHeight: '1.6',
+                      fontSize: '0.98rem',
+                      color: '#e4e4e7'
+                    }}>
+                      {dict.rules.discord.rules_list.map((rule, idx) => (
+                        <li key={idx} style={{ paddingLeft: '5px' }}>
+                          {rule}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+
+                  {/* SECTION III: Penalties */}
+                  <section style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderRadius: '12px',
+                    padding: '25px'
+                  }}>
+                    <h3 style={{
+                      color: '#ff952e',
+                      fontSize: '1.6rem',
+                      fontWeight: '700',
+                      marginTop: 0,
+                      marginBottom: '20px',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                      paddingBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px'
+                    }}>
+                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>III</span>
+                      {dict.rules.penalty.title.replace('III. ', '')}
+                    </h3>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      <div>
+                        <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', margin: '0 0 10px 0' }}>
+                          {dict.rules.penalty.smp_title}
+                        </h4>
+                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '15px', borderLeft: '2px solid rgba(239, 68, 68, 0.3)' }}>
+                          {dict.rules.penalty.smp_rules.map((rule, idx) => (
+                            <div key={idx} style={{ fontSize: '0.98rem', lineHeight: '1.6', color: '#e4e4e7' }}>
+                              {formatText(rule)}
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+                      <div style={{ marginTop: '10px' }}>
+                        <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', margin: '0 0 10px 0' }}>
+                          {dict.rules.penalty.discord_title}
+                        </h4>
+                        <ul style={{ paddingLeft: '20px', margin: 0, fontSize: '0.98rem', color: '#e4e4e7' }}>
+                          {dict.rules.penalty.discord_rules.map((rule, idx) => (
+                            <li key={idx}>{rule}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  </section>
+
+                  {/* SECTION IV: Final Notes */}
+                  <section style={{
+                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
+                    border: '1px solid rgba(255, 255, 255, 0.04)',
+                    borderRadius: '12px',
+                    padding: '25px'
+                  }}>
+                    <h3 style={{
+                      color: '#ff952e',
+                      fontSize: '1.6rem',
+                      fontWeight: '700',
+                      marginTop: 0,
+                      marginBottom: '20px',
+                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
+                      paddingBottom: '10px',
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '10px'
+                    }}>
+                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>IV</span>
+                      {dict.rules.footer_msg.title.replace('IV. ', '')}
+                    </h3>
+                    <ul style={{
+                      paddingLeft: '20px',
+                      margin: 0,
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px',
+                      lineHeight: '1.6',
+                      fontSize: '0.98rem',
+                      color: '#e4e4e7'
+                    }}>
+                      {dict.rules.footer_msg.msgs.map((msg, idx) => (
+                        <li key={idx} style={{
+                          paddingLeft: '5px',
+                          fontWeight: idx === dict.rules.footer_msg.msgs.length - 1 ? '700' : 'normal',
+                          color: idx === dict.rules.footer_msg.msgs.length - 1 ? '#ff952e' : '#e4e4e7'
+                        }}>
+                          {msg}
+                        </li>
+                      ))}
+                    </ul>
+                  </section>
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeTab === "wiki" && (
+          <section className="section reveal visible" id="wiki" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
+            <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{
+                maxWidth: '850px',
+                width: '100%',
+                backgroundColor: '#161922',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '40px',
+                boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5)',
+                position: 'relative',
+                overflow: 'hidden',
+                textAlign: 'left'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '4px',
+                  background: 'linear-gradient(90deg, #ff952e, #f37b18)'
+                }}></div>
+
+                <h2 style={{
+                  fontSize: '2.5rem',
+                  fontWeight: '800',
+                  textAlign: 'center',
+                  color: '#ff952e',
+                  marginBottom: '40px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.5px',
+                  background: 'linear-gradient(to right, #ff952e, #fff)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  border: 'none',
+                  padding: 0
+                }}>
+                  {labels.navWiki}
+                </h2>
+
+                <div style={{ color: '#d7d8dc', fontSize: '1.05rem', lineHeight: '1.6', textAlign: 'center', padding: '40px 0', fontFamily: "'Outfit', 'Inter', sans-serif" }}>
+                  {isVi ? "Nội dung Wiki đang được cập nhật..." : "Wiki content is being updated..."}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeTab === "donate" && (
+          <section className="section reveal visible" id="donate" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
+            <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div style={{
+                maxWidth: '850px',
+                width: '100%',
+                backgroundColor: '#161922',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '40px',
+                boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5)',
+                position: 'relative',
+                overflow: 'hidden',
+                textAlign: 'left'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '4px',
+                  background: 'linear-gradient(90deg, #ff952e, #f37b18)'
+                }}></div>
+
+                <h2 style={{
+                  fontSize: '2.5rem',
+                  fontWeight: '800',
+                  textAlign: 'center',
+                  color: '#ff952e',
+                  marginBottom: '40px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.5px',
+                  background: 'linear-gradient(to right, #ff952e, #fff)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  border: 'none',
+                  padding: 0
+                }}>
+                  {labels.donate}
+                </h2>
+
+                <div style={{ color: '#d7d8dc', fontSize: '1.05rem', lineHeight: '1.6', textAlign: 'center', padding: '40px 0', fontFamily: "'Outfit', 'Inter', sans-serif" }}>
+                  {isVi ? "Nội dung Donate đang được cập nhật..." : "Donate content is being updated..."}
+                </div>
+              </div>
+            </div>
+          </section>
+        )}
+
+        {activeTab === "profile" && isLoggedIn && user && (
+          <section className="section reveal visible profile-section" id="profile" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
+            <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+              <div className="profile-card" style={{
+                maxWidth: '850px',
+                width: '100%',
+                backgroundColor: '#161922',
+                border: '1px solid rgba(255, 255, 255, 0.08)',
+                borderRadius: '16px',
+                padding: '40px',
+                boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5)',
+                position: 'relative',
+                overflow: 'hidden',
+                textAlign: 'left'
+              }}>
+                <div style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  right: 0,
+                  height: '4px',
+                  background: 'linear-gradient(90deg, #5865F2, #ff952e)'
+                }}></div>
+
+                <h2 style={{
+                  fontSize: '2.5rem',
+                  fontWeight: '800',
+                  textAlign: 'center',
+                  color: '#ff952e',
+                  marginBottom: '40px',
+                  textTransform: 'uppercase',
+                  letterSpacing: '1.5px',
+                  background: 'linear-gradient(to right, #ff952e, #fff)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  border: 'none',
+                  padding: 0
+                }}>
+                  {dict.profile.title}
+                </h2>
+
+                <div className="profile-card-grid">
+                  <div className="profile-avatar-wrapper">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className="profile-avatar"
+                      src={`https://minotar.net/avatar/${user.username}/120`}
+                      alt={user.username}
+                    />
+                    <div className={`profile-discord-badge ${!user.discord_id ? "profile-discord-badge--unlinked" : ""}`}>
+                      {user.discord_id && user.avatar_url ? (
+                        /* eslint-disable-next-line @next/next/no-img-element */
+                        <img 
+                          src={user.avatar_url} 
+                          alt="Discord avatar" 
+                          style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                        />
+                      ) : (
+                        <i className="fab fa-discord"></i>
+                      )}
+                    </div>
+                  </div>
+
+                  <div className="profile-info">
+                    <div className="profile-name-row">
+                      <h3 className="profile-username">{user.username}</h3>
+                      {user.uuid ? (
+                        <span className="profile-badge profile-badge--verified">
+                          <i className="fas fa-check-circle"></i> {dict.profile.linked_minecraft}
+                        </span>
+                      ) : (
+                        <span className="profile-badge profile-badge--unverified">
+                          <i className="fas fa-exclamation-circle"></i> {dict.profile.unlinked_minecraft}
+                        </span>
+                      )}
+                    </div>
+
+                    <div className="profile-fields-grid">
+                      <div className="profile-field-item">
+                        <span className="profile-field-label">{dict.profile.username_label || (isVi ? "Tài khoản Minecraft" : "Minecraft Account")}</span>
+                        <span className="profile-field-value" style={{ fontWeight: '700', color: '#ff952e' }}>{user.username}</span>
+                      </div>
+                      <div className="profile-field-item">
+                        <span className="profile-field-label">Email</span>
+                        <span className="profile-field-value">{user.email}</span>
+                      </div>
+                      <div className="profile-field-item">
+                        <span className="profile-field-label">{dict.profile.playtime_label}</span>
+                        <span className="profile-field-value" style={{ fontWeight: '600', color: '#fff' }}>
+                          {dict.profile.playtime_value
+                            .replace('{hours}', Math.floor((user.play_time || 0) / 3600))
+                            .replace('{minutes}', Math.floor(((user.play_time || 0) % 3600) / 60))}
+                        </span>
+                      </div>
+                      <div className="profile-field-item">
+                        <span className="profile-field-label">{dict.profile.discord_status_label || (isVi ? "Liên kết Discord" : "Discord Connection")}</span>
+                        <span className="profile-field-value">
+                          {user.discord_id ? (
+                            <span style={{ color: '#43b581', display: 'inline-flex', alignItems: 'center', gap: '5px', fontWeight: '600' }}>
+                              <i className="fab fa-discord"></i> {dict.profile.linked_discord}
+                            </span>
+                          ) : (
+                            <span style={{ color: '#888', display: 'inline-flex', alignItems: 'center', gap: '5px' }}>
+                              <i className="fab fa-discord"></i> {dict.profile.unlinked_discord}
+                            </span>
+                          )}
+                        </span>
+                      </div>
+                      <div className="profile-field-item">
+                        <span className="profile-field-label">{dict.profile.role_label}</span>
+                        <span className="profile-field-value">{user.role || (isVi ? "Thành viên" : "Member")}</span>
+                      </div>
+                      <div className="profile-field-item">
+                        <span className="profile-field-label">{dict.profile.uuid_label}</span>
+                        <span className="profile-field-value profile-field-value--code">{user.uuid || "---"}</span>
+                      </div>
+                    </div>
+
+                    {!user.uuid && (
+                      <div className="profile-tip-box" style={{ marginTop: '10px' }}>
+                        <i className="fas fa-info-circle"></i>
+                        <span>{dict.profile.minecraft_link_tip}</span>
+                      </div>
+                    )}
+
+                    <div className="profile-actions-row" style={{ marginTop: '20px' }}>
+                      <div className="profile-actions-left">
+                        {user.discord_id ? (
+                          <span className="profile-sync-msg profile-sync-msg--success" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
+                            <i className="fab fa-discord"></i> {dict.profile.linked_discord}
+                          </span>
+                        ) : (
+                          <button className="btn-profile-discord" onClick={handleLinkDiscord}>
+                            <i className="fab fa-discord"></i> {dict.profile.link_discord_btn}
+                          </button>
+                        )}
+
+                        {user.discord_id && (
+                          <button className="btn-profile-sync" onClick={handleSyncDiscord} disabled={syncing}>
+                            <i className="fas fa-sync-alt"></i> {syncing ? dict.profile.syncing : dict.profile.sync_btn}
+                          </button>
+                        )}
+
+                        {syncMsg && (
+                          <span className={`profile-sync-msg ${syncSuccess ? 'profile-sync-msg--success' : 'profile-sync-msg--error'}`}>
+                            {syncMsg}
+                          </span>
+                        )}
+                      </div>
+
+                      <button className="btn-profile-logout" onClick={handleLogout}>
+                        <i className="fas fa-sign-out-alt"></i> {dict.profile.logout_btn}
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </section>
@@ -412,6 +1001,7 @@ export default function HomeClient({ dict, lang }) {
           {/* Column 1 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '15px' }}>
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img src="/assets/img/logo.png" alt="HaoHan SMP" style={{ width: '40px', height: '40px' }} />
               <strong style={{ color: '#fff', fontSize: '1.2rem' }}>HaoHan SMP</strong>
             </div>
