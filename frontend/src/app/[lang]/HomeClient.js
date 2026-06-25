@@ -20,7 +20,8 @@ export default function HomeClient({ dict, lang }) {
     const hl = dict.home_labels || {};
     return {
       navHome: hl.nav_home || (isVi ? "Trang chủ" : "Home"),
-      navGallery: dict.features_list?.title || hl.nav_gallery || (isVi ? "Tính năng" : "Features"),
+      navFeatures: hl.nav_features || (isVi ? "Tính năng" : "Features"),
+      navGallery: hl.nav_gallery || (isVi ? "Thư viện" : "Gallery"),
       navRules: hl.nav_rules || (isVi ? "Luật" : "Rules"),
       navWiki: hl.nav_wiki || "Wiki",
       signup: hl.signup || (isVi ? "Đăng ký" : "Sign up"),
@@ -33,6 +34,7 @@ export default function HomeClient({ dict, lang }) {
       donate: hl.donate || (isVi ? "Ủng hộ chúng tôi" : "Support us"),
       serversTitle: dict.servers?.title || hl.servers_title || (isVi ? "Danh sách máy chủ" : "Our Servers"),
       featuresTitle: dict.features_list?.title || hl.features_title || (isVi ? "Tính năng" : "Features"),
+      galleryTitle: hl.gallery_title || (isVi ? "Thư viện ảnh" : "Gallery"),
       faqTitle: hl.faq_title || "FAQ",
       serverIpLabel: hl.server_ip || (isVi ? "IP máy chủ:" : "Server IP:"),
       copied: hl.copied || (isVi ? "Đã copy" : "Copied"),
@@ -74,6 +76,34 @@ export default function HomeClient({ dict, lang }) {
     ["/assets/img/bg4.png", dict.features_list.modpack || "Modpack"],
     ["/assets/img/bg-checking-status.jpg", dict.features_list.more || "More"],
   ], [dict]);
+
+  const galleryImages = useMemo(() => [
+    "/assets/img/b1.png",
+    "/assets/img/b2.png",
+    "/assets/img/b3.png",
+    "/assets/img/b4.png",
+    "/assets/img/bg.png",
+    "/assets/img/bg1.png",
+    "/assets/img/bg2.png",
+    "/assets/img/bg3.png",
+    "/assets/img/bg4.png",
+    "/assets/img/bg-checking-status.jpg",
+    "/assets/img/bg-status-server.png"
+  ], []);
+
+  const galleryCaptions = useMemo(() => [
+    isVi ? "Khoảnh khắc sinh tồn" : "Survival moments",
+    isVi ? "Căn cứ người chơi" : "Player base",
+    isVi ? "Cảnh quan thiên nhiên" : "Scenic view",
+    isVi ? "Công trình cộng đồng" : "Community build",
+    isVi ? "Khám phá thế giới rộng lớn" : "Explore the vast world",
+    isVi ? "Sinh tồn cùng bạn bè" : "Survival with friends",
+    isVi ? "Động vật hoang dã phong phú" : "Rich wildlife",
+    isVi ? "Cơ chế tùy chỉnh độc đáo" : "Unique custom mechanics",
+    isVi ? "Hệ thống Modpack đa dạng" : "Diverse Modpack system",
+    isVi ? "Khu di tích cổ kính" : "Ancient ruins",
+    isVi ? "Bảng trạng thái máy chủ" : "Server status board"
+  ], [isVi]);
 
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
@@ -128,6 +158,23 @@ export default function HomeClient({ dict, lang }) {
         } else if (href === "#gallery") {
           setActiveTab("gallery");
           window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (href === "#features") {
+          if (activeTab !== "home") {
+            setActiveTab("home");
+            setTimeout(() => {
+              const target = document.getElementById("features");
+              if (target) {
+                const offset = topbar?.classList.contains("topbar--visible") ? 62 : 0;
+                window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
+              }
+            }, 100);
+          } else {
+            const target = document.getElementById("features");
+            if (target) {
+              const offset = topbar?.classList.contains("topbar--visible") ? 62 : 0;
+              window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
+            }
+          }
         }
       });
     });
@@ -220,6 +267,7 @@ export default function HomeClient({ dict, lang }) {
 
   const navLinks = [
     ["#home", labels.navHome],
+    ["#features", labels.navFeatures],
     ["#gallery", labels.navGallery],
     [`/${currentLang}/rules`, labels.navRules],
     ["#", labels.navWiki],
@@ -290,6 +338,21 @@ export default function HomeClient({ dict, lang }) {
               </div>
             </section>
 
+            <section className="section reveal visible" id="features">
+              <div className="wrap">
+                <h2>{labels.featuresTitle}</h2>
+                <div className="feature-grid">
+                  {featuresTranslated.map(([src, title]) => (
+                    <div className="feature" key={title}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img src={src} alt="" />
+                      <strong>{title}</strong>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </section>
+
             <section className="section section--panel faq reveal visible">
               <div className="wrap faq__wrap">
                 <div className="faq__content">
@@ -307,13 +370,13 @@ export default function HomeClient({ dict, lang }) {
         ) : (
           <section className="section reveal visible" id="gallery" style={{ minHeight: 'calc(100vh - 400px)' }}>
             <div className="wrap">
-              <h2>{labels.featuresTitle}</h2>
+              <h2>{labels.galleryTitle}</h2>
               <div className="feature-grid">
-                {featuresTranslated.map(([src, title], index) => (
+                {galleryImages.map((src, index) => (
                   <a
                     className="feature"
                     href="#gallery"
-                    key={title}
+                    key={src}
                     onClick={(e) => {
                       e.preventDefault();
                       setActiveImgIndex(index);
@@ -321,7 +384,7 @@ export default function HomeClient({ dict, lang }) {
                   >
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src={src} alt="" />
-                    <strong>{title}</strong>
+                    <strong>{galleryCaptions[index]}</strong>
                   </a>
                 ))}
               </div>
@@ -403,13 +466,26 @@ export default function HomeClient({ dict, lang }) {
       {activeImgIndex !== null && (
         <div className="lightbox-overlay" onClick={() => setActiveImgIndex(null)}>
           <button className="lightbox-close" onClick={() => setActiveImgIndex(null)} aria-label="Close lightbox">&times;</button>
-          <button className="lightbox-prev" onClick={(e) => { e.stopPropagation(); setActiveImgIndex((prev) => (prev > 0 ? prev - 1 : featuresTranslated.length - 1)); }} aria-label="Previous image">&#10094;</button>
+          <button className="lightbox-prev" onClick={(e) => {
+            e.stopPropagation();
+            const list = activeTab === "gallery" ? galleryImages : featuresTranslated;
+            setActiveImgIndex((prev) => (prev > 0 ? prev - 1 : list.length - 1));
+          }} aria-label="Previous image">&#10094;</button>
           <div className="lightbox-content" onClick={(e) => e.stopPropagation()}>
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={featuresTranslated[activeImgIndex][0]} alt={featuresTranslated[activeImgIndex][1]} />
-            <div className="lightbox-caption">{featuresTranslated[activeImgIndex][1]}</div>
+            <img
+              src={activeTab === "gallery" ? galleryImages[activeImgIndex] : featuresTranslated[activeImgIndex][0]}
+              alt={activeTab === "gallery" ? galleryCaptions[activeImgIndex] : featuresTranslated[activeImgIndex][1]}
+            />
+            <div className="lightbox-caption">
+              {activeTab === "gallery" ? galleryCaptions[activeImgIndex] : featuresTranslated[activeImgIndex][1]}
+            </div>
           </div>
-          <button className="lightbox-next" onClick={(e) => { e.stopPropagation(); setActiveImgIndex((prev) => (prev < featuresTranslated.length - 1 ? prev + 1 : 0)); }} aria-label="Next image">&#10095;</button>
+          <button className="lightbox-next" onClick={(e) => {
+            e.stopPropagation();
+            const list = activeTab === "gallery" ? galleryImages : featuresTranslated;
+            setActiveImgIndex((prev) => (prev < list.length - 1 ? prev + 1 : 0));
+          }} aria-label="Next image">&#10095;</button>
         </div>
       )}
     </>
