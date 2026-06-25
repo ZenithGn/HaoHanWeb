@@ -126,7 +126,7 @@ button {
   z-index: 1;
   top: 42%;
   left: 50%;
-  width: 220px;
+  width: 286px;
   display: block;
   transform: translate(-50%, -50%);
   filter: drop-shadow(0 13px 18px rgba(0, 0, 0, 0.38));
@@ -994,7 +994,7 @@ summary::after {
   }
 
   .haohan__logo {
-    width: 180px;
+    width: 234px;
   }
 
   .nav {
