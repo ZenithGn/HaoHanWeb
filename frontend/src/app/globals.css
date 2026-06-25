@@ -571,6 +571,19 @@ button {
   text-align: center;
 }
 
+.intro h1 {
+  font-family: 'Outfit', sans-serif;
+  font-size: clamp(2.2rem, 5vw, 3.2rem);
+  font-weight: 900;
+  letter-spacing: 0.5px;
+  background: linear-gradient(135deg, #ff952e 0%, #ffd085 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+  margin-bottom: 24px;
+  filter: drop-shadow(0 4px 15px rgba(255, 149, 46, 0.15));
+}
+
 .intro p {
   max-width: 560px;
   margin: 0 auto 18px;
