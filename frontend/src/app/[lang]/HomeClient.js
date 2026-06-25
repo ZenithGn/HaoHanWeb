@@ -1,11 +1,8 @@
 "use client";
-
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../components/AuthContext";
-
 const serverIp = "haohansmp.io.vn";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
-
 export default function HomeClient({ dict, lang }) {
   const [currentLang, setCurrentLang] = useState(lang);
   const [copiedIp, setCopiedIp] = useState(false);
@@ -15,14 +12,11 @@ export default function HomeClient({ dict, lang }) {
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
   const topbarIndicatorRef = useRef(null);
-
   const isVi = currentLang === "vi";
-
   const { user, isLoggedIn, logout, login, getToken } = useAuth();
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState("");
   const [syncSuccess, setSyncSuccess] = useState(true);
-
   const formatText = (text) => {
     return text.split('\n').map((line, idx) => {
       if (line.trim().startsWith('•')) {
@@ -40,7 +34,6 @@ export default function HomeClient({ dict, lang }) {
       );
     });
   };
-
   const labels = useMemo(() => {
     const hl = dict.home_labels || {};
     return {
@@ -71,7 +64,6 @@ export default function HomeClient({ dict, lang }) {
       communityHeader: hl.community_header || (isVi ? "Liên Kết Cộng Đồng" : "Community Links")
     };
   }, [dict, isVi]);
-
   const serverCardsTranslated = useMemo(() => [
     {
       title: dict.servers.survival_title || "Survival",
@@ -93,7 +85,6 @@ export default function HomeClient({ dict, lang }) {
       oneIcon: true,
     },
   ], [dict]);
-
   const featuresTranslated = useMemo(() => [
     ["/assets/img/bg.png", dict.features_list.explore || "Explore"],
     ["/assets/img/bg1.png", dict.features_list.survival || "Survival"],
@@ -102,7 +93,6 @@ export default function HomeClient({ dict, lang }) {
     ["/assets/img/bg4.png", dict.features_list.modpack || "Modpack"],
     ["/assets/img/bg-checking-status.jpg", dict.features_list.more || "More"],
   ], [dict]);
-
   const galleryImages = useMemo(() => [
     "/assets/img/b1.png",
     "/assets/img/b2.png",
@@ -116,7 +106,6 @@ export default function HomeClient({ dict, lang }) {
     "/assets/img/bg-checking-status.jpg",
     "/assets/img/bg-status-server.png"
   ], []);
-
   const galleryCaptions = useMemo(() => [
     isVi ? "Khoảnh khắc sinh tồn" : "Survival moments",
     isVi ? "Căn cứ người chơi" : "Player base",
@@ -130,7 +119,6 @@ export default function HomeClient({ dict, lang }) {
     isVi ? "Khu di tích cổ kính" : "Ancient ruins",
     isVi ? "Bảng trạng thái máy chủ" : "Server status board"
   ], [isVi]);
-
   const galleryAlbums = useMemo(() => [
     {
       year: "2024",
@@ -153,7 +141,6 @@ export default function HomeClient({ dict, lang }) {
       ],
     },
   ], []);
-
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
       if (!indicator || !linkEl || !containerEl) return;
@@ -162,14 +149,12 @@ export default function HomeClient({ dict, lang }) {
       indicator.style.left = `${linkRect.left - containerRect.left}px`;
       indicator.style.width = `${linkRect.width}px`;
     };
-
     const haohanNav = haohanNavRef.current;
     const topbarNav = topbarNavRef.current;
     const topbar = document.getElementById("topbar");
     const haohan = document.getElementById("home");
     const haohanLinks = haohanNav ? Array.from(haohanNav.querySelectorAll("a[href^='#']")) : [];
     const topLinks = topbarNav ? Array.from(topbarNav.querySelectorAll("a[href^='#']")) : [];
-
     const setActive = (href) => {
       haohanLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === href));
       topLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === href));
@@ -180,9 +165,7 @@ export default function HomeClient({ dict, lang }) {
         moveIndicator(topbarIndicatorRef.current, topActive, topbarNav);
       });
     };
-
     setActive(`#${activeTab}`);
-
     [...haohanLinks, ...topLinks].forEach((link) => {
       link.addEventListener("mouseenter", () => {
         const nav = link.closest("nav");
@@ -196,7 +179,6 @@ export default function HomeClient({ dict, lang }) {
         }
         if (!href.startsWith("#")) return;
         event.preventDefault();
-
         if (href === "#home") {
           setActiveTab("home");
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -209,14 +191,14 @@ export default function HomeClient({ dict, lang }) {
             setTimeout(() => {
               const target = document.getElementById("features");
               if (target) {
-                const offset = topbar?.classList.contains("topbar--visible") ? 62 : 0;
+                const offset = topbar?.classList.contains("topbar--scrolled") ? 62 : 0;
                 window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
               }
             }, 100);
           } else {
             const target = document.getElementById("features");
             if (target) {
-              const offset = topbar?.classList.contains("topbar--visible") ? 62 : 0;
+              const offset = topbar?.classList.contains("topbar--scrolled") ? 62 : 0;
               window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
             }
           }
@@ -235,7 +217,6 @@ export default function HomeClient({ dict, lang }) {
         }
       });
     });
-
     haohanNav?.addEventListener("mouseleave", () => {
       const active = haohanLinks.find((link) => link.classList.contains("active")) || haohanLinks[0];
       moveIndicator(haohanIndicatorRef.current, active, haohanNav);
@@ -244,54 +225,43 @@ export default function HomeClient({ dict, lang }) {
       const active = topLinks.find((link) => link.classList.contains("active")) || topLinks[0];
       moveIndicator(topbarIndicatorRef.current, active, topbarNav);
     });
-
     const haohanObserver = new IntersectionObserver(([entry]) => {
       if (activeTab !== "home") return;
       const gone = !entry.isIntersecting;
-      topbar?.classList.toggle("topbar--visible", gone);
-      topbar?.setAttribute("aria-hidden", String(!gone));
+      topbar?.classList.toggle("topbar--scrolled", gone);
     }, { threshold: 0.15 });
-
     const sectionObserver = new IntersectionObserver((entries) => {
       if (activeTab !== "home") return;
       entries.forEach((entry) => {
         if (entry.isIntersecting) setActive(`#${entry.target.id}`);
       });
     }, { rootMargin: "-25% 0px -65% 0px" });
-
     if (activeTab === "home" && haohan) haohanObserver.observe(haohan);
     if (activeTab === "home") {
       document.querySelectorAll("section[id], header[id]").forEach((section) => sectionObserver.observe(section));
     }
-
     const onResize = () => setActive(`#${activeTab}`);
     window.addEventListener("resize", onResize);
-
     return () => {
       haohanObserver.disconnect();
       sectionObserver.disconnect();
       window.removeEventListener("resize", onResize);
     };
   }, [currentLang, activeTab, isLoggedIn]);
-
   useEffect(() => {
     const topbar = document.getElementById("topbar");
     if (activeTab !== "home") {
-      topbar?.classList.add("topbar--visible");
-      topbar?.setAttribute("aria-hidden", "false");
+      topbar?.classList.add("topbar--scrolled");
     } else {
       if (window.scrollY < 100) {
-        topbar?.classList.remove("topbar--visible");
-        topbar?.setAttribute("aria-hidden", "true");
+        topbar?.classList.remove("topbar--scrolled");
       }
     }
   }, [activeTab]);
-
   const toggleLang = () => {
     const next = currentLang === "vi" ? "en" : "vi";
     window.location.href = `/${next}`;
   };
-
   const copyServerIp = async () => {
     try {
       await navigator.clipboard.writeText(serverIp);
@@ -301,7 +271,6 @@ export default function HomeClient({ dict, lang }) {
       console.warn("Could not copy server IP.", error);
     }
   };
-
   const handleLinkDiscord = async () => {
     try {
       const response = await fetch(`${API_BASE}/api/auth/discord/url`);
@@ -316,7 +285,6 @@ export default function HomeClient({ dict, lang }) {
       alert(isVi ? "Lỗi kết nối khi lấy URL Discord." : "Connection error getting Discord URL.");
     }
   };
-
   const handleSyncDiscord = async () => {
     setSyncing(true);
     setSyncMsg("");
@@ -348,19 +316,13 @@ export default function HomeClient({ dict, lang }) {
       setSyncing(false);
     }
   };
-
   const handleLogout = () => {
     logout();
     setActiveTab("home");
     window.location.href = `/${currentLang}`;
   };
-
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}`}>
-      <button className="tool-pill tool-lang" type="button" aria-label="Switch language" onClick={toggleLang}>
-        <span className={`lang-opt${currentLang === "vi" ? " active" : ""}`}>VI</span>
-        <span className={`lang-opt${currentLang === "en" ? " active" : ""}`}>EN</span>
-      </button>
       {isLoggedIn && user ? (
         <button className="tool-pill tool-auth" onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{
           backgroundColor: 'rgba(255, 255, 255, 0.05)',
@@ -386,7 +348,6 @@ export default function HomeClient({ dict, lang }) {
       )}
     </div>
   );
-
   const navLinks = useMemo(() => {
     const list = [
       ["#home", labels.navHome, "fa-solid fa-campground"],
@@ -400,7 +361,6 @@ export default function HomeClient({ dict, lang }) {
     }
     return list;
   }, [labels, isLoggedIn]);
-
   return (
     <>
       <div className="topbar" id="topbar" aria-hidden="true">
@@ -410,14 +370,13 @@ export default function HomeClient({ dict, lang }) {
           <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
           {navLinks.map(([href, text, icon]) => (
             <a key={href} href={href}>
-              {icon && <i className={icon} style={{ marginRight: '6px' }}></i>}
-              {text}
+              {icon && <i className={icon}></i>}
+              <span className="nav-text">{text}</span>
             </a>
           ))}
         </nav>
         {renderTools(true)}
       </div>
-
       {activeTab === "home" && (
         <header className="haohan" id="home">
           <div className="haohan__shade"></div>
@@ -428,7 +387,7 @@ export default function HomeClient({ dict, lang }) {
               </span>
               <img className="haohan__logo-main" src="/assets/img/logo.png" alt="HaoHan SMP" />
               <p className="haohan__desc">{labels.haohanDesc}</p>
-              
+
               <div className="haohan__actions">
                 <a className="haohan__btn-discord" href="https://discord.com/invite/znHfuc6hCR">
                   <i className="fab fa-discord"></i> {labels.discord}
@@ -441,7 +400,6 @@ export default function HomeClient({ dict, lang }) {
           </div>
         </header>
       )}
-
       <main style={{ paddingTop: activeTab === "home" ? "0" : "80px" }}>
         {activeTab === "home" && (
           <>
@@ -468,7 +426,6 @@ export default function HomeClient({ dict, lang }) {
                 </div>
               </div>
             </section>
-
             <section className="section section--panel reveal visible" id="features">
               <div className="wrap">
                 <h2>{labels.featuresTitle}</h2>
@@ -483,7 +440,6 @@ export default function HomeClient({ dict, lang }) {
                 </div>
               </div>
             </section>
-
             <section className="section section--panel faq reveal visible">
               <div className="wrap faq__wrap">
                 {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -513,7 +469,6 @@ export default function HomeClient({ dict, lang }) {
             </section>
           </>
         )}
-
         {activeTab === "gallery" && (
           <section className="section section--panel gallery-page reveal visible" id="gallery" style={{ minHeight: 'calc(100vh - 400px)' }}>
             <div className="wrap gallery-page__wrap">
@@ -524,7 +479,6 @@ export default function HomeClient({ dict, lang }) {
                   Click any image to view a full size version.
                 </p>
               </header>
-
               <div className="gallery-albums">
                 {galleryAlbums.map((album) => (
                   <section className="gallery-year" key={album.year}>
@@ -555,228 +509,83 @@ export default function HomeClient({ dict, lang }) {
             </div>
           </section>
         )}
-
         {activeTab === "rules" && (
-          <section className="section reveal visible" id="rules" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
-            <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{
-                maxWidth: '850px',
-                width: '100%',
-                backgroundColor: '#161922',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '16px',
-                padding: '40px',
-                boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5)',
-                position: 'relative',
-                overflow: 'hidden',
-                textAlign: 'left'
-              }}>
-                {/* Accent Top Gradient Line */}
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #ff952e, #f37b18)'
-                }}></div>
-
-                <h2 style={{
-                  fontSize: '2.5rem',
-                  fontWeight: '800',
-                  textAlign: 'center',
-                  color: '#ff952e',
-                  marginBottom: '40px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1.5px',
-                  background: 'linear-gradient(to right, #ff952e, #fff)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  border: 'none',
-                  padding: 0
-                }}>
-                  {dict.rules.title}
-                </h2>
-
-                <div style={{ display: 'flex', flexDirection: 'column', gap: '40px' }}>
-                  {/* SECTION I: SMP */}
-                  <section style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.04)',
-                    borderRadius: '12px',
-                    padding: '25px',
-                    transition: 'border-color 0.2s'
-                  }}>
-                    <h3 style={{
-                      color: '#ff952e',
-                      fontSize: '1.6rem',
-                      fontWeight: '700',
-                      marginTop: 0,
-                      marginBottom: '20px',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                      paddingBottom: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px'
-                    }}>
-                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>I</span>
-                      {dict.rules.smp.title.replace('I. ', '')}
-                    </h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '24px' }}>
-                      {dict.rules.smp.rules_list.map((group, idx) => (
-                        <div key={idx}>
-                          <h4 style={{ color: '#fff', fontSize: '1.15rem', fontWeight: '600', margin: '0 0 12px 0' }}>
-                            {group.num}
-                          </h4>
-                          <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', paddingLeft: '15px', borderLeft: '2px solid rgba(255, 149, 46, 0.2)' }}>
-                            {dict.rules.smp.rules_list[idx].sub_rules.map((subRule, sIdx) => (
-                              <div key={sIdx} style={{ fontSize: '0.98rem', lineHeight: '1.6', color: '#e4e4e7' }}>
-                                {formatText(subRule)}
-                              </div>
-                            ))}
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </section>
-
-                  {/* SECTION II: Discord */}
-                  <section style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.04)',
-                    borderRadius: '12px',
-                    padding: '25px'
-                  }}>
-                    <h3 style={{
-                      color: '#ff952e',
-                      fontSize: '1.6rem',
-                      fontWeight: '700',
-                      marginTop: 0,
-                      marginBottom: '20px',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                      paddingBottom: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px'
-                    }}>
-                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>II</span>
-                      {dict.rules.discord.title.replace('II. ', '')}
-                    </h3>
-                    <ul style={{
-                      paddingLeft: '20px',
-                      margin: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '12px',
-                      lineHeight: '1.6',
-                      fontSize: '0.98rem',
-                      color: '#e4e4e7'
-                    }}>
-                      {dict.rules.discord.rules_list.map((rule, idx) => (
-                        <li key={idx} style={{ paddingLeft: '5px' }}>
-                          {rule}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
-
-                  {/* SECTION III: Penalties */}
-                  <section style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.04)',
-                    borderRadius: '12px',
-                    padding: '25px'
-                  }}>
-                    <h3 style={{
-                      color: '#ff952e',
-                      fontSize: '1.6rem',
-                      fontWeight: '700',
-                      marginTop: 0,
-                      marginBottom: '20px',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                      paddingBottom: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px'
-                    }}>
-                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>III</span>
-                      {dict.rules.penalty.title.replace('III. ', '')}
-                    </h3>
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                      <div>
-                        <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', margin: '0 0 10px 0' }}>
-                          {dict.rules.penalty.smp_title}
-                        </h4>
-                        <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', paddingLeft: '15px', borderLeft: '2px solid rgba(239, 68, 68, 0.3)' }}>
-                          {dict.rules.penalty.smp_rules.map((rule, idx) => (
-                            <div key={idx} style={{ fontSize: '0.98rem', lineHeight: '1.6', color: '#e4e4e7' }}>
-                              {formatText(rule)}
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-                      <div style={{ marginTop: '10px' }}>
-                        <h4 style={{ color: '#fff', fontSize: '1.1rem', fontWeight: '600', margin: '0 0 10px 0' }}>
-                          {dict.rules.penalty.discord_title}
-                        </h4>
-                        <ul style={{ paddingLeft: '20px', margin: 0, fontSize: '0.98rem', color: '#e4e4e7' }}>
-                          {dict.rules.penalty.discord_rules.map((rule, idx) => (
-                            <li key={idx}>{rule}</li>
-                          ))}
-                        </ul>
-                      </div>
-                    </div>
-                  </section>
-
-                  {/* SECTION IV: Final Notes */}
-                  <section style={{
-                    backgroundColor: 'rgba(255, 255, 255, 0.02)',
-                    border: '1px solid rgba(255, 255, 255, 0.04)',
-                    borderRadius: '12px',
-                    padding: '25px'
-                  }}>
-                    <h3 style={{
-                      color: '#ff952e',
-                      fontSize: '1.6rem',
-                      fontWeight: '700',
-                      marginTop: 0,
-                      marginBottom: '20px',
-                      borderBottom: '1px solid rgba(255, 255, 255, 0.08)',
-                      paddingBottom: '10px',
-                      display: 'flex',
-                      alignItems: 'center',
-                      gap: '10px'
-                    }}>
-                      <span style={{ fontSize: '1.2rem', padding: '4px 8px', backgroundColor: 'rgba(255, 149, 46, 0.1)', borderRadius: '6px', color: '#ff952e' }}>IV</span>
-                      {dict.rules.footer_msg.title.replace('IV. ', '')}
-                    </h3>
-                    <ul style={{
-                      paddingLeft: '20px',
-                      margin: 0,
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '12px',
-                      lineHeight: '1.6',
-                      fontSize: '0.98rem',
-                      color: '#e4e4e7'
-                    }}>
-                      {dict.rules.footer_msg.msgs.map((msg, idx) => (
-                        <li key={idx} style={{
-                          paddingLeft: '5px',
-                          fontWeight: idx === dict.rules.footer_msg.msgs.length - 1 ? '700' : 'normal',
-                          color: idx === dict.rules.footer_msg.msgs.length - 1 ? '#ff952e' : '#e4e4e7'
-                        }}>
-                          {msg}
-                        </li>
-                      ))}
-                    </ul>
-                  </section>
+          <section className="rules-page reveal visible" id="rules">
+            <header className="rules-hero">
+              <div className="wrap rules-hero__inner">
+                <div className="rules-hero__art">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src="/assets/img/Fox_with_emerald.webp" alt="" aria-hidden="true" />
                 </div>
+                <div className="rules-hero__copy">
+                  <span><i className="fa-solid fa-clover"></i> {isVi ? "Nội quy server" : "Server rules"}</span>
+                  <h1>HAOHAN <strong>SMP</strong></h1>
+                  <p>{isVi ? "Vui lòng đọc kỹ và tuân thủ các quy định dưới đây để có trải nghiệm tốt nhất cùng cộng đồng." : "Please read and follow the rules below to keep the community friendly and fair."}</p>
+                </div>
+                <div className="rules-hero__cube" aria-hidden="true"></div>
               </div>
+            </header>
+
+            <div className="wrap rules-page__body">
+              <section className="rules-line-section">
+                <span className="rules-line-section__num">1</span>
+                <div className="rules-line-section__content">
+                  <h2><i className="fa-solid fa-clover"></i> {dict.rules.smp.title.replace('I. ', '')}</h2>
+                  <ul>
+                    {dict.rules.smp.rules_list[0]?.sub_rules.map((rule, idx) => (
+                      <li key={idx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+
+              <section className="rules-line-section">
+                <span className="rules-line-section__num">2</span>
+                <div className="rules-line-section__content">
+                  <h2><i className="fa-solid fa-clover"></i> Client/Mod</h2>
+                  <ul>
+                    {dict.rules.smp.rules_list[1]?.sub_rules.map((rule, idx) => (
+                      <li key={idx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+
+              <section className="rules-line-section">
+                <span className="rules-line-section__num">3</span>
+                <div className="rules-line-section__content">
+                  <h2><i className="fa-solid fa-clover"></i> {dict.rules.discord.title.replace('II. ', '')}</h2>
+                  <ul>
+                    {dict.rules.discord.rules_list.map((rule, idx) => (
+                      <li key={idx}>{rule}</li>
+                    ))}
+                  </ul>
+                </div>
+              </section>
+
+              <section className="rules-line-section">
+                <span className="rules-line-section__num">4</span>
+                <div className="rules-line-section__content">
+                  <h2><i className="fa-solid fa-clover"></i> {isVi ? "Giải quyết vấn đề" : "Issue resolution"}</h2>
+                  <ul>
+                    {dict.rules.smp.rules_list[2]?.sub_rules.map((rule, idx) => (
+                      <li key={idx}>{formatText(rule)}</li>
+                    ))}
+                  </ul>
+                  <div className="rules-ticket">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src="/assets/img/logo.png" alt="" />
+                    <p>{isVi ? "Bạn có thể liên hệ admin bằng cách tạo một ticket để được giải quyết." : "You can contact admins by opening a ticket for support."}</p>
+                  </div>
+                  <div className="rules-note">
+                    <i className="fa-solid fa-clover"></i>
+                    <span>{dict.rules.footer_msg.msgs[0]} {dict.rules.footer_msg.msgs[1]}</span>
+                  </div>
+                </div>
+              </section>
             </div>
           </section>
         )}
-
         {activeTab === "wiki" && (
           <section className="section reveal visible" id="wiki" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
             <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -800,7 +609,6 @@ export default function HomeClient({ dict, lang }) {
                   height: '4px',
                   background: 'linear-gradient(90deg, #ff952e, #f37b18)'
                 }}></div>
-
                 <h2 style={{
                   fontSize: '2.5rem',
                   fontWeight: '800',
@@ -817,7 +625,6 @@ export default function HomeClient({ dict, lang }) {
                 }}>
                   {labels.navWiki}
                 </h2>
-
                 <div style={{ color: '#d7d8dc', fontSize: '1.05rem', lineHeight: '1.6', textAlign: 'center', padding: '40px 0', fontFamily: "'Outfit', 'Inter', sans-serif" }}>
                   {isVi ? "Nội dung Wiki đang được cập nhật..." : "Wiki content is being updated..."}
                 </div>
@@ -825,7 +632,6 @@ export default function HomeClient({ dict, lang }) {
             </div>
           </section>
         )}
-
         {activeTab === "donate" && (
           <section className="section reveal visible" id="donate" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
             <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -849,7 +655,6 @@ export default function HomeClient({ dict, lang }) {
                   height: '4px',
                   background: 'linear-gradient(90deg, #ff952e, #f37b18)'
                 }}></div>
-
                 <h2 style={{
                   fontSize: '2.5rem',
                   fontWeight: '800',
@@ -866,7 +671,6 @@ export default function HomeClient({ dict, lang }) {
                 }}>
                   {labels.donate}
                 </h2>
-
                 <div style={{ color: '#d7d8dc', fontSize: '1.05rem', lineHeight: '1.6', textAlign: 'center', padding: '40px 0', fontFamily: "'Outfit', 'Inter', sans-serif" }}>
                   {isVi ? "Nội dung Donate đang được cập nhật..." : "Donate content is being updated..."}
                 </div>
@@ -874,7 +678,6 @@ export default function HomeClient({ dict, lang }) {
             </div>
           </section>
         )}
-
         {activeTab === "profile" && isLoggedIn && user && (
           <section className="section reveal visible profile-section" id="profile" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
             <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
@@ -898,7 +701,6 @@ export default function HomeClient({ dict, lang }) {
                   height: '4px',
                   background: 'linear-gradient(90deg, #5865F2, #ff952e)'
                 }}></div>
-
                 <h2 style={{
                   fontSize: '2.5rem',
                   fontWeight: '800',
@@ -915,7 +717,6 @@ export default function HomeClient({ dict, lang }) {
                 }}>
                   {dict.profile.title}
                 </h2>
-
                 <div className="profile-card-grid">
                   <div className="profile-avatar-wrapper">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -937,7 +738,6 @@ export default function HomeClient({ dict, lang }) {
                       )}
                     </div>
                   </div>
-
                   <div className="profile-info">
                     <div className="profile-name-row">
                       <h3 className="profile-username">{user.username}</h3>
@@ -951,7 +751,6 @@ export default function HomeClient({ dict, lang }) {
                         </span>
                       )}
                     </div>
-
                     <div className="profile-fields-grid">
                       <div className="profile-field-item">
                         <span className="profile-field-label">{dict.profile.username_label || (isVi ? "Tài khoản Minecraft" : "Minecraft Account")}</span>
@@ -992,14 +791,12 @@ export default function HomeClient({ dict, lang }) {
                         <span className="profile-field-value profile-field-value--code">{user.uuid || "---"}</span>
                       </div>
                     </div>
-
                     {!user.uuid && (
                       <div className="profile-tip-box" style={{ marginTop: '10px' }}>
                         <i className="fas fa-info-circle"></i>
                         <span>{dict.profile.minecraft_link_tip}</span>
                       </div>
                     )}
-
                     <div className="profile-actions-row" style={{ marginTop: '20px' }}>
                       <div className="profile-actions-left">
                         {user.discord_id ? (
@@ -1011,20 +808,17 @@ export default function HomeClient({ dict, lang }) {
                             <i className="fab fa-discord"></i> {dict.profile.link_discord_btn}
                           </button>
                         )}
-
                         {user.discord_id && (
                           <button className="btn-profile-sync" onClick={handleSyncDiscord} disabled={syncing}>
                             <i className="fas fa-sync-alt"></i> {syncing ? dict.profile.syncing : dict.profile.sync_btn}
                           </button>
                         )}
-
                         {syncMsg && (
                           <span className={`profile-sync-msg ${syncSuccess ? 'profile-sync-msg--success' : 'profile-sync-msg--error'}`}>
                             {syncMsg}
                           </span>
                         )}
                       </div>
-
                       <button className="btn-profile-logout" onClick={handleLogout}>
                         <i className="fas fa-sign-out-alt"></i> {dict.profile.logout_btn}
                       </button>
@@ -1036,7 +830,6 @@ export default function HomeClient({ dict, lang }) {
           </section>
         )}
       </main>
-
       <footer style={{
         backgroundColor: '#18120c',
         padding: '0 0 40px 0',
@@ -1064,7 +857,6 @@ export default function HomeClient({ dict, lang }) {
               {labels.haohanDesc}
             </p>
           </div>
-
           {/* Column 2 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <strong style={{ color: '#ff952e', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -1085,7 +877,6 @@ export default function HomeClient({ dict, lang }) {
               </a>
             </div>
           </div>
-
           {/* Column 3 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <strong style={{ color: '#ff952e', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
@@ -1107,7 +898,6 @@ export default function HomeClient({ dict, lang }) {
             </div>
           </div>
         </div>
-
         <div className="wrap" style={{
           marginTop: '30px',
           display: 'flex',

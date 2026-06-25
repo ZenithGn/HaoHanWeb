@@ -1,60 +1,78 @@
 "use client";
-
 import { usePathname } from 'next/navigation';
-import { useEffect } from 'react';
-
+import { useEffect, useState, useRef } from 'react';
 export default function LanguageSwitcher({ lang }) {
   const pathname = usePathname();
-
+  const [isOpen, setIsOpen] = useState(false);
+  const containerRef = useRef(null);
   useEffect(() => {
     const savedScroll = sessionStorage.getItem('scrollPosition');
     if (savedScroll) {
       const scrollPos = parseInt(savedScroll, 10);
       window.scrollTo(0, scrollPos);
-      
-      // Secondary check to ensure scroll is restored after layout render
+
       const timer = setTimeout(() => {
         window.scrollTo(0, scrollPos);
         sessionStorage.removeItem('scrollPosition');
       }, 50);
-
       return () => clearTimeout(timer);
     }
   }, []);
-  
+  // Close popover when clicking outside
+  useEffect(() => {
+    const handleOutsideClick = (event) => {
+      if (containerRef.current && !containerRef.current.contains(event.target)) {
+        setIsOpen(false);
+      }
+    };
+    if (isOpen) {
+      document.addEventListener('click', handleOutsideClick);
+    }
+    return () => document.removeEventListener('click', handleOutsideClick);
+  }, [isOpen]);
+
   const switchLang = (e, locale) => {
     e.preventDefault();
     if (!pathname) return;
-    
-    // Save current scroll position before redirection
+
     sessionStorage.setItem('scrollPosition', window.scrollY);
-    
+
     const segments = pathname.split('/');
     segments[1] = locale;
-    
+
     const hash = typeof window !== 'undefined' ? window.location.hash : '';
     const newPath = segments.join('/') + hash;
     window.location.href = newPath;
   };
-
+  const currentFlag = lang === 'vi' ? '🇻🇳' : '🇬🇧';
   return (
-    <div className="floating-lang-switcher" aria-label="Language Selector">
-      <i className="fas fa-globe" />
+    <div className="floating-lang" ref={containerRef} aria-label="Language Selector">
       <button
-        onClick={(e) => switchLang(e, 'vi')}
-        className={`floating-lang-btn ${lang === 'vi' ? 'floating-lang-btn--active' : ''}`}
-        aria-current={lang === 'vi' ? 'page' : undefined}
+        onClick={() => setIsOpen(!isOpen)}
+        className="floating-lang__trigger"
+        aria-expanded={isOpen}
+        aria-label={`Change language (Current: ${lang === 'vi' ? 'Vietnamese' : 'English'})`}
       >
-        VI
+        {currentFlag}
       </button>
-      <span className="floating-lang-divider">|</span>
-      <button
-        onClick={(e) => switchLang(e, 'en')}
-        className={`floating-lang-btn ${lang === 'en' ? 'floating-lang-btn--active' : ''}`}
-        aria-current={lang === 'en' ? 'page' : undefined}
-      >
-        EN
-      </button>
+      {isOpen && (
+        <div className="floating-lang__popover">
+          <button
+            onClick={(e) => { switchLang(e, 'vi'); setIsOpen(false); }}
+            className={`floating-lang__option ${lang === 'vi' ? 'active' : ''}`}
+          >
+            <span className="flag-emoji">🇻🇳</span>
+            <span>Tiếng Việt</span>
+          </button>
+          <button
+            onClick={(e) => { switchLang(e, 'en'); setIsOpen(false); }}
+            className={`floating-lang__option ${lang === 'en' ? 'active' : ''}`}
+          >
+            <span className="flag-emoji">🇬🇧</span>
+            <span>English</span>
+          </button>
+        </div>
+      )}
     </div>
   );
 }
