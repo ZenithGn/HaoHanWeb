@@ -253,9 +253,6 @@ export default function HomeClient({ dict, lang }) {
                     <h3>{server.title}</h3>
                     <span>{server.address}</span>
                     <p>{server.body}</p>
-                    <div className={`server-icons${server.oneIcon ? " server-icons--one" : ""}`} aria-hidden="true">
-                      <span></span><span></span>{!server.oneIcon && <span></span>}
-                    </div>
                   </div>
                 </article>
               ))}

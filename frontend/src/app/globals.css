@@ -45,7 +45,7 @@ body {
 }
 
 h1, h2, h3, h4, h5, h6, .nav a, .topbar__nav a, .tool-pill, .button {
-  font-family: 'Outfit', 'Inter', sans-serif;
+  font-family: 'Be Vietnam Pro', 'Outfit', 'Inter', sans-serif;
 }
 
 a {
@@ -690,7 +690,7 @@ button {
 
 .server-card h3 {
   margin: 0;
-  font-size: 22px;
+  font-size: 19px;
   font-weight: 800;
   line-height: 1.1;
   color: #ffffff;
@@ -700,14 +700,14 @@ button {
   display: block;
   margin-top: 5px;
   color: #ff952e;
-  font-size: 16px;
+  font-size: 15px;
   font-weight: 700;
 }
 
 .server-card p {
   margin: 12px 0 9px;
   color: #d7d8dc;
-  font-size: 13.5px;
+  font-size: 12.5px;
   line-height: 1.45;
 }
 
@@ -793,7 +793,7 @@ button {
   left: 14px;
   right: 12px;
   bottom: 14px;
-  font-size: 18.5px;
+  font-size: 16px;
   font-weight: 800;
   line-height: 1.2;
   text-shadow: 0 2px 8px rgba(0, 0, 0, 0.95);
