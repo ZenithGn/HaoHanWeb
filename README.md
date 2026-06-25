@@ -38,6 +38,21 @@ HaoHanWeb là một ứng dụng web được xây dựng để quản lý và g
 
 ## Cách Cài Đặt & Chạy
 
+### Build & Chạy Nhanh Bằng Script (Khuyến nghị)
+Tôi đã viết sẵn các tập lệnh script để bạn thực hiện thao tác nhanh chỉ với **một câu lệnh duy nhất**.
+
+#### 1. Build & Chạy tự động (Build mới + Khởi động)
+Mở Terminal ở thư mục gốc và chạy:
+- Trên CMD: `build.bat`
+- Trên PowerShell: `.\build.ps1`
+*Script cung cấp menu lựa chọn từ [1-5], cho phép bạn Build và tự khởi chạy luôn hoặc chọn chạy riêng lẻ.*
+
+#### 2. Chỉ khởi chạy (Run - Không cần build lại)
+Nếu trước đó đã build rồi và bạn chỉ muốn khởi động cả 2 server (Backend & Frontend) vào các cửa sổ mới:
+- Trên CMD: `run.bat`
+- Trên PowerShell: `.\run.ps1`
+
+
 ### Option 1: Sử dụng Docker (Khuyến Nghị)
 
 ```bash
