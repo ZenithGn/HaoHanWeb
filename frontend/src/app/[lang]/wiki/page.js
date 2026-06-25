@@ -3,8 +3,7 @@ import { getDictionary } from "../../../dictionaries/get-dictionary";
 export default async function WikiPage({ params }) {
   const { lang } = await params;
   const dict = await getDictionary(lang);
-
-  const isVi = lang === 'vi';
+  const wiki = dict.wiki;
 
   return (
     <div style={{
@@ -34,59 +33,43 @@ export default async function WikiPage({ params }) {
           textTransform: 'uppercase',
           letterSpacing: '1px'
         }}>
-          {isVi ? "Tài Liệu Hướng Dẫn - Wiki" : "Server Guide - Wiki"}
+          {wiki.title}
         </h1>
 
         <div style={{ display: 'flex', flexDirection: 'column', gap: '30px' }}>
           <section>
             <h2 style={{ color: '#fff', fontSize: '1.4rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '8px' }}>
-              {isVi ? "1. Cách tham gia server" : "1. How to join the server"}
+              {wiki.section1_title}
             </h2>
             <p style={{ lineHeight: '1.6', color: '#c7c8ce', fontSize: '1rem' }}>
-              {isVi ? (
-                "Server hỗ trợ cả Java Edition và Bedrock Edition. Bạn có thể kết nối bằng địa chỉ IP: haohansmp.hopto.org (Port Java mặc định: 25565, Port Bedrock: 19132)."
-              ) : (
-                "The server supports both Java Edition and Bedrock Edition. You can connect using IP: haohansmp.hopto.org (Java default port: 25565, Bedrock port: 19132)."
-              )}
+              {wiki.section1_desc}
             </p>
           </section>
 
           <section>
             <h2 style={{ color: '#fff', fontSize: '1.4rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '8px' }}>
-              {isVi ? "2. Đăng ký tài khoản trong game" : "2. In-game account registration"}
+              {wiki.section2_title}
             </h2>
             <p style={{ lineHeight: '1.6', color: '#c7c8ce', fontSize: '1rem' }}>
-              {isVi ? (
-                "Khi vào game lần đầu, bạn cần gõ lệnh /register <mật khẩu> <xác nhận mật khẩu> để tạo tài khoản game. Những lần chơi tiếp theo, sử dụng lệnh /login <mật khẩu> để đăng nhập."
-              ) : (
-                "When entering the server for the first time, type /register <password> <confirm_password> to create your game account. For subsequent plays, use /login <password>."
-              )}
+              {wiki.section2_desc}
             </p>
           </section>
 
           <section>
             <h2 style={{ color: '#fff', fontSize: '1.4rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '8px' }}>
-              {isVi ? "3. Liên kết tài khoản web" : "3. Web account linking"}
+              {wiki.section3_title}
             </h2>
             <p style={{ lineHeight: '1.6', color: '#c7c8ce', fontSize: '1rem' }}>
-              {isVi ? (
-                "Đăng ký tài khoản trên web với cùng tên nhân vật trong game để quản lý hồ sơ, donate và đồng bộ hóa chức vụ từ LuckPerms."
-              ) : (
-                "Register an account on the web with the exact same in-game name to manage your profile, donate, and sync roles from LuckPerms."
-              )}
+              {wiki.section3_desc}
             </p>
           </section>
 
           <section>
             <h2 style={{ color: '#fff', fontSize: '1.4rem', borderBottom: '1px solid rgba(255, 255, 255, 0.1)', paddingBottom: '8px' }}>
-              {isVi ? "4. Hỗ trợ & Quyên góp" : "4. Support & Donations"}
+              {wiki.section4_title}
             </h2>
             <p style={{ lineHeight: '1.6', color: '#c7c8ce', fontSize: '1rem' }}>
-              {isVi ? (
-                "Quyên góp thông qua hệ thống tự động của chúng tôi giúp duy trì server. Mọi đóng góp đều nhận được phần quà và quyền lợi tương ứng."
-              ) : (
-                "Donating through our automated system helps maintain the server. All contributions receive custom benefits and rewards."
-              )}
+              {wiki.section4_desc}
             </p>
           </section>
         </div>

@@ -15,27 +15,30 @@ export default function HomeClient({ dict, lang }) {
   const isVi = currentLang === "vi";
 
   const labels = useMemo(() => {
+    const hl = dict.home_labels || {};
     return {
-      navHome: isVi ? "Trang chủ" : "Home",
-      navGallery: dict.features_list.title || (isVi ? "Tính năng" : "Features"),
-      navRules: isVi ? "Luật" : "Rules",
-      navWiki: "Wiki",
-      signup: isVi ? "Đăng ký" : "Sign up",
-      login: isVi ? "Đăng nhập" : "Login",
-      haohanTitle: isVi ? "Chào mừng đến với HaoHan SMP" : "Welcome to HaoHan SMP",
-      haohanDesc: isVi
+      navHome: hl.nav_home || (isVi ? "Trang chủ" : "Home"),
+      navGallery: dict.features_list?.title || hl.nav_gallery || (isVi ? "Tính năng" : "Features"),
+      navRules: hl.nav_rules || (isVi ? "Luật" : "Rules"),
+      navWiki: hl.nav_wiki || "Wiki",
+      signup: hl.signup || (isVi ? "Đăng ký" : "Sign up"),
+      login: hl.login || (isVi ? "Đăng nhập" : "Login"),
+      haohanTitle: hl.title || (isVi ? "Chào mừng đến với HaoHan SMP" : "Welcome to HaoHan SMP"),
+      haohanDesc: hl.desc || (isVi
         ? "Cộng đồng Minecraft sinh tồn do người chơi vận hành, mang đến trải nghiệm sinh tồn cốt lõi, roleplay và phát triển lâu dài."
-        : "A community-run Minecraft survival server offering a focused co-op, roleplay and long-term survival experience.",
-      discord: isVi ? "Tham gia Discord" : "Join Discord",
-      donate: isVi ? "Ủng hộ chúng tôi" : "Support us",
-      serversTitle: dict.servers.title || (isVi ? "Danh sách máy chủ" : "Our Servers"),
-      featuresTitle: dict.features_list.title || (isVi ? "Tính năng" : "Features"),
-      faqTitle: "FAQ",
-      serverIpLabel: isVi ? "IP máy chủ:" : "Server IP:",
-      copied: isVi ? "Đã copy" : "Copied",
-      discordBtn: isVi ? "Kết nối Discord" : "Discord Connect",
-      rights: dict.footer.rights,
-      disclaimer: dict.footer.disclaimer
+        : "A community-run Minecraft survival server offering a focused co-op, roleplay and long-term survival experience."),
+      discord: hl.join_discord || (isVi ? "Tham gia Discord" : "Join Discord"),
+      donate: hl.donate || (isVi ? "Ủng hộ chúng tôi" : "Support us"),
+      serversTitle: dict.servers?.title || hl.servers_title || (isVi ? "Danh sách máy chủ" : "Our Servers"),
+      featuresTitle: dict.features_list?.title || hl.features_title || (isVi ? "Tính năng" : "Features"),
+      faqTitle: hl.faq_title || "FAQ",
+      serverIpLabel: hl.server_ip || (isVi ? "IP máy chủ:" : "Server IP:"),
+      copied: hl.copied || (isVi ? "Đã copy" : "Copied"),
+      discordBtn: hl.discord_connect || (isVi ? "Kết nối Discord" : "Discord Connect"),
+      rights: dict.footer?.rights,
+      disclaimer: dict.footer?.disclaimer,
+      exploreHeader: hl.explore_header || (isVi ? "Khám Phá" : "Explore"),
+      communityHeader: hl.community_header || (isVi ? "Liên Kết Cộng Đồng" : "Community Links")
     };
   }, [currentLang, dict]);
 
@@ -315,7 +318,7 @@ export default function HomeClient({ dict, lang }) {
           {/* Column 2 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <strong style={{ color: '#fff', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {isVi ? "Khám Phá" : "Explore"}
+              {labels.exploreHeader}
             </strong>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
               <a href="#home" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>{labels.navHome}</a>
@@ -328,7 +331,7 @@ export default function HomeClient({ dict, lang }) {
           {/* Column 3 */}
           <div style={{ display: 'flex', flexDirection: 'column', gap: '12px' }}>
             <strong style={{ color: '#fff', fontSize: '1rem', textTransform: 'uppercase', letterSpacing: '0.5px' }}>
-              {isVi ? "Liên Kết Cộng Đồng" : "Community Links"}
+              {labels.communityHeader}
             </strong>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '8px', fontSize: '0.85rem' }}>
               <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ transition: 'color 0.2s' }} onMouseOver={(e) => e.target.style.color = '#fff'} onMouseOut={(e) => e.target.style.color = '#888'}>Discord</a>

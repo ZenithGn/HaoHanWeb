@@ -30,22 +30,13 @@
     "contribute": "Đóng Góp"
   },
   "servers": {
-    "title": "Server của chúng tôi",
-    "survival": {
-      "name": "Survival",
-      "ip": "IP: haohansmp.hopto.org",
-      "desc": "Sinh tồn cùng bạn bè với các tính năng và sự kiện thú vị trong cộng đồng."
-    },
-    "build": {
-      "name": "Build",
-      "ip": "IP: haohansmp.hopto.org",
-      "desc": "Tự do sáng tạo, xây dựng những công trình tuyệt vời cùng mọi người trên server."
-    },
-    "archive": {
-      "name": "Archive",
-      "ip": "IP: haohansmp.hopto.org",
-      "desc": "Kho lưu trữ, khám phá các công trình và thế giới từ các mùa trước."
-    }
+    "title": "Danh sách máy chủ",
+    "survival_title": "Survival",
+    "survival_desc": "Java 1.17.1 và Bedrock 1.17.x cho người chơi yêu sinh tồn, xây dựng và roleplay lâu dài.",
+    "bedrock_title": "Bedrock",
+    "bedrock_desc": "Cộng đồng chung cho Java và Bedrock, dễ kết nối với bạn bè và cùng tạo nên căn cứ riêng.",
+    "community_title": "Community",
+    "community_desc": "Đăng ký, hỏi đáp, báo lỗi và cập nhật thông tin máy chủ thông qua Discord chính thức."
   },
   "gallery": {
     "title": "Thư Viện Ảnh",
@@ -344,15 +335,6 @@
     "rules_modal_title": "Luật Máy Chủ HaoHan SMP",
     "rules_close": "Đóng"
   },
-  "servers": {
-    "title": "Danh sách máy chủ",
-    "survival_title": "Survival",
-    "survival_desc": "Java 1.17.1 và Bedrock 1.17.x cho người chơi yêu sinh tồn, xây dựng và roleplay lâu dài.",
-    "bedrock_title": "Bedrock",
-    "bedrock_desc": "Cộng đồng chung cho Java và Bedrock, dễ kết nối với bạn bè và cùng tạo nên căn cứ riêng.",
-    "community_title": "Community",
-    "community_desc": "Đăng ký, hỏi đáp, báo lỗi và cập nhật thông tin máy chủ thông qua Discord chính thức."
-  },
   "features_list": {
     "title": "Tính năng",
     "explore": "Khám phá thế giới",
@@ -447,5 +429,50 @@
     "logout_btn": "Đăng xuất tài khoản",
     "minecraft_link_tip": "Hãy vào game Minecraft gõ lệnh `/link` để nhận mã liên kết và xác thực tài khoản của bạn!",
     "join_discord_required": "Bạn phải tham gia server Discord của Hảo Hán SMP trước khi liên kết!"
+  },
+  "home_labels": {
+    "nav_home": "Trang chủ",
+    "nav_gallery": "Tính năng",
+    "nav_rules": "Luật",
+    "nav_wiki": "Wiki",
+    "signup": "Đăng ký",
+    "login": "Đăng nhập",
+    "title": "Chào mừng đến với HaoHan SMP",
+    "desc": "Cộng đồng Minecraft sinh tồn do người chơi vận hành, mang đến trải nghiệm sinh tồn cốt lõi, roleplay và phát triển lâu dài.",
+    "join_discord": "Tham gia Discord",
+    "donate": "Ủng hộ chúng tôi",
+    "servers_title": "Danh sách máy chủ",
+    "features_title": "Tính năng",
+    "faq_title": "FAQ",
+    "server_ip": "IP máy chủ:",
+    "copied": "Đã copy",
+    "discord_connect": "Kết nối Discord",
+    "explore_header": "Khám Phá",
+    "community_header": "Liên Kết Cộng Đồng"
+  },
+  "wiki": {
+    "title": "Tài Liệu Hướng Dẫn - Wiki",
+    "section1_title": "1. Cách tham gia server",
+    "section1_desc": "Server hỗ trợ cả Java Edition và Bedrock Edition. Bạn có thể kết nối bằng địa chỉ IP: haohansmp.hopto.org (Port Java mặc định: 25565, Port Bedrock: 19132).",
+    "section2_title": "2. Đăng ký tài khoản trong game",
+    "section2_desc": "Khi vào game lần đầu, bạn cần gõ lệnh /register <mật khẩu> <xác nhận mật khẩu> để tạo tài khoản game. Những lần chơi tiếp theo, sử dụng lệnh /login <mật khẩu> để đăng nhập.",
+    "section3_title": "3. Liên kết tài khoản web",
+    "section3_desc": "Đăng ký tài khoản trên web với cùng tên nhân vật trong game để quản lý hồ sơ, donate và đồng bộ hóa chức vụ từ LuckPerms.",
+    "section4_title": "4. Hỗ trợ & Quyên góp",
+    "section4_desc": "Quyên góp thông qua hệ thống tự động của chúng tôi giúp duy trì server. Mọi đóng góp đều nhận được phần quà và quyền lợi tương ứng."
+  },
+  "discord_callback": {
+    "auth_required": "Bạn cần đăng nhập trước khi thực hiện liên kết Discord.",
+    "oauth_code_missing": "Không tìm thấy mã xác thực OAuth từ Discord.",
+    "success_message": "Liên kết tài khoản Discord thành công!",
+    "error_default": "Đã xảy ra lỗi trong quá trình liên kết với Discord.",
+    "error_connection": "Lỗi kết nối đến máy chủ. Vui lòng thử lại sau.",
+    "verifying_title": "Đang xác thực liên kết...",
+    "verifying_desc": "Hệ thống đang kiểm tra thông tin tài khoản Discord của bạn.",
+    "success_title": "Liên Kết Thành Công!",
+    "redirect_text": "Quay lại trang chủ sau {count} giây...",
+    "error_title": "Liên Kết Thất Bại!",
+    "join_discord_btn": "Tham Gia Discord Server",
+    "back_to_home_btn": "Quay lại Trang Chủ"
   }
 }

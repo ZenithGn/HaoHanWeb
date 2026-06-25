@@ -31,21 +31,12 @@
   },
   "servers": {
     "title": "Our Servers",
-    "survival": {
-      "name": "Survival",
-      "ip": "IP: haohansmp.hopto.org",
-      "desc": "Survive with friends with exciting features and community events."
-    },
-    "build": {
-      "name": "Build",
-      "ip": "IP: haohansmp.hopto.org",
-      "desc": "Freely create and build amazing structures with everyone on the server."
-    },
-    "archive": {
-      "name": "Archive",
-      "ip": "IP: haohansmp.hopto.org",
-      "desc": "Explore builds and worlds from previous seasons in our archive."
-    }
+    "survival_title": "Survival",
+    "survival_desc": "Java 1.17.1 and Bedrock 1.17.x for players who love survival, building, and long-term roleplay.",
+    "bedrock_title": "Bedrock",
+    "bedrock_desc": "A unified Java and Bedrock community, easy to connect with friends and build your own base.",
+    "community_title": "Community",
+    "community_desc": "Register, Q&A, report bugs, and get server updates through our official Discord server."
   },
   "gallery": {
     "title": "Gallery",
@@ -344,15 +335,6 @@
     "rules_modal_title": "HaoHan SMP Server Rules",
     "rules_close": "Close"
   },
-  "servers": {
-    "title": "Our Servers",
-    "survival_title": "Survival",
-    "survival_desc": "Java 1.17.1 and Bedrock 1.17.x for players who love survival, building, and long-term roleplay.",
-    "bedrock_title": "Bedrock",
-    "bedrock_desc": "A unified Java and Bedrock community, easy to connect with friends and build your own base.",
-    "community_title": "Community",
-    "community_desc": "Register, Q&A, report bugs, and get server updates through our official Discord server."
-  },
   "features_list": {
     "title": "Features",
     "explore": "Explore the World",
@@ -447,5 +429,50 @@
     "logout_btn": "Logout Account",
     "minecraft_link_tip": "Join the Minecraft server and type `/link` to get your link code and verify your account!",
     "join_discord_required": "You must join the HaoHan SMP Discord server before linking!"
+  },
+  "home_labels": {
+    "nav_home": "Home",
+    "nav_gallery": "Features",
+    "nav_rules": "Rules",
+    "nav_wiki": "Wiki",
+    "signup": "Sign up",
+    "login": "Login",
+    "title": "Welcome to HaoHan SMP",
+    "desc": "A community-run Minecraft survival server offering a focused co-op, roleplay and long-term survival experience.",
+    "join_discord": "Join Discord",
+    "donate": "Support us",
+    "servers_title": "Our Servers",
+    "features_title": "Features",
+    "faq_title": "FAQ",
+    "server_ip": "Server IP:",
+    "copied": "Copied",
+    "discord_connect": "Discord Connect",
+    "explore_header": "Explore",
+    "community_header": "Community Links"
+  },
+  "wiki": {
+    "title": "Server Guide - Wiki",
+    "section1_title": "1. How to join the server",
+    "section1_desc": "The server supports both Java Edition and Bedrock Edition. You can connect using IP: haohansmp.hopto.org (Java default port: 25565, Bedrock port: 19132).",
+    "section2_title": "2. In-game account registration",
+    "section2_desc": "When entering the server for the first time, type /register <password> <confirm_password> to create your game account. For subsequent plays, use /login <password>.",
+    "section3_title": "3. Web account linking",
+    "section3_desc": "Register an account on the web with the exact same in-game name to manage your profile, donate, and sync roles from LuckPerms.",
+    "section4_title": "4. Support & Donations",
+    "section4_desc": "Donating through our automated system helps maintain the server. All contributions receive custom benefits and rewards."
+  },
+  "discord_callback": {
+    "auth_required": "You need to log in before linking with Discord.",
+    "oauth_code_missing": "OAuth authentication code from Discord not found.",
+    "success_message": "Discord account linked successfully!",
+    "error_default": "An error occurred while linking with Discord.",
+    "error_connection": "Connection error to server. Please try again later.",
+    "verifying_title": "Verifying link...",
+    "verifying_desc": "The system is checking your Discord account information.",
+    "success_title": "Linking Successful!",
+    "redirect_text": "Redirecting back to home in {count} seconds...",
+    "error_title": "Linking Failed!",
+    "join_discord_btn": "Join Discord Server",
+    "back_to_home_btn": "Back to Home"
   }
 }
