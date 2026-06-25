@@ -159,8 +159,7 @@ export default function HomeClient({ dict, lang }) {
 
   const toggleLang = () => {
     const next = currentLang === "vi" ? "en" : "vi";
-    setCurrentLang(next);
-    window.history.replaceState(null, "", `/${next}`);
+    window.location.href = `/${next}`;
   };
 
   const copyServerIp = async () => {
