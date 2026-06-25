@@ -40,7 +40,20 @@
   },
   "gallery": {
     "title": "Thư Viện Ảnh",
-    "subtitle": "Khám phá thế giới HaoHan SMP qua những khoảnh khắc đáng nhớ."
+    "subtitle": "Khám phá thế giới HaoHan SMP qua những khoảnh khắc đáng nhớ.",
+    "intro": "Chào mừng đến với thư viện ảnh! Trang này lưu lại các album và khoảnh khắc đáng nhớ của HaoHan SMP. Nhấn vào ảnh bất kỳ để xem phiên bản kích thước lớn.",
+    "albums": {
+      "anniversary_7_title": "Kỷ niệm 7 năm",
+      "anniversary_7_subtitle": "Cuộc thi ảnh chụp màn hình",
+      "artworks_title": "Tranh vẽ",
+      "artworks_subtitle": "Tác phẩm do thành viên cộng đồng thực hiện",
+      "website_originals_title": "Ảnh gốc của website",
+      "website_originals_subtitle": "Những hình ảnh được dùng trong bản thiết kế lại website",
+      "anniversary_4_title": "Kỷ niệm 4 năm",
+      "anniversary_4_subtitle": "Kỷ niệm cộng đồng",
+      "survival_world_title": "Thế giới sinh tồn",
+      "survival_world_subtitle": "Những hình ảnh từ những ngày đầu của server"
+    }
   },
   "rule": {
     "title": "Hảo Hán Hình Sự",

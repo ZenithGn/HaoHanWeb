@@ -8,6 +8,7 @@ export default function HomeClient({ dict, lang }) {
   const [copiedIp, setCopiedIp] = useState(false);
   const [activeImgIndex, setActiveImgIndex] = useState(null);
   const [activeTab, setActiveTab] = useState("home");
+  const [isTopNavOpen, setIsTopNavOpen] = useState(false);
   const haohanNavRef = useRef(null);
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
@@ -119,28 +120,31 @@ export default function HomeClient({ dict, lang }) {
     isVi ? "Khu di tích cổ kính" : "Ancient ruins",
     isVi ? "Bảng trạng thái máy chủ" : "Server status board"
   ], [isVi]);
-  const galleryAlbums = useMemo(() => [
-    {
-      year: "2024",
-      items: [
-        { index: 9, title: "7 year anniversary", subtitle: "Screenshot competition" },
-        { index: 1, title: "Artworks", subtitle: "Artworks made by members of the community" },
-        { index: 10, title: "Website originals", subtitle: "Images originally used in the website redesign" },
-      ],
-    },
-    {
-      year: "2021",
-      items: [
-        { index: 2, title: "4 Year anniversary", subtitle: "Community memories" },
-      ],
-    },
-    {
-      year: "2020",
-      items: [
-        { index: 4, title: "Survival world", subtitle: "From the early days of the server" },
-      ],
-    },
-  ], []);
+  const galleryAlbums = useMemo(() => {
+    const albums = dict.gallery?.albums || {};
+    return [
+      {
+        year: "2024",
+        items: [
+          { index: 9, title: albums.anniversary_7_title || "7 year anniversary", subtitle: albums.anniversary_7_subtitle || "Screenshot competition" },
+          { index: 1, title: albums.artworks_title || "Artworks", subtitle: albums.artworks_subtitle || "Artworks made by members of the community" },
+          { index: 10, title: albums.website_originals_title || "Website originals", subtitle: albums.website_originals_subtitle || "Images originally used in the website redesign" },
+        ],
+      },
+      {
+        year: "2021",
+        items: [
+          { index: 2, title: albums.anniversary_4_title || "4 Year anniversary", subtitle: albums.anniversary_4_subtitle || "Community memories" },
+        ],
+      },
+      {
+        year: "2020",
+        items: [
+          { index: 4, title: albums.survival_world_title || "Survival world", subtitle: albums.survival_world_subtitle || "From the early days of the server" },
+        ],
+      },
+    ];
+  }, [dict]);
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
       if (!indicator || !linkEl || !containerEl) return;
@@ -324,17 +328,18 @@ export default function HomeClient({ dict, lang }) {
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}`}>
       {isLoggedIn && user ? (
-        <button className="tool-pill tool-auth" onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{
-          backgroundColor: 'rgba(255, 255, 255, 0.05)',
-          border: '1px solid rgba(255, 255, 255, 0.15)',
-          borderRadius: '8px',
-          color: '#fff',
-          cursor: 'pointer',
-          padding: '7px 14px',
-          fontWeight: 600,
-          fontFamily: "'Outfit', 'Inter', sans-serif"
-        }}>
-          <span className="tool-text">{dict.hero.hello.replace('{name}', user.username)}</span>
+        <button
+          className="topbar-auth-message"
+          type="button"
+          onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }}
+          aria-label={dict.hero.hello.replace('{name}', user.username)}
+        >
+          <span className="topbar-auth-message__phrase topbar-auth-message__phrase--hello">
+            Xin Chào <span className="topbar-auth-message__user">{user.username}</span>
+          </span>
+          <span className="topbar-auth-message__phrase topbar-auth-message__phrase--welcome">
+            Chào mừng đến với Hảo Hán SMP
+          </span>
         </button>
       ) : (
         <>
@@ -363,18 +368,29 @@ export default function HomeClient({ dict, lang }) {
   }, [labels, isLoggedIn]);
   return (
     <>
-      <div className="topbar" id="topbar" aria-hidden="true">
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="topbar__logo" src="/assets/img/logo.png" alt="HaoHan" />
-        <nav className="topbar__nav" ref={topbarNavRef} aria-label="Quick navigation">
-          <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
-          {navLinks.map(([href, text, icon]) => (
-            <a key={href} href={href}>
-              {icon && <i className={icon}></i>}
-              <span className="nav-text">{text}</span>
-            </a>
-          ))}
-        </nav>
+      <div className={`topbar ${isTopNavOpen ? "topbar--nav-open" : ""}`} id="topbar">
+        <div className="topbar__brand">
+          <button
+            className="topbar__logo-toggle"
+            type="button"
+            aria-label={isTopNavOpen ? "Close navigation" : "Open navigation"}
+            aria-expanded={isTopNavOpen}
+            onClick={() => setIsTopNavOpen((open) => !open)}
+          >
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img className="topbar__logo" src="/assets/img/logo.png" alt="HaoHan" />
+            <i className={`fa-solid ${isTopNavOpen ? "fa-xmark" : "fa-bars"} topbar__logo-toggle-icon`}></i>
+          </button>
+          <nav className="topbar__nav" ref={topbarNavRef} aria-label="Quick navigation">
+            <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
+            {navLinks.map(([href, text, icon]) => (
+              <a key={href} href={href} title={text} onClick={() => setIsTopNavOpen(false)}>
+                {icon && <i className={icon}></i>}
+                <span className="nav-text">{text}</span>
+              </a>
+            ))}
+          </nav>
+        </div>
         {renderTools(true)}
       </div>
       {activeTab === "home" && (
@@ -474,10 +490,7 @@ export default function HomeClient({ dict, lang }) {
             <div className="wrap gallery-page__wrap">
               <header className="gallery-page__header">
                 <h2>{labels.galleryTitle}</h2>
-                <p>
-                  Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP.
-                  Click any image to view a full size version.
-                </p>
+                <p>{dict.gallery?.intro || "Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP. Click any image to view a full size version."}</p>
               </header>
               <div className="gallery-albums">
                 {galleryAlbums.map((album) => (

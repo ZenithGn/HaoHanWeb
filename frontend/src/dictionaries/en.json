@@ -40,7 +40,20 @@
   },
   "gallery": {
     "title": "Gallery",
-    "subtitle": "Explore the world of HaoHan SMP through memorable moments."
+    "subtitle": "Explore the world of HaoHan SMP through memorable moments.",
+    "intro": "Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP. Click any image to view a full size version.",
+    "albums": {
+      "anniversary_7_title": "7 year anniversary",
+      "anniversary_7_subtitle": "Screenshot competition",
+      "artworks_title": "Artworks",
+      "artworks_subtitle": "Artworks made by members of the community",
+      "website_originals_title": "Website originals",
+      "website_originals_subtitle": "Images originally used in the website redesign",
+      "anniversary_4_title": "4 Year anniversary",
+      "anniversary_4_subtitle": "Community memories",
+      "survival_world_title": "Survival world",
+      "survival_world_subtitle": "From the early days of the server"
+    }
   },
   "rule": {
     "title": "HaoHan Criminal Code",
