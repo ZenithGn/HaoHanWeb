@@ -572,7 +572,7 @@ button {
 }
 
 .intro h1 {
-  font-family: 'Outfit', sans-serif;
+  font-family: 'Be Vietnam Pro', 'Outfit', sans-serif;
   font-size: clamp(2.2rem, 5vw, 3.2rem);
   font-weight: 900;
   letter-spacing: 0.5px;
