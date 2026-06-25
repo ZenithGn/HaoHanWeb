@@ -100,8 +100,9 @@ button {
 
 .haohan {
   position: relative;
-  min-height: 520px;
-  background: linear-gradient(90deg, rgba(6, 10, 16, 0.76), rgba(8, 9, 11, 0.07) 42%, rgba(32, 17, 10, 0.17)), url("/assets/img/bg-checking-status.jpg") center top / cover no-repeat;
+  height: 100vh;
+  height: 100dvh;
+  background: linear-gradient(90deg, rgba(6, 10, 16, 0.76), rgba(8, 9, 11, 0.07) 42%, rgba(32, 17, 10, 0.17)), url("/assets/img/bg-checking-status.jpg") center center / cover no-repeat;
   overflow: hidden;
 }
 
@@ -123,17 +124,17 @@ button {
 .haohan__logo {
   position: absolute;
   z-index: 1;
-  top: 90px;
+  top: 42%;
   left: 50%;
   width: 220px;
   display: block;
-  transform: translateX(-50%);
+  transform: translate(-50%, -50%);
   filter: drop-shadow(0 13px 18px rgba(0, 0, 0, 0.38));
   transition: transform 300ms cubic-bezier(0.34, 1.56, 0.64, 1);
 }
 
 .haohan__logo:hover {
-  transform: translateX(-50%) scale(1.15);
+  transform: translate(-50%, -50%) scale(1.15);
 }
 
 .haohan__top-tools {
@@ -988,11 +989,11 @@ summary::after {
   }
 
   .haohan {
-    min-height: 420px;
+    height: 100vh;
+    height: 100dvh;
   }
 
   .haohan__logo {
-    top: 86px;
     width: 180px;
   }
 
