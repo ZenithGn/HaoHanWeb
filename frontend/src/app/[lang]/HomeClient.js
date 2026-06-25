@@ -8,6 +8,7 @@ export default function HomeClient({ dict, lang }) {
   const [currentLang, setCurrentLang] = useState(lang);
   const [copiedIp, setCopiedIp] = useState(false);
   const [activeImgIndex, setActiveImgIndex] = useState(null);
+  const [activeTab, setActiveTab] = useState("home");
   const haohanNavRef = useRef(null);
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
@@ -101,7 +102,11 @@ export default function HomeClient({ dict, lang }) {
       });
     };
 
-    setActive("#home");
+    if (activeTab === "home") {
+      setActive("#home");
+    } else {
+      setActive("#gallery");
+    }
 
     [...haohanLinks, ...topLinks].forEach((link) => {
       link.addEventListener("mouseenter", () => {
@@ -115,12 +120,15 @@ export default function HomeClient({ dict, lang }) {
           return;
         }
         if (!href.startsWith("#")) return;
-        const target = document.querySelector(href);
-        if (!target) return;
         event.preventDefault();
-        setActive(href);
-        const offset = topbar?.classList.contains("topbar--visible") ? 62 : 0;
-        window.scrollTo({ top: target.getBoundingClientRect().top + window.scrollY - offset, behavior: "smooth" });
+
+        if (href === "#home") {
+          setActiveTab("home");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        } else if (href === "#gallery") {
+          setActiveTab("gallery");
+          window.scrollTo({ top: 0, behavior: "smooth" });
+        }
       });
     });
 
@@ -134,21 +142,25 @@ export default function HomeClient({ dict, lang }) {
     });
 
     const haohanObserver = new IntersectionObserver(([entry]) => {
+      if (activeTab !== "home") return;
       const gone = !entry.isIntersecting;
       topbar?.classList.toggle("topbar--visible", gone);
       topbar?.setAttribute("aria-hidden", String(!gone));
     }, { threshold: 0.15 });
 
     const sectionObserver = new IntersectionObserver((entries) => {
+      if (activeTab !== "home") return;
       entries.forEach((entry) => {
         if (entry.isIntersecting) setActive(`#${entry.target.id}`);
       });
     }, { rootMargin: "-25% 0px -65% 0px" });
 
-    if (haohan) haohanObserver.observe(haohan);
-    document.querySelectorAll("section[id], header[id]").forEach((section) => sectionObserver.observe(section));
+    if (activeTab === "home" && haohan) haohanObserver.observe(haohan);
+    if (activeTab === "home") {
+      document.querySelectorAll("section[id], header[id]").forEach((section) => sectionObserver.observe(section));
+    }
 
-    const onResize = () => setActive(window.location.hash || "#home");
+    const onResize = () => setActive(activeTab === "home" ? "#home" : "#gallery");
     window.addEventListener("resize", onResize);
 
     return () => {
@@ -156,7 +168,20 @@ export default function HomeClient({ dict, lang }) {
       sectionObserver.disconnect();
       window.removeEventListener("resize", onResize);
     };
-  }, [currentLang]);
+  }, [currentLang, activeTab]);
+
+  useEffect(() => {
+    const topbar = document.getElementById("topbar");
+    if (activeTab === "gallery") {
+      topbar?.classList.add("topbar--visible");
+      topbar?.setAttribute("aria-hidden", "false");
+    } else {
+      if (window.scrollY < 100) {
+        topbar?.classList.remove("topbar--visible");
+        topbar?.setAttribute("aria-hidden", "true");
+      }
+    }
+  }, [activeTab]);
 
   const toggleLang = () => {
     const next = currentLang === "vi" ? "en" : "vi";
@@ -212,91 +237,97 @@ export default function HomeClient({ dict, lang }) {
         {renderTools(true)}
       </div>
 
-      <header className="haohan" id="home">
-        <div className="haohan__top-tools wrap">{renderTools()}</div>
-        <div className="haohan__shade"></div>
-        {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img className="haohan__logo" src="/assets/img/logo.png" alt="HaoHan SMP" />
-        <nav className="nav" ref={haohanNavRef} aria-label="Main navigation">
-          <span className="nav__indicator" ref={haohanIndicatorRef}></span>
-          {navLinks.map(([href, text], index) => <a key={href} className={index === 0 ? "active" : ""} href={href}>{text}</a>)}
-        </nav>
-      </header>
+      {activeTab === "home" && (
+        <header className="haohan" id="home">
+          <div className="haohan__top-tools wrap">{renderTools()}</div>
+          <div className="haohan__shade"></div>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img className="haohan__logo" src="/assets/img/logo.png" alt="HaoHan SMP" />
+          <nav className="nav" ref={haohanNavRef} aria-label="Main navigation">
+            <span className="nav__indicator" ref={haohanIndicatorRef}></span>
+            {navLinks.map(([href, text], index) => <a key={href} className={index === 0 ? "active" : ""} href={href}>{text}</a>)}
+          </nav>
+        </header>
+      )}
 
-      <main>
-        <section className="intro section section--tight reveal visible">
-          <div className="wrap">
-            <h1>{labels.haohanTitle}</h1>
-            <p>{labels.haohanDesc}</p>
-            <div className="actions intro-actions">
-              <a className="button button--discord" href="https://discord.com/invite/znHfuc6hCR">{labels.discord}</a>
-            </div>
-            <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
-              <div className="server-ip intro-server-ip">
-                <span>{labels.serverIpLabel}</span>
-                <strong>{serverIp}</strong>
-                <button type="button" aria-label="Copy server IP" onClick={copyServerIp}>
-                  {copiedIp ? labels.copied : "Copy"}
-                </button>
+      <main style={{ paddingTop: activeTab === "gallery" ? "80px" : "0" }}>
+        {activeTab === "home" ? (
+          <>
+            <section className="intro section section--tight reveal visible">
+              <div className="wrap">
+                <h1>{labels.haohanTitle}</h1>
+                <p>{labels.haohanDesc}</p>
+                <div className="actions intro-actions">
+                  <a className="button button--discord" href="https://discord.com/invite/znHfuc6hCR">{labels.discord}</a>
+                </div>
+                <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
+                  <div className="server-ip intro-server-ip">
+                    <span>{labels.serverIpLabel}</span>
+                    <strong>{serverIp}</strong>
+                    <button type="button" aria-label="Copy server IP" onClick={copyServerIp}>
+                      {copiedIp ? labels.copied : "Copy"}
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </section>
+
+            <section className="section section--panel reveal visible" id="rules">
+              <div className="wrap">
+                <h2>{labels.serversTitle}</h2>
+                <div className="server-grid">
+                  {serverCardsTranslated.map((server) => (
+                    <article className="server-card" key={server.title}>
+                      <div className={`block ${server.block}`} aria-hidden="true"></div>
+                      <div>
+                        <h3>{server.title}</h3>
+                        <span>{server.address}</span>
+                        <p>{server.body}</p>
+                      </div>
+                    </article>
+                  ))}
+                </div>
+              </div>
+            </section>
+
+            <section className="section section--panel faq reveal visible">
+              <div className="wrap faq__wrap">
+                <div className="faq__content">
+                  <h2>{labels.faqTitle}</h2>
+                  {[1, 2, 3, 4, 5].map((item) => (
+                    <details key={item}>
+                      <summary>{dict.faq[`q${item}`]}</summary>
+                      <p>{dict.faq[`a${item}`]}</p>
+                    </details>
+                  ))}
+                </div>
+              </div>
+            </section>
+          </>
+        ) : (
+          <section className="section reveal visible" id="gallery" style={{ minHeight: 'calc(100vh - 400px)' }}>
+            <div className="wrap">
+              <h2>{labels.featuresTitle}</h2>
+              <div className="feature-grid">
+                {featuresTranslated.map(([src, title], index) => (
+                  <a
+                    className="feature"
+                    href="#gallery"
+                    key={title}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      setActiveImgIndex(index);
+                    }}
+                  >
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img src={src} alt="" />
+                    <strong>{title}</strong>
+                  </a>
+                ))}
               </div>
             </div>
-          </div>
-        </section>
-
-        <section className="section section--panel reveal visible" id="rules">
-          <div className="wrap">
-            <h2>{labels.serversTitle}</h2>
-            <div className="server-grid">
-              {serverCardsTranslated.map((server) => (
-                <article className="server-card" key={server.title}>
-                  <div className={`block ${server.block}`} aria-hidden="true"></div>
-                  <div>
-                    <h3>{server.title}</h3>
-                    <span>{server.address}</span>
-                    <p>{server.body}</p>
-                  </div>
-                </article>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section reveal visible" id="gallery">
-          <div className="wrap">
-            <h2>{labels.featuresTitle}</h2>
-            <div className="feature-grid">
-              {featuresTranslated.map(([src, title], index) => (
-                <a
-                  className="feature"
-                  href="#gallery"
-                  key={title}
-                  onClick={(e) => {
-                    e.preventDefault();
-                    setActiveImgIndex(index);
-                  }}
-                >
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src={src} alt="" />
-                  <strong>{title}</strong>
-                </a>
-              ))}
-            </div>
-          </div>
-        </section>
-
-        <section className="section section--panel faq reveal visible">
-          <div className="wrap faq__wrap">
-            <div className="faq__content">
-              <h2>{labels.faqTitle}</h2>
-              {[1, 2, 3, 4, 5].map((item) => (
-                <details key={item}>
-                  <summary>{dict.faq[`q${item}`]}</summary>
-                  <p>{dict.faq[`a${item}`]}</p>
-                </details>
-              ))}
-            </div>
-          </div>
-        </section>
+          </section>
+        )}
       </main>
 
       <footer style={{
