@@ -427,7 +427,8 @@
         "By playing on the SMP, you confirm you have read, understood, and agreed to the HaoHan Criminal Code.",
         "And one more thing: if you play legit and friendly, you don't even need to read this."
       ]
-    },
+    }
+  },
   "profile": {
     "title": "Account Profile",
     "unlinked_discord": "Not connected to Discord",
