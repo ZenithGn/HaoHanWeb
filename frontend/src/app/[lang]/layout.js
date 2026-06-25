@@ -44,7 +44,6 @@ export default async function RootLayout({ children, params }) {
       <body suppressHydrationWarning>
         <AuthProvider>
           {children}
-          <LanguageSwitcher lang={lang} />
         </AuthProvider>
       </body>
     </html>

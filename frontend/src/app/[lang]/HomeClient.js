@@ -227,8 +227,6 @@ export default function HomeClient({ dict, lang }) {
             <p>{labels.haohanDesc}</p>
             <div className="actions intro-actions">
               <a className="button button--discord" href="https://discord.com/invite/znHfuc6hCR">{labels.discord}</a>
-              <a className="button button--orange" href={`/${currentLang}/donate`}>{labels.donate}</a>
-              <a className="button button--features" href="#gallery">{labels.featuresTitle}</a>
             </div>
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: '20px' }}>
               <div className="server-ip intro-server-ip">
