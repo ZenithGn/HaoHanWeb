@@ -52,6 +52,9 @@ if %ERRORLEVEL% neq 0 (
     cd ..
     goto end
 )
+echo Dang xoa cache build cu cua Frontend...
+if exist .next rmdir /s /q .next
+if exist .turbo rmdir /s /q .turbo
 call npm run build
 if %ERRORLEVEL% neq 0 (
     echo [LOI] npm run build that bai!
@@ -69,11 +72,11 @@ if "%run_opt%"=="" set run_opt=Y
 if /I "%run_opt%"=="Y" (
     echo Dang khoi dong Backend va Frontend...
     start "HaoHanWeb Backend" cmd /k "echo --- KHOI DONG BACKEND --- && cd backend && bundle exec rails s -p 3001"
-    start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run start"
+    start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run dev"
 ) else (
     echo De chay ung dung thu cong:
     echo - Backend: cd backend ^&^& bundle exec rails s -p 3001
-    echo - Frontend: cd frontend ^&^& npm run start
+    echo - Frontend: cd frontend ^&^& npm run dev
 )
 goto end
 
@@ -131,6 +134,9 @@ if %ERRORLEVEL% neq 0 (
     cd ..
     goto end
 )
+echo Dang xoa cache build cu cua Frontend...
+if exist .next rmdir /s /q .next
+if exist .turbo rmdir /s /q .turbo
 call npm run build
 if %ERRORLEVEL% neq 0 (
     echo [LOI] npm run build that bai!
@@ -142,7 +148,7 @@ echo [THANH CONG] Build Frontend hoan tat!
 set /p run_opt="Ban co muon khoi dong Frontend ngay bay gio? [Y/N] (Mac dinh la Y): "
 if "%run_opt%"=="" set run_opt=Y
 if /I "%run_opt%"=="Y" (
-    start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run start"
+    start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run dev"
 )
 goto end
 
@@ -152,7 +158,7 @@ echo ===================================================
 echo Dang khoi dong Backend va Frontend...
 echo ===================================================
 start "HaoHanWeb Backend" cmd /k "echo --- KHOI DONG BACKEND --- && cd backend && bundle exec rails s -p 3001"
-start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run start"
+start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run dev"
 goto end
 
 :error_choice

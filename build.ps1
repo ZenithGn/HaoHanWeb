@@ -49,6 +49,8 @@ switch ($opt) {
             Pop-Location
             break
         }
+        Write-Host "Dang xoa cache build cu cua Frontend..." -ForegroundColor Gray
+        Remove-Item -Recurse -Force .next, .turbo -ErrorAction SilentlyContinue
         & npm run build
         if ($LASTEXITCODE -ne 0) {
             Write-Host "[LOI] npm run build that bai!" -ForegroundColor Red
@@ -67,11 +69,11 @@ switch ($opt) {
         if ($run -eq "Y" -or $run -eq "y") {
             Write-Host "Dang khoi dong Backend va Frontend trong cua so moi..." -ForegroundColor Cyan
             Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG BACKEND ---' -ForegroundColor Yellow; cd backend; bundle exec rails s -p 3001"
-            Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run start"
+            Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run dev"
         } else {
             Write-Host "De chay ung dung thu cong:" -ForegroundColor White
             Write-Host " - Backend: cd backend; bundle exec rails s -p 3001" -ForegroundColor Gray
-            Write-Host " - Frontend: cd frontend; npm run start" -ForegroundColor Gray
+            Write-Host " - Frontend: cd frontend; npm run dev" -ForegroundColor Gray
         }
     }
     "2" {
@@ -122,6 +124,8 @@ switch ($opt) {
             Pop-Location
             break
         }
+        Write-Host "Dang xoa cache build cu cua Frontend..." -ForegroundColor Gray
+        Remove-Item -Recurse -Force .next, .turbo -ErrorAction SilentlyContinue
         & npm run build
         if ($LASTEXITCODE -ne 0) {
             Write-Host "[LOI] npm run build that bai!" -ForegroundColor Red
@@ -131,7 +135,7 @@ switch ($opt) {
             $run = Read-Host "Ban co muon khoi dong Frontend ngay bay gio? [Y/N] (Mac dinh la Y)"
             if ([string]::IsNullOrWhiteSpace($run)) { $run = "Y" }
             if ($run -eq "Y" -or $run -eq "y") {
-                Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run start"
+                Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run dev"
             }
         }
         Pop-Location
@@ -141,7 +145,7 @@ switch ($opt) {
         Write-Host "Dang khoi dong Backend va Frontend trong cua so moi..." -ForegroundColor Cyan
         Write-Host "===================================================" -ForegroundColor Cyan
         Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG BACKEND ---' -ForegroundColor Yellow; cd backend; bundle exec rails s -p 3001"
-        Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run start"
+        Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run dev"
     }
     default {
         Write-Host "Lua chon khong hop le." -ForegroundColor Red

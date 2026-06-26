@@ -6,6 +6,7 @@ Write-Host "     HAO HAN WEB - START SYSTEM" -ForegroundColor Cyan
 Write-Host "===================================================" -ForegroundColor Cyan
 Write-Host ""
 Write-Host "Dang khoi dong Backend va Frontend trong cua so moi..." -ForegroundColor Cyan
+Write-Host "Frontend se chay bang npm run dev de hien thi thay doi moi nhat." -ForegroundColor Gray
 
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG BACKEND ---' -ForegroundColor Yellow; cd backend; bundle exec rails s -p 3001"
 Start-Process powershell -ArgumentList "-NoExit", "-Command", "Write-Host '--- KHOI DONG FRONTEND ---' -ForegroundColor Yellow; cd frontend; npm run dev"
