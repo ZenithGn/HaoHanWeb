@@ -1,173 +1,248 @@
 # HaoHanWeb
 
-Website cho server Minecraft SMP (Survival Multiplayer) của bạn.
+Website cho cộng đồng Minecraft HaoHan SMP. Dự án gồm frontend Next.js và backend Ruby on Rails API, dùng SQL Server cho dữ liệu.
 
-## Mô Tả Dự Án
+## Tổng Quan
 
-HaoHanWeb là một ứng dụng web được xây dựng để quản lý và giới thiệu server Minecraft SMP. Dự án sử dụng kiến trúc **full-stack** hiện đại:
+- Frontend: Next.js 16, React 19, CSS thuần.
+- Backend: Ruby on Rails 8 API.
+- Database: Microsoft SQL Server.
+- Tích hợp: Discord OAuth/Webhook, PayOS, RCON, JWT.
+- Docker: `docker-compose.yml` hiện chạy SQL Server và backend.
 
-- **Frontend**: Next.js + React (TypeScript/JavaScript)
-- **Backend**: Ruby on Rails
-- **Database**: SQL Server (T-SQL)
-- **Styling**: CSS
-- **DevOps**: Docker
+## Cấu Trúc Dự Án
 
-## Tech Stack
-
-| Thành Phần | Công Nghệ | Tỷ Lệ |
-|-----------|----------|-------|
-| Backend | Ruby | 50.5% |
-| Styling | CSS | 25.2% |
-| Frontend | JavaScript | 17.8% |
-| Database | T-SQL | 2.7% |
-| DevOps | Docker | 1.8% |
-| Shell Scripts | - | 1.5% |
-
-## Yêu Cầu Hệ Thống
-
-### Yêu Cầu Chung
-- Git
-- Node.js 18+ (cho frontend)
-- Ruby 3.0+ (cho backend)
-- Docker (tùy chọn, nhưng được khuyến nghị)
-
-### Nếu không dùng Docker
-- Rails 7+
-- SQL Server hoặc PostgreSQL
-- Bundler
-
-## Cách Cài Đặt & Chạy
-
-### Build & Chạy Nhanh Bằng Script (Khuyến nghị)
-Tôi đã viết sẵn các tập lệnh script để bạn thực hiện thao tác nhanh chỉ với **một câu lệnh duy nhất**.
-
-#### 1. Build & Chạy tự động (Build mới + Khởi động)
-Mở Terminal ở thư mục gốc và chạy:
-- Trên CMD: `build.bat`
-- Trên PowerShell: `.\build.ps1`
-*Script cung cấp menu lựa chọn từ [1-5], cho phép bạn Build và tự khởi chạy luôn hoặc chọn chạy riêng lẻ.*
-
-#### 2. Chỉ khởi chạy (Run - Không cần build lại)
-Nếu trước đó đã build rồi và bạn chỉ muốn khởi động cả 2 server (Backend & Frontend) vào các cửa sổ mới:
-- Trên CMD: `run.bat`
-- Trên PowerShell: `.\run.ps1`
-
-
-### Option 1: Sử dụng Docker (Khuyến Nghị)
-
-```bash
-# Clone repository
-git clone https://github.com/ZenithGn/HaoHanWeb.git
-cd HaoHanWeb
-
-# Checkout branch rework_web
-git checkout rework_web
-
-# Build và chạy với Docker Compose
-docker-compose up -d
-
-# Ứng dụng sẽ có sẵn tại:
-# Frontend: http://localhost:3000
-# Backend API: http://localhost:3000/api
-```
-
-### Option 2: Cài Đặt Thủ Công
-
-#### Backend (Ruby on Rails)
-
-```bash
-# Vào thư mục backend
-cd backend
-
-# Cài đặt dependencies
-bundle install
-
-# Thiết lập database
-bundle exec rails db:create
-bundle exec rails db:migrate
-bundle exec rails db:seed  # (nếu có seed data)
-
-# Chạy Rails server
-bundle exec rails s -p 3001
-```
-
-Backend sẽ chạy tại: `http://localhost:3001`
-
-#### Frontend (Next.js)
-
-```bash
-# Vào thư mục frontend
-cd frontend
-
-# Cài đặt dependencies
-npm install
-# hoặc
-yarn install
-# hoặc
-pnpm install
-
-# Chạy development server
-npm run dev
-# hoặc
-yarn dev
-# hoặc
-pnpm dev
-```
-
-Frontend sẽ chạy tại: `http://localhost:3000`
-
-## Cấu Trúc Thư Mục
-
-```
+```text
 HaoHanWeb/
-├── backend/           # Ruby on Rails API
+├── backend/              # Rails API
 │   ├── app/
 │   ├── config/
 │   ├── db/
 │   ├── Gemfile
-│   └── ...
-├── frontend/          # Next.js Frontend
-│   ├── app/
-│   ├── components/
+│   └── Dockerfile
+├── frontend/             # Next.js app
 │   ├── public/
-│   ├── package.json
-│   └── ...
-├── docker-compose.yml # Docker configuration
-├── Dockerfile
+│   ├── src/
+│   └── package.json
+├── docker-compose.yml
+├── .dockerignore
+├── .env.example
 └── README.md
 ```
 
-## Cấu Hình
+## Yêu Cầu
 
-### Backend
-- Xem `backend/config/database.yml` để cấu hình database
-- Xem `backend/config/secrets.yml` cho API keys và environment variables
+- Node.js 20+ khuyến nghị cho frontend.
+- Ruby 3.4.x cho backend.
+- Bundler.
+- Docker Desktop nếu chạy bằng Docker.
+- SQL Server hoặc container SQL Server từ `docker-compose.yml`.
 
-### Frontend
-- Xem `frontend/.env.local` cho environment variables
-- Xem `frontend/next.config.js` cho Next.js configuration
+## Cấu Hình Môi Trường
 
-## Environment Variables
+Tạo file môi trường từ file mẫu:
 
-### Backend (.env hoặc .env.local)
-```
-DATABASE_URL=your_database_url
-RAILS_ENV=development
-SECRET_KEY_BASE=your_secret_key
+```bash
+cp .env.example .env
+cp backend/.env.example backend/.env
 ```
 
-### Frontend (.env.local)
+Các biến quan trọng:
+
+```env
+DB_HOST=localhost
+DB_PORT=1433
+DB_NAME=HaoHanDB
+DB_USERNAME=
+DB_PASSWORD=
+
+DISCORD_WEBHOOK_URL=
+RCON_HOST=127.0.0.1
+RCON_PORT=25575
+RCON_PASSWORD=
+
+PAYOS_CLIENT_ID=
+PAYOS_API_KEY=
+PAYOS_CHECKSUM_KEY=
+
+GAME_SERVER_TOKEN=
+JWT_SECRET=
 ```
+
+Frontend dùng API backend qua:
+
+```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
-NEXT_PUBLIC_APP_NAME=HaoHanWeb
 ```
+
+Nếu cần, tạo `frontend/.env.local` và đặt biến trên trong file đó.
+
+## Setup Và Chạy Nhanh Bằng Script
+
+Ở thư mục gốc dự án có sẵn script cho Windows:
+
+- `build.bat`
+- `build.ps1`
+- `run.bat`
+- `run.ps1`
+
+### Build Và Chạy Bằng CMD
+
+```bat
+build.bat
+```
+
+Script sẽ hiện menu:
+
+```text
+[1] Build toàn bộ hệ thống local
+[2] Build bằng Docker Compose
+[3] Chỉ build backend
+[4] Chỉ build frontend
+[5] Chỉ khởi động hệ thống, không build lại
+```
+
+Sau khi build local xong, script có thể mở backend và frontend trong cửa sổ mới.
+
+### Build Và Chạy Bằng PowerShell
+
+```powershell
+.\build.ps1
+```
+
+Nếu PowerShell chặn script, có thể chạy:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\build.ps1
+```
+
+### Chỉ Khởi Động Project
+
+CMD:
+
+```bat
+run.bat
+```
+
+PowerShell:
+
+```powershell
+.\run.ps1
+```
+
+Các script khởi động:
+
+- Backend Rails: `http://localhost:3001`
+- Frontend Next.js: `http://localhost:3000`
+
+## Chạy Bằng Docker
+
+Docker Compose hiện khởi động SQL Server và Rails backend:
+
+```bash
+docker compose up -d --build
+```
+
+Các service mặc định:
+
+- SQL Server: `localhost:1433`
+- Backend API: `http://localhost:3001`
+
+Dừng container:
+
+```bash
+docker compose down
+```
+
+Dừng và xoá volume database local:
+
+```bash
+docker compose down -v
+```
+
+## Chạy Backend Thủ Công
+
+```bash
+cd backend
+bundle install
+bin/rails db:create
+bin/rails db:migrate
+bin/rails server -p 3001
+```
+
+Backend chạy tại:
+
+```text
+http://localhost:3001
+```
+
+## Chạy Frontend
+
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+Frontend chạy tại:
+
+```text
+http://localhost:3000
+```
+
+Build production:
+
+```bash
+cd frontend
+npm run build
+npm run start
+```
+
+Kiểm tra lint:
+
+```bash
+cd frontend
+npm run lint
+```
+
+## Scripts Hữu Ích
+
+Backend:
+
+```bash
+cd backend
+bin/rails db:migrate
+bin/rails db:seed
+bin/rails test
+```
+
+Frontend:
+
+```bash
+cd frontend
+npm run dev
+npm run build
+npm run lint
+```
+
+Docker:
+
+```bash
+docker compose up -d --build
+docker compose logs -f backend
+docker compose logs -f db
+```
+
+## Ghi Chú Phát Triển
+
+- Không commit file `.env`, key, token, database dump hoặc file build.
+- Giữ `.env.example` và `backend/.env.example` được cập nhật khi thêm biến môi trường mới.
+- File SQL dump local như `HaoHanDB.sql` đang được ignore.
+- Frontend assets nằm trong `frontend/public/assets`.
+- Nội dung đa ngôn ngữ nằm trong `frontend/src/dictionaries`.
 
 ## Đóng Góp
 
-Hãy tạo một pull request nếu bạn muốn đóng góp cho dự án!
-
-1. Fork repository
-2. Tạo branch cho feature của bạn (`git checkout -b feature/AmazingFeature`)
-3. Commit changes (`git commit -m 'Add some AmazingFeature'`)
-4. Push to branch (`git push origin feature/AmazingFeature`)
-5. Mở Pull Request
+1. Tạo branch mới cho thay đổi.
+2. Chạy build/test phù hợp trước khi mở pull request.
+3. Mô tả ngắn gọn thay đổi và ảnh hưởng nếu có.

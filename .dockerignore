@@ -1,28 +1,70 @@
 # Git
 .git
 .gitignore
+.gitattributes
+
+# Environment and secrets
+.env
+.env.*
+**/.env
+**/.env.*
+!**/.env.example
+**/config/master.key
+**/config/credentials/*.key
 
 # Node / Next.js
 **/node_modules
 **/.next
 **/out
 **/build
+**/dist
+**/.turbo
+**/.vercel
+**/.npm
+**/.pnpm-store
 npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
 
-# Ruby on Rails (Backend)
+# Rails / Ruby
 backend/log/*
 backend/tmp/*
 backend/storage/*
-backend/.bundle/
+backend/.bundle
 backend/vendor/bundle
-backend/.env
-backend/.env.*
+backend/coverage
+backend/public/assets
+backend/public/packs
+backend/public/packs-test
+backend/public/uploads
+!backend/log/.keep
+!backend/tmp/.keep
 
-# IDEs and OS files
+# Databases, dumps, and local artifacts
+*.sqlite3
+*.sqlite3-*
+*.sql
+*.bak
+*.dump
+HaoHanDB.sql
+
+# Tests and reports
+coverage
+**/coverage
+**/.nyc_output
+**/test-results
+**/playwright-report
+
+# OS / editor
 .vscode
 .idea
 .DS_Store
 Thumbs.db
 desktop.ini
+*.swp
+*.swo
+
+# Project docs not needed in Docker build context
 Postman_Testing_Guide.md
-HaoHanDB.sql
+README.md

@@ -1,33 +1,73 @@
-# Node / Next.js
+# Dependencies
 node_modules/
+frontend/node_modules/
+backend/vendor/bundle/
+backend/.bundle/
+
+# Next.js / frontend build output
 .next/
+frontend/.next/
 out/
+frontend/out/
 build/
+frontend/build/
+dist/
+frontend/dist/
+.turbo/
+frontend/.turbo/
+.vercel/
+frontend/.vercel/
+
+# Rails / backend runtime files
+backend/log/*
+backend/tmp/*
+backend/storage/*
+backend/coverage/
+backend/public/assets/
+backend/public/packs/
+backend/public/packs-test/
+backend/public/uploads/
+!backend/log/.keep
+!backend/tmp/.keep
+!backend/tmp/pids/
+!backend/tmp/pids/.keep
+
+# Environment variables and secrets
+.env
+.env.*
+frontend/.env
+frontend/.env.*
+backend/.env
+backend/.env.*
+backend/config/master.key
+backend/config/credentials/*.key
+!.env.example
+!frontend/.env.example
+!backend/.env.example
+
+# Logs and reports
+*.log
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+pnpm-debug.log*
+coverage/
+.nyc_output/
+test-results/
+playwright-report/
 
-# Ruby on Rails (Backend)
-/backend/log/*
-/backend/tmp/*
-/backend/storage/*
-/backend/.bundle/
-/backend/vendor/bundle/
-!/backend/log/.keep
-!/backend/tmp/.keep
+# Databases, dumps, and local exports
+*.sqlite3
+*.sqlite3-*
+*.sql
+*.bak
+*.dump
+HaoHanDB.sql
 
-# Environment variables & secrets
-.env
-.env.local
-.env.development.local
-.env.test.local
-.env.production.local
-*.env
-*.env.*
-backend/.env
-backend/.env.*
-
-# OS & Editor files
+# OS and editor files
+.DS_Store
+Thumbs.db
+desktop.ini
 .vscode/
 .idea/
 *.suo
@@ -35,12 +75,6 @@ backend/.env.*
 *.njsproj
 *.sln
 *.sw?
-.DS_Store
-Thumbs.db
-desktop.ini
 
-# Whitelist env examples
-!.env.example
-!backend/.env.example
-package-lock.json
+# Local scratch files
 Tài liệu không có tiêu đề.md
