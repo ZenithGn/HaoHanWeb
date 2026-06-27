@@ -808,8 +808,9 @@ export default function HomeClient({ dict, lang }) {
                 }
                 <i className="fa-solid fa-leaf"></i>
               </span>
-              {/* eslint-disable-next-line @next/next/no-img-element */}
-              <img className="haohan__logo-main" src="/assets/img/logo.png" alt="HaoHan SMP" />
+              <div className="haohan__logo-wrapper">
+                <img className="haohan__logo-main" src="/assets/img/logo.png" alt="HaoHan SMP" />
+              </div>
               <p className="haohan__desc">{labels.haohanDesc}</p>
 
               <div className="haohan__actions">
