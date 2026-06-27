@@ -176,13 +176,20 @@ button {
   height: auto;
   filter: drop-shadow(0 8px 24px rgba(0, 0, 0, 0.6));
   margin-bottom: 24px;
-  transition: transform 0.3s ease;
+  transition: transform 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275), filter 0.3s ease;
   animation: heroFadeInUp 0.9s cubic-bezier(0.22, 1, 0.36, 1) both;
   animation-delay: 0.25s;
+  cursor: pointer;
 }
 
 .haohan__logo-main:hover {
-  transform: scale(1.1);
+  transform: scale(1.1) rotate(0.5deg);
+  filter: drop-shadow(0 12px 30px rgba(255, 149, 46, 0.3));
+}
+
+.haohan__logo-main:active {
+  transform: scale(1.2) rotate(-0.5deg);
+  transition: transform 0.1s ease;
 }
 
 .haohan__desc {
