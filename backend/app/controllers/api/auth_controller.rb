@@ -125,4 +125,60 @@ class Api::AuthController < ApplicationController
       render json: { error: 'Tên đăng nhập hoặc mật khẩu không chính xác!' }, status: :unauthorized
     end
   end
+
+  # POST /api/auth/update-profile
+  def update_profile
+    authenticate_user!
+    return if performed?
+
+    current_password = params[:current_password]
+    if current_password.blank?
+      return render json: { error: 'Vui lòng nhập mật khẩu hiện tại để xác thực thay đổi!' }, status: :bad_request
+    end
+
+    unless @current_user.valid_password?(current_password)
+      return render json: { error: 'Mật khẩu hiện tại không chính xác!' }, status: :unauthorized
+    end
+
+    email = params[:email]&.strip
+    new_password = params[:new_password]
+
+    if email.present? && email != @current_user.email
+      unless email =~ URI::MailTo::EMAIL_REGEXP
+        return render json: { error: 'Email không đúng định dạng!' }, status: :bad_request
+      end
+
+      if Player.where.not(id: @current_user.id).where.not(password_hash: 'UNREGISTERED_GHOST').exists?(email: email)
+        return render json: { error: 'Địa chỉ email này đã được sử dụng!' }, status: :bad_request
+      end
+
+      @current_user.email = email
+    end
+
+    if new_password.present?
+      if new_password.length < 6
+        return render json: { error: 'Mật khẩu mới phải từ 6 ký tự trở lên!' }, status: :bad_request
+      end
+      @current_user.password_hash = Player.hash_password(new_password)
+    end
+
+    if @current_user.save
+      render json: {
+        message: 'Cập nhật thông tin tài khoản thành công!',
+        user: { 
+          id: @current_user.id, 
+          username: @current_user.username, 
+          email: @current_user.email, 
+          uuid: @current_user.uuid, 
+          role: @current_user.role,
+          is_linked: @current_user.is_linked ? 1 : 0,
+          discord_id: @current_user.discord_id,
+          avatar_url: @current_user.avatar_url,
+          play_time: @current_user.play_time
+        }
+      }, status: :ok
+    else
+      render json: { error: @current_user.errors.full_messages.join(', ') }, status: :unprocessable_entity
+    end
+  end
 end

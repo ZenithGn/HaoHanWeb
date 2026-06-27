@@ -194,6 +194,35 @@ export default function HomeClient({ dict, lang }) {
   const [syncSuccess, setSyncSuccess] = useState(true);
   const [openFaq, setOpenFaq] = useState(null);
   const [activeWikiTab, setActiveWikiTab] = useState("intro");
+  const [wikiMenuOpen, setWikiMenuOpen] = useState(false);
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+
+  const [profileSubTab, setProfileSubTab] = useState("overview");
+  const [selectedTopic, setSelectedTopic] = useState(null);
+  const [selectedTopicImageIndex, setSelectedTopicImageIndex] = useState(0);
+
+  // Account Settings form states
+  const [currentPassword, setCurrentPassword] = useState("");
+  const [newEmail, setNewEmail] = useState("");
+  const [newPassword, setNewPassword] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [settingsMsg, setSettingsMsg] = useState("");
+  const [settingsSuccess, setSettingsSuccess] = useState(true);
+  const [updatingSettings, setUpdatingSettings] = useState(false);
+  const [isEditingSettings, setIsEditingSettings] = useState(false);
+
+  // Minecraft Link states
+  const [linkCode, setLinkCode] = useState("");
+  const [linkingGame, setLinkingGame] = useState(false);
+  const [linkMsg, setLinkMsg] = useState("");
+  const [linkSuccess, setLinkSuccess] = useState(true);
+
+  useEffect(() => {
+    if (user && user.email) {
+      setNewEmail(user.email);
+    }
+  }, [user]);
+
   const formatText = (text) => {
     return text.split('\n').map((line, idx) => {
       if (line.trim().startsWith('•')) {
@@ -342,30 +371,85 @@ export default function HomeClient({ dict, lang }) {
   ], []);
   const galleryCaptions = useMemo(() => dict.gallery?.captions || [], [dict]);
   const galleryAlbums = useMemo(() => {
-    const albums = dict.gallery?.albums || {};
     return [
       {
-        year: "2024",
-        items: [
-          { index: 9, title: albums.anniversary_7_title || "7 year anniversary", subtitle: albums.anniversary_7_subtitle || "Screenshot competition" },
-          { index: 1, title: albums.artworks_title || "Artworks", subtitle: albums.artworks_subtitle || "Artworks made by members of the community" },
-          { index: 10, title: albums.website_originals_title || "Website originals", subtitle: albums.website_originals_subtitle || "Images originally used in the website redesign" },
-        ],
+        season: "3",
+        name: isVi ? "HaoHan Origins" : "HaoHan Origins",
+        duration: "01/2024 - 06/2024",
+        desc: isVi 
+          ? "Khởi nguồn câu chuyện sinh tồn cổ điển của các thành viên HaoHan với những kỳ quan và cơ chế hoàn toàn mới."
+          : "The beginning of classic survival story for HaoHan members with completely new wonders and mechanics.",
+        topics: [
+          {
+            title: isVi ? "Công trình vĩ đại" : "Epic Builds",
+            desc: isVi ? "Các lâu đài và kỳ quan được xây dựng bởi thành viên." : "Castles and wonders constructed by players.",
+            coverIndex: 0,
+            images: [
+              { index: 0, title: isVi ? "Lâu đài trên mây" : "Cloud Castle", desc: isVi ? "Xây dựng bởi đội ngũ kiến trúc sư HaoHan tại tọa độ x: 1200, z: -450." : "Constructed by HaoHan architects team at coordinates x: 1200, z: -450." },
+              { index: 1, title: isVi ? "Khu chợ cổ trấn" : "Ancient Town Market", desc: isVi ? "Điểm giao thương sầm uất nhất của Season 3, nơi tụ họp thương nhân." : "The most bustling trading point of Season 3, a gathering place for merchants." },
+              { index: 2, title: isVi ? "Nhà thờ Gothic" : "Gothic Cathedral", desc: isVi ? "Công trình tâm linh kỳ vĩ với hơn 500,000 khối đá tỉ mỉ." : "A magnificent spiritual monument built with over 500,000 detailed blocks." },
+            ]
+          },
+          {
+            title: isVi ? "Hoạt động cộng đồng" : "Community Events",
+            desc: isVi ? "Khoảnh khắc vui vẻ bên nhau trong các sự kiện in-game." : "Fun moments together during in-game events.",
+            coverIndex: 3,
+            images: [
+              { index: 3, title: isVi ? "Ảnh tập thể Season 3" : "S3 Group Photo", desc: isVi ? "Đông đảo thành viên tề tựu tại Sảnh chính trước giờ reset." : "Many members gathered at the main Hall before the reset time." },
+              { index: 4, title: isVi ? "Đua thuyền rồng" : "Dragon Boat Racing", desc: isVi ? "Giải đấu thể thao kịch tính trên sông băng thu hút nhiều khán giả." : "An exciting sports tournament on ice river attracting many spectators." }
+            ]
+          }
+        ]
       },
       {
-        year: "2021",
-        items: [
-          { index: 2, title: albums.anniversary_4_title || "4 Year anniversary", subtitle: albums.anniversary_4_subtitle || "Community memories" },
-        ],
+        season: "2",
+        name: isVi ? "HaoHan Reborn" : "HaoHan Reborn",
+        duration: "06/2021 - 12/2023",
+        desc: isVi 
+          ? "Thời kỳ máy chủ chuyển mình mạnh mẽ với các bản cập nhật công nghệ và cơ sở hạ tầng đột phá."
+          : "The era of server breakthrough transformation with technology and infrastructure updates.",
+        topics: [
+          {
+            title: isVi ? "Thế giới Survival" : "Survival World",
+            desc: isVi ? "Khám phá các vùng đất kỳ thú và căn cứ sinh tồn đầy sáng tạo." : "Explore wonderlands and creative survival bases.",
+            coverIndex: 5,
+            images: [
+              { index: 5, title: isVi ? "Căn cứ dưới lòng đất" : "Underground Bunker", desc: isVi ? "Căn cứ tự động hóa hoàn toàn với hệ thống phân loại kho thông minh." : "Fully automated base with smart warehouse sorting system." },
+              { index: 6, title: isVi ? "Trang trại sắt khổng lồ" : "Iron Golem Farm", desc: isVi ? "Cỗ máy sản xuất tài nguyên tự động hiệu suất cực cao." : "Extremely high efficiency automated resource production machine." }
+            ]
+          },
+          {
+            title: isVi ? "Đấu trường PvP" : "PvP Arena",
+            desc: isVi ? "Nơi diễn ra các trận thư hùng kịch tính giữa các chiến binh." : "Where intense battles take place between warriors.",
+            coverIndex: 7,
+            images: [
+              { index: 7, title: isVi ? "Đấu trường La Mã" : "Colosseum PvP", desc: isVi ? "Vòng chung kết giải đấu PvP đợt Giáng Sinh vô cùng nảy lửa." : "Extremely fiery PvP tournament finals during Christmas season." },
+              { index: 8, title: isVi ? "Pháo đài công thành" : "Siege Fortress", desc: isVi ? "Hoạt động công thành chiến quy tụ hàng chục clan tham gia." : "Siege warfare activity gathering dozens of clans." }
+            ]
+          }
+        ]
       },
       {
-        year: "2020",
-        items: [
-          { index: 4, title: albums.survival_world_title || "Survival world", subtitle: albums.survival_world_subtitle || "From the early days of the server" },
-        ],
-      },
+        season: "1",
+        name: isVi ? "HaoHan Classic" : "HaoHan Classic",
+        duration: "03/2020 - 05/2021",
+        desc: isVi 
+          ? "Hành trình khởi đầu của cộng đồng HaoHan SMP đầy ắp kỷ niệm thô sơ nhưng ấm cúng."
+          : "The initial journey of HaoHan SMP community filled with raw but warm memories.",
+        topics: [
+          {
+            title: isVi ? "Bản làng sơ khai" : "Classic Village",
+            desc: isVi ? "Nhìn lại căn nhà gỗ đầu tiên và những người bạn thuở sơ khai." : "Looking back at the first wooden house and initial friends.",
+            coverIndex: 9,
+            images: [
+              { index: 9, title: isVi ? "Ngôi làng khởi đầu" : "Spawn Village", desc: isVi ? "Nơi tụ họp đầu tiên của các thành viên đặt nền móng cho server." : "The first meeting place of members laying foundation for the server." },
+              { index: 10, title: isVi ? "Nhà kho cộng đồng" : "Spawn Warehouse", desc: isVi ? "Nhà kho chung chia sẻ tài nguyên thời kỳ đầu nhiều khó khăn." : "Shared warehouse sharing resources during difficult early days." }
+            ]
+          }
+        ]
+      }
     ];
-  }, [dict]);
+  }, [isVi]);
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
       if (!indicator || !linkEl || !containerEl) return;
@@ -547,6 +631,103 @@ export default function HomeClient({ dict, lang }) {
     setMobileMenuOpen(false);
     setActiveTab("home");
     window.location.href = `/${currentLang}`;
+  };
+  const handleUpdateSettings = async (e) => {
+    e.preventDefault();
+    if (!currentPassword) {
+      setSettingsMsg(isVi ? "Vui lòng nhập mật khẩu hiện tại!" : "Please enter your current password!");
+      setSettingsSuccess(false);
+      return;
+    }
+    if (newPassword && newPassword !== confirmPassword) {
+      setSettingsMsg(isVi ? "Mật khẩu mới không khớp!" : "New passwords do not match!");
+      setSettingsSuccess(false);
+      return;
+    }
+    setUpdatingSettings(true);
+    setSettingsMsg("");
+    try {
+      const token = getToken();
+      const response = await fetch(`${API_BASE}/api/auth/update-profile`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({
+          current_password: currentPassword,
+          email: newEmail,
+          new_password: newPassword || undefined
+        })
+      });
+      const data = await response.json();
+      if (response.ok && data.user) {
+        setSettingsMsg(isVi ? "Cập nhật tài khoản thành công!" : "Profile updated successfully!");
+        setSettingsSuccess(true);
+        login(token, data.user);
+        setCurrentPassword("");
+        setNewPassword("");
+        setConfirmPassword("");
+        setIsEditingSettings(false);
+      } else {
+        setSettingsMsg(data.error || (isVi ? "Cập nhật thất bại!" : "Update failed!"));
+        setSettingsSuccess(false);
+      }
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      setSettingsMsg(isVi ? "Lỗi kết nối máy chủ!" : "Server connection error!");
+      setSettingsSuccess(false);
+    } finally {
+      setUpdatingSettings(false);
+    }
+  };
+
+  const handleCancelEdit = () => {
+    setIsEditingSettings(false);
+    setNewEmail(user ? user.email : "");
+    setNewPassword("");
+    setConfirmPassword("");
+    setCurrentPassword("");
+    setSettingsMsg("");
+  };
+
+  const handleLinkMinecraft = async (e) => {
+    e.preventDefault();
+    if (!linkCode) {
+      setLinkMsg(isVi ? "Vui lòng nhập mã liên kết!" : "Please enter the link code!");
+      setLinkSuccess(false);
+      return;
+    }
+    setLinkingGame(true);
+    setLinkMsg("");
+    try {
+      const token = getToken();
+      const response = await fetch(`${API_BASE}/api/auth/link`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${token}`
+        },
+        body: JSON.stringify({ code: linkCode })
+      });
+      const data = await response.json();
+      if (response.ok && data.user) {
+        setLinkMsg(isVi ? "Liên kết tài khoản game thành công!" : "Game account linked successfully!");
+        setLinkSuccess(true);
+        const updatedUser = { ...user, ...data.user };
+        login(token, updatedUser);
+        setLinkCode("");
+      } else {
+        setLinkMsg(data.error || (isVi ? "Mã liên kết không hợp lệ!" : "Invalid link code!"));
+        setLinkSuccess(false);
+      }
+    } catch (error) {
+      console.error("Error linking Minecraft account:", error);
+      setLinkMsg(isVi ? "Lỗi kết nối máy chủ!" : "Server connection error!");
+      setLinkSuccess(false);
+    } finally {
+      setLinkingGame(false);
+    }
   };
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}${topbar && mobileMenuOpen ? " topbar__actions--open" : ""}`}>
@@ -836,34 +1017,175 @@ export default function HomeClient({ dict, lang }) {
                 <div className="page-hero__cube" style={{ background: 'linear-gradient(#facc15 0 30%, transparent 31%), repeating-linear-gradient(45deg, #8a6233 0 7px, #654826 7px 14px)' }} aria-hidden="true"></div>
               </div>
             </header>
+            
             <div className="wrap gallery-page__wrap" style={{ marginTop: '40px' }}>
-              <div className="gallery-albums">
-                {galleryAlbums.map((album) => (
-                  <section className="gallery-year" key={album.year}>
-                    <h3>{album.year}</h3>
-                    <div className="gallery-album-grid">
-                      {album.items.map((item) => (
-                        <a
-                          className="gallery-album-card"
-                          href="#gallery"
-                          key={`${album.year}-${item.index}`}
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setActiveImgIndex(item.index);
-                          }}
-                        >
-                          {/* eslint-disable-next-line @next/next/no-img-element */}
-                          <img src={galleryImages[item.index]} alt="" />
-                          <span className="gallery-album-card__text">
-                            <strong>{item.title}</strong>
-                            <em>{item.subtitle}</em>
-                          </span>
-                        </a>
-                      ))}
+              {selectedTopic ? (
+                /* Topic Media Explorer (Split Pane layout) */
+                <div style={{ width: '100%' }}>
+                  {/* Breadcrumbs and Back Button */}
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '24px', fontFamily: "'Outfit', sans-serif" }}>
+                    <button
+                      onClick={() => setSelectedTopic(null)}
+                      style={{
+                        background: 'rgba(255, 255, 255, 0.05)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        color: '#ff952e',
+                        padding: '8px 18px',
+                        borderRadius: '6px',
+                        fontWeight: '700',
+                        fontSize: '0.9rem',
+                        cursor: 'pointer',
+                        display: 'inline-flex',
+                        alignItems: 'center',
+                        gap: '8px',
+                        transition: 'all 0.2s'
+                      }}
+                    >
+                      <i className="fa-solid fa-arrow-left"></i> {isVi ? "Quay lại" : "Back"}
+                    </button>
+                    <span style={{ color: '#868582', fontSize: '1.1rem' }}>/</span>
+                    <span style={{ color: '#fff', fontWeight: '700', fontSize: '1.1rem' }}>{selectedTopic.title}</span>
+                  </div>
+
+                  {/* Split layout */}
+                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 300px) 1fr', gap: '30px', minHeight: '500px', width: '100%' }}>
+                    {/* Left Sidebar - Images List */}
+                    <div style={{
+                      background: 'rgba(20, 16, 12, 0.32)',
+                      border: '1px solid rgba(255, 149, 46, 0.12)',
+                      borderRadius: '10px',
+                      padding: '16px',
+                      maxHeight: '600px',
+                      overflowY: 'auto',
+                      display: 'flex',
+                      flexDirection: 'column',
+                      gap: '12px'
+                    }}>
+                      <h4 style={{ color: '#ff952e', margin: '0 0 4px 0', fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Outfit', sans-serif" }}>
+                        {isVi ? "Danh sách ảnh" : "Images List"}
+                      </h4>
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        {selectedTopic.images.map((img, idx) => {
+                          const isActive = selectedTopicImageIndex === idx;
+                          return (
+                            <button
+                              key={idx}
+                              onClick={() => setSelectedTopicImageIndex(idx)}
+                              style={{
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '12px',
+                                width: '100%',
+                                background: isActive ? 'rgba(255, 149, 46, 0.15)' : 'rgba(20, 16, 12, 0.2)',
+                                border: isActive ? '1px solid #ff952e' : '1px solid rgba(255, 255, 255, 0.08)',
+                                borderRadius: '8px',
+                                padding: '8px',
+                                cursor: 'pointer',
+                                textAlign: 'left',
+                                transition: 'all 0.2s'
+                              }}
+                            >
+                              {/* eslint-disable-next-line @next/next/no-img-element */}
+                              <img
+                                src={galleryImages[img.index]}
+                                alt={img.title}
+                                style={{ width: '60px', height: '45px', objectFit: 'cover', borderRadius: '4px', border: '1px solid rgba(255, 255, 255, 0.1)' }}
+                              />
+                              <div style={{ flex: 1, minWidth: 0 }}>
+                                <div style={{ color: isActive ? '#ff952e' : '#fff', fontWeight: '700', fontSize: '0.85rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', fontFamily: "'Outfit', sans-serif" }}>
+                                  {img.title}
+                                </div>
+                                <div style={{ color: '#868582', fontSize: '0.75rem', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap', marginTop: '2px', fontFamily: "'Outfit', sans-serif" }}>
+                                  Index #{idx + 1}
+                                </div>
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
                     </div>
-                  </section>
-                ))}
-              </div>
+
+                    {/* Right Main Detail View */}
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
+                      <div style={{
+                        position: 'relative',
+                        width: '100%',
+                        height: '450px',
+                        background: 'rgba(0, 0, 0, 0.4)',
+                        border: '1px solid rgba(255, 255, 255, 0.1)',
+                        borderRadius: '12px',
+                        overflow: 'hidden',
+                        boxShadow: '0 15px 30px rgba(0,0,0,0.5)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center'
+                      }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          src={galleryImages[selectedTopic.images[selectedTopicImageIndex].index]}
+                          alt={selectedTopic.images[selectedTopicImageIndex].title}
+                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
+                        />
+                      </div>
+
+                      <div style={{
+                        background: 'rgba(20, 16, 12, 0.4)',
+                        border: '1px solid rgba(255, 149, 46, 0.15)',
+                        borderRadius: '10px',
+                        padding: '20px',
+                        fontFamily: "'Outfit', sans-serif"
+                      }}>
+                        <h4 style={{ color: '#ff952e', margin: '0 0 8px 0', fontSize: '1.25rem', fontWeight: '700' }}>
+                          {selectedTopic.images[selectedTopicImageIndex].title}
+                        </h4>
+                        <p style={{ color: '#f1f0ed', margin: 0, fontSize: '0.95rem', lineHeight: '1.6' }}>
+                          {selectedTopic.images[selectedTopicImageIndex].desc}
+                        </p>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              ) : (
+                /* Seasons and Topic Cards view */
+                <div className="gallery-albums">
+                  {galleryAlbums.map((album) => (
+                    <section className="gallery-year" key={album.season} style={{ marginBottom: '40px' }}>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid rgba(255, 255, 255, 0.14)', paddingBottom: '10px', marginBottom: '8px' }}>
+                        <h3 style={{ margin: 0, color: '#ffffff', fontFamily: "'Be Vietnam Pro', 'Outfit', sans-serif", fontSize: '26px', fontWeight: '900' }}>
+                          Season {album.season}: {album.name}
+                        </h3>
+                        <span style={{ color: '#ff952e', fontSize: '14px', fontWeight: '700', fontFamily: "'Outfit', sans-serif" }}>
+                          {album.duration}
+                        </span>
+                      </div>
+                      <p style={{ margin: '0 0 20px 0', color: '#aaa9a6', fontSize: '0.95rem', lineHeight: '1.5', fontFamily: "'Outfit', sans-serif" }}>
+                        {album.desc}
+                      </p>
+                      <div className="gallery-album-grid">
+                        {album.topics.map((topic, topicIdx) => (
+                          <a
+                            key={topicIdx}
+                            className="gallery-album-card"
+                            href="#gallery"
+                            onClick={(e) => {
+                              e.preventDefault();
+                              setSelectedTopic(topic);
+                              setSelectedTopicImageIndex(0);
+                            }}
+                          >
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img src={galleryImages[topic.coverIndex]} alt={topic.title} />
+                            <span className="gallery-album-card__text">
+                              <strong>{topic.title}</strong>
+                              <em>{topic.desc}</em>
+                            </span>
+                          </a>
+                        ))}
+                      </div>
+                    </section>
+                  ))}
+                </div>
+              )}
             </div>
           </section>
         )}
@@ -1238,16 +1560,25 @@ export default function HomeClient({ dict, lang }) {
                     <p>{dict.profile.description}</p>
                   </header>
                   <nav className="profile-sidebar-nav" aria-label={dict.profile.nav_label}>
-                    <button type="button" className="profile-sidebar-link profile-sidebar-link--active">
+                    <button
+                      type="button"
+                      className={`profile-sidebar-link ${profileSubTab === "overview" ? "profile-sidebar-link--active" : ""}`}
+                      onClick={() => setProfileSubTab("overview")}
+                    >
                       <i className="fa-solid fa-user"></i><span>{dict.profile.nav_overview}</span>
                     </button>
-                    <button type="button" className="profile-sidebar-link">
+                    <button
+                      type="button"
+                      className={`profile-sidebar-link ${profileSubTab === "settings" ? "profile-sidebar-link--active" : ""}`}
+                      onClick={() => setProfileSubTab("settings")}
+                    >
                       <i className="fa-solid fa-gear"></i><span>{dict.profile.nav_settings}</span>
                     </button>
-                    <button type="button" className="profile-sidebar-link">
-                      <i className="fa-regular fa-bell"></i><span>{dict.profile.nav_notifications}</span>
-                    </button>
-                    <button type="button" className="profile-sidebar-link">
+                    <button
+                      type="button"
+                      className={`profile-sidebar-link ${profileSubTab === "connections" ? "profile-sidebar-link--active" : ""}`}
+                      onClick={() => setProfileSubTab("connections")}
+                    >
                       <i className="fa-solid fa-link"></i><span>{dict.profile.nav_connections}</span>
                     </button>
                     <button type="button" className="profile-sidebar-link profile-sidebar-link--logout" onClick={handleLogout}>
@@ -1256,127 +1587,468 @@ export default function HomeClient({ dict, lang }) {
                   </nav>
                 </aside>
                 <div className="profile-card">
-                  <div className="profile-card-grid">
-                    <div className="profile-avatar-wrapper">
-                      {/* eslint-disable-next-line @next/next/no-img-element */}
-                      <img
-                        className="profile-avatar"
-                        src={`https://minotar.net/avatar/${user.username}/120`}
-                        alt={user.username}
-                      />
-                      <div className={`profile-discord-badge ${!user.discord_id ? "profile-discord-badge--unlinked" : ""}`}>
-                        {user.discord_id && user.avatar_url ? (
-                          /* eslint-disable-next-line @next/next/no-img-element */
-                          <img
-                            src={user.avatar_url}
-                            alt="Discord avatar"
-                            style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
-                          />
-                        ) : (
-                          <i className="fab fa-discord"></i>
-                        )}
+                  {profileSubTab === "overview" && (
+                    <div className="profile-card-grid">
+                      <div className="profile-avatar-wrapper">
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img
+                          className="profile-avatar"
+                          src={`https://minotar.net/avatar/${user.username}/120`}
+                          alt={user.username}
+                        />
+                      </div>
+                      <div className="profile-info">
+                        <div className="profile-name-row">
+                          <h3 className="profile-username">{user.username}</h3>
+                        </div>
+                        <p className="profile-welcome">
+                          {dict.profile.welcome_message}
+                        </p>
+                        <div className="profile-fields-grid">
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-user"></i>
+                            <span className="profile-field-label">{dict.profile.username_label}</span>
+                            <span className="profile-field-value profile-field-value--accent">{user.username}</span>
+                          </div>
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-envelope"></i>
+                            <span className="profile-field-label">Email</span>
+                            <span className="profile-field-value">{user.email}</span>
+                          </div>
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-clock"></i>
+                            <span className="profile-field-label">{dict.profile.playtime_label}</span>
+                            <span className="profile-field-value">
+                              {dict.profile.playtime_value
+                                .replace('{hours}', Math.floor((user.play_time || 0) / 3600))
+                                .replace('{minutes}', Math.floor(((user.play_time || 0) % 3600) / 60))}
+                            </span>
+                          </div>
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-brands fa-discord"></i>
+                            <span className="profile-field-label">{dict.profile.discord_status_label}</span>
+                            <span className="profile-field-value">
+                              {user.discord_id ? (
+                                <span className="profile-connection profile-connection--linked">
+                                  <i className="fab fa-discord"></i> {dict.profile.linked_discord}
+                                </span>
+                              ) : (
+                                <span className="profile-connection">
+                                  <i className="fab fa-discord"></i> {dict.profile.unlinked_discord}
+                                </span>
+                              )}
+                            </span>
+                          </div>
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-shield-halved"></i>
+                            <span className="profile-field-label">{dict.profile.role_label}</span>
+                            <span className="profile-field-value">{user.role || dict.profile.default_role}</span>
+                          </div>
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-fingerprint"></i>
+                            <span className="profile-field-label">{dict.profile.uuid_label}</span>
+                            <span className="profile-field-value profile-field-value--code">{user.uuid || "---"}</span>
+                          </div>
+                        </div>
                       </div>
                     </div>
-                    <div className="profile-info">
-                      <div className="profile-name-row">
-                        <h3 className="profile-username">{user.username}</h3>
-                        {user.uuid ? (
-                          <span className="profile-badge profile-badge--verified">
-                            <i className="fas fa-check-circle"></i> {dict.profile.linked_minecraft}
-                          </span>
-                        ) : (
-                          <span className="profile-badge profile-badge--unverified">
-                            <i className="fas fa-exclamation-circle"></i> {dict.profile.unlinked_minecraft}
-                          </span>
-                        )}
-                      </div>
-                      <p className="profile-welcome">
-                        {dict.profile.welcome_message}
+                  )}
+
+                  {profileSubTab === "settings" && (
+                    <div style={{ padding: '0 0 0 clamp(20px, 4vw, 40px)', width: '100%', fontFamily: "'Outfit', sans-serif" }}>
+                      <h3 style={{ color: '#ff952e', fontSize: '1.6rem', fontWeight: '700', marginBottom: '8px', letterSpacing: '-0.5px' }}>
+                        {dict.profile.settings_title}
+                      </h3>
+                      <p style={{ color: '#aaa9a6', fontSize: '0.95rem', marginBottom: '30px' }}>
+                        {dict.profile.settings_desc}
                       </p>
-                      <div className="profile-fields-grid">
-                        <div className="profile-field-item">
-                          <i className="profile-field-icon fa-solid fa-cube"></i>
-                          <span className="profile-field-label">{dict.profile.username_label}</span>
-                          <span className="profile-field-value profile-field-value--accent">{user.username}</span>
-                        </div>
-                        <div className="profile-field-item">
-                          <i className="profile-field-icon fa-solid fa-envelope"></i>
-                          <span className="profile-field-label">Email</span>
-                          <span className="profile-field-value">{user.email}</span>
-                        </div>
-                        <div className="profile-field-item">
-                          <i className="profile-field-icon fa-solid fa-clock"></i>
-                          <span className="profile-field-label">{dict.profile.playtime_label}</span>
-                          <span className="profile-field-value">
-                            {dict.profile.playtime_value
-                              .replace('{hours}', Math.floor((user.play_time || 0) / 3600))
-                              .replace('{minutes}', Math.floor(((user.play_time || 0) % 3600) / 60))}
-                          </span>
-                        </div>
-                        <div className="profile-field-item">
-                          <i className="profile-field-icon fa-brands fa-discord"></i>
-                          <span className="profile-field-label">{dict.profile.discord_status_label}</span>
-                          <span className="profile-field-value">
-                            {user.discord_id ? (
-                              <span className="profile-connection profile-connection--linked">
-                                <i className="fab fa-discord"></i> {dict.profile.linked_discord}
-                              </span>
-                            ) : (
-                              <span className="profile-connection">
-                                <i className="fab fa-discord"></i> {dict.profile.unlinked_discord}
-                              </span>
-                            )}
-                          </span>
-                        </div>
-                        <div className="profile-field-item">
-                          <i className="profile-field-icon fa-solid fa-shield-halved"></i>
-                          <span className="profile-field-label">{dict.profile.role_label}</span>
-                          <span className="profile-field-value">{user.role || dict.profile.default_role}</span>
-                        </div>
-                        <div className="profile-field-item">
-                          <i className="profile-field-icon fa-solid fa-fingerprint"></i>
-                          <span className="profile-field-label">{dict.profile.uuid_label}</span>
-                          <span className="profile-field-value profile-field-value--code">{user.uuid || "---"}</span>
-                        </div>
-                      </div>
-                      {!user.uuid && (
-                        <div className="profile-tip-box" style={{ marginTop: '10px' }}>
-                          <i className="fas fa-info-circle"></i>
-                          <span>{dict.profile.minecraft_link_tip}</span>
-                        </div>
-                      )}
-                      <div className="profile-actions-row" style={{ marginTop: '20px' }}>
-                        <div className="profile-actions-left">
-                          {user.discord_id ? (
-                            <span className="profile-sync-msg profile-sync-msg--success" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                              <i className="fab fa-discord"></i> {dict.profile.linked_discord}
+
+                      <form onSubmit={handleUpdateSettings}>
+                        <div className="profile-fields-grid" style={{ marginBottom: '24px' }}>
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-envelope"></i>
+                            <span className="profile-field-label">Email</span>
+                            <span className="profile-field-value" style={{ width: '100%' }}>
+                              <input
+                                type="email"
+                                value={newEmail}
+                                onChange={(e) => setNewEmail(e.target.value)}
+                                placeholder="you@example.com"
+                                required
+                                disabled={!isEditingSettings}
+                                style={{
+                                  width: '100%',
+                                  background: 'transparent',
+                                  border: 'none',
+                                  borderBottom: isEditingSettings ? '1px dashed rgba(255, 255, 255, 0.2)' : 'none',
+                                  color: isEditingSettings ? '#fff' : '#868582',
+                                  fontSize: '0.95rem',
+                                  padding: '4px 0',
+                                  outline: 'none',
+                                  cursor: isEditingSettings ? 'text' : 'not-allowed'
+                                }}
+                              />
                             </span>
+                          </div>
+
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-key"></i>
+                            <span className="profile-field-label">{dict.profile.settings_new_password}</span>
+                            <span className="profile-field-value" style={{ width: '100%' }}>
+                              <input
+                                type="password"
+                                value={newPassword}
+                                onChange={(e) => setNewPassword(e.target.value)}
+                                placeholder={isEditingSettings ? "••••••••" : ""}
+                                minLength={6}
+                                disabled={!isEditingSettings}
+                                style={{
+                                  width: '100%',
+                                  background: 'transparent',
+                                  border: 'none',
+                                  borderBottom: isEditingSettings ? '1px dashed rgba(255, 255, 255, 0.2)' : 'none',
+                                  color: isEditingSettings ? '#fff' : '#868582',
+                                  fontSize: '0.95rem',
+                                  padding: '4px 0',
+                                  outline: 'none',
+                                  cursor: isEditingSettings ? 'text' : 'not-allowed'
+                                }}
+                              />
+                            </span>
+                          </div>
+
+                          {isEditingSettings && newPassword && (
+                            <div className="profile-field-item">
+                              <i className="profile-field-icon fa-solid fa-key"></i>
+                              <span className="profile-field-label">{dict.profile.settings_confirm_password}</span>
+                              <span className="profile-field-value" style={{ width: '100%' }}>
+                                <input
+                                  type="password"
+                                  value={confirmPassword}
+                                  onChange={(e) => setConfirmPassword(e.target.value)}
+                                  placeholder="••••••••"
+                                  required={!!newPassword}
+                                  disabled={!isEditingSettings}
+                                  style={{
+                                    width: '100%',
+                                    background: 'transparent',
+                                    border: 'none',
+                                    borderBottom: isEditingSettings ? '1px dashed rgba(255, 255, 255, 0.2)' : 'none',
+                                    color: isEditingSettings ? '#fff' : '#868582',
+                                    fontSize: '0.95rem',
+                                    padding: '4px 0',
+                                    outline: 'none',
+                                    cursor: isEditingSettings ? 'text' : 'not-allowed'
+                                  }}
+                                />
+                              </span>
+                            </div>
+                          )}
+
+                          <div className="profile-field-item">
+                            <i className="profile-field-icon fa-solid fa-shield-halved"></i>
+                            <span className="profile-field-label">{dict.profile.settings_current_password} {isEditingSettings && "*"}</span>
+                            <span className="profile-field-value" style={{ width: '100%' }}>
+                              <input
+                                type="password"
+                                value={currentPassword}
+                                onChange={(e) => setCurrentPassword(e.target.value)}
+                                placeholder="••••••••"
+                                required={isEditingSettings}
+                                disabled={!isEditingSettings}
+                                style={{
+                                  width: '100%',
+                                  background: 'transparent',
+                                  border: 'none',
+                                  borderBottom: isEditingSettings ? '1px dashed rgba(255, 255, 255, 0.2)' : 'none',
+                                  color: isEditingSettings ? '#fff' : '#868582',
+                                  fontSize: '0.95rem',
+                                  padding: '4px 0',
+                                  outline: 'none',
+                                  cursor: isEditingSettings ? 'text' : 'not-allowed'
+                                }}
+                              />
+                            </span>
+                          </div>
+                        </div>
+
+                        {settingsMsg && (
+                          <div className={settingsSuccess ? "profile-sync-msg profile-sync-msg--success" : "auth-error"} style={{ marginBottom: '20px', padding: '12px', borderRadius: '6px' }}>
+                            <i className={settingsSuccess ? "fas fa-check-circle" : "fas fa-exclamation-circle"} style={{ marginRight: '8px' }}></i>
+                            {settingsMsg}
+                          </div>
+                        )}
+
+                        <div style={{ display: 'flex', gap: '12px', marginTop: '24px' }}>
+                          {!isEditingSettings ? (
+                            <button
+                              type="button"
+                              onClick={() => setIsEditingSettings(true)}
+                              style={{
+                                minHeight: '44px',
+                                padding: '0 30px',
+                                background: 'linear-gradient(135deg, rgba(255, 149, 46, 0.15), rgba(255, 149, 46, 0.05))',
+                                color: '#ff952e',
+                                border: '1px solid rgba(255, 149, 46, 0.3)',
+                                fontWeight: '700',
+                                cursor: 'pointer',
+                                display: 'inline-flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '8px',
+                                borderRadius: '6px',
+                                transition: 'all 0.2s'
+                              }}
+                            >
+                              <i className="fa-solid fa-pen-to-square"></i>
+                              {isVi ? "Chỉnh sửa" : "Edit"}
+                            </button>
                           ) : (
-                            <button className="btn-profile-discord" onClick={handleLinkDiscord}>
-                              <i className="fab fa-discord"></i> {dict.profile.link_discord_btn}
-                            </button>
-                          )}
-                          {user.discord_id && (
-                            <button className="btn-profile-sync" onClick={handleSyncDiscord} disabled={syncing}>
-                              <i className="fas fa-sync-alt"></i> {syncing ? dict.profile.syncing : dict.profile.sync_btn}
-                            </button>
-                          )}
-                          {syncMsg && (
-                            <span className={`profile-sync-msg ${syncSuccess ? 'profile-sync-msg--success' : 'profile-sync-msg--error'}`}>
-                              {syncMsg}
-                            </span>
+                            <>
+                              <button
+                                type="submit"
+                                disabled={!(newEmail !== (user ? user.email : "") || newPassword !== "" || currentPassword !== "") || updatingSettings}
+                                style={{
+                                  minHeight: '44px',
+                                  padding: '0 30px',
+                                  background: (newEmail !== (user ? user.email : "") || newPassword !== "" || currentPassword !== "") ? 'linear-gradient(135deg, #ff952e, #f37b18)' : 'rgba(255, 255, 255, 0.05)',
+                                  color: (newEmail !== (user ? user.email : "") || newPassword !== "" || currentPassword !== "") ? '#fff' : 'rgba(255, 255, 255, 0.3)',
+                                  border: (newEmail !== (user ? user.email : "") || newPassword !== "" || currentPassword !== "") ? 'none' : '1px solid rgba(255, 255, 255, 0.08)',
+                                  fontWeight: '700',
+                                  cursor: (newEmail !== (user ? user.email : "") || newPassword !== "" || currentPassword !== "") ? 'pointer' : 'not-allowed',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  gap: '8px',
+                                  borderRadius: '6px',
+                                  boxShadow: (newEmail !== (user ? user.email : "") || newPassword !== "" || currentPassword !== "") ? '0 4px 15px rgba(243, 123, 24, 0.3)' : 'none',
+                                  transition: 'all 0.2s ease'
+                                }}
+                              >
+                                {updatingSettings ? (
+                                  <>
+                                    <i className="fa-solid fa-circle-notch fa-spin"></i>
+                                    {dict.profile.settings_updating}
+                                  </>
+                                ) : (
+                                  <>
+                                    <i className="fa-solid fa-floppy-disk"></i>
+                                    {dict.profile.settings_save_btn}
+                                  </>
+                                )}
+                              </button>
+
+                              <button
+                                type="button"
+                                onClick={handleCancelEdit}
+                                style={{
+                                  minHeight: '44px',
+                                  padding: '0 24px',
+                                  background: 'rgba(255, 255, 255, 0.05)',
+                                  color: '#aaa9a6',
+                                  border: '1px solid rgba(255, 255, 255, 0.1)',
+                                  fontWeight: '600',
+                                  cursor: 'pointer',
+                                  display: 'inline-flex',
+                                  alignItems: 'center',
+                                  justifyContent: 'center',
+                                  borderRadius: '6px',
+                                  transition: 'all 0.2s'
+                                }}
+                              >
+                                {isVi ? "Hủy" : "Cancel"}
+                              </button>
+                            </>
                           )}
                         </div>
-                        <button className="btn-profile-logout" onClick={handleLogout}>
-                          <i className="fas fa-sign-out-alt"></i> {dict.profile.logout_btn}
-                        </button>
+                      </form>
+                    </div>
+                  )}
+
+                  {profileSubTab === "connections" && (
+                    <div style={{ padding: '0 0 0 clamp(20px, 4vw, 40px)', width: '100%', fontFamily: "'Outfit', sans-serif" }}>
+                      <h3 style={{ color: '#ff952e', fontSize: '1.6rem', fontWeight: '700', marginBottom: '8px', letterSpacing: '-0.5px' }}>
+                        {dict.profile.connections_title}
+                      </h3>
+                      <p style={{ color: '#aaa9a6', fontSize: '0.95rem', marginBottom: '30px' }}>
+                        {dict.profile.connections_desc}
+                      </p>
+
+                      <div className="profile-fields-grid" style={{ marginBottom: '24px' }}>
+                        {/* Minecraft Connection */}
+                        <div className="profile-field-item" style={{ minHeight: '120px', alignItems: 'start', paddingTop: '16px' }}>
+                          <i className="profile-field-icon fa-solid fa-cube"></i>
+                          <span className="profile-field-label">{dict.profile.connections_minecraft_title}</span>
+                          <div className="profile-field-value" style={{ width: '100%', marginTop: '6px' }}>
+                            {user.uuid ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                                <span className="profile-badge profile-badge--verified" style={{ alignSelf: 'flex-start', margin: '4px 0 8px' }}>
+                                  <i className="fas fa-check-circle"></i> {dict.profile.linked_minecraft}
+                                </span>
+                                <span style={{ fontSize: '0.8rem', color: '#868582', display: 'block' }}>UUID: {user.uuid}</span>
+                              </div>
+                            ) : (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <span className="profile-badge profile-badge--unverified" style={{ alignSelf: 'flex-start', margin: '4px 0' }}>
+                                  <i className="fas fa-exclamation-circle"></i> {dict.profile.unlinked_minecraft}
+                                </span>
+                                <span style={{ fontSize: '0.8rem', color: '#868582', lineHeight: '1.4' }}>
+                                  {dict.profile.minecraft_link_tip}
+                                </span>
+                                <form onSubmit={handleLinkMinecraft} style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+                                  <input
+                                    type="text"
+                                    value={linkCode}
+                                    onChange={(e) => setLinkCode(e.target.value)}
+                                    placeholder="AB12CD"
+                                    maxLength={6}
+                                    required
+                                    style={{
+                                      background: 'transparent',
+                                      border: 'none',
+                                      borderBottom: '1px dashed rgba(255, 255, 255, 0.2)',
+                                      color: '#fff',
+                                      fontSize: '0.95rem',
+                                      padding: '4px 0',
+                                      outline: 'none',
+                                      width: '100px',
+                                      textTransform: 'uppercase',
+                                      textAlign: 'center',
+                                      letterSpacing: '2px'
+                                    }}
+                                  />
+                                  <button
+                                    type="submit"
+                                    disabled={linkingGame}
+                                    style={{
+                                      padding: '4px 12px',
+                                      background: 'linear-gradient(135deg, #ff952e, #f37b18)',
+                                      color: '#fff',
+                                      border: 'none',
+                                      fontWeight: '600',
+                                      fontSize: '0.8rem',
+                                      cursor: 'pointer',
+                                      borderRadius: '4px'
+                                    }}
+                                  >
+                                    {linkingGame ? <i className="fa-solid fa-circle-notch fa-spin"></i> : dict.profile.connections_link_btn}
+                                  </button>
+                                </form>
+                                {linkMsg && (
+                                  <div className={linkSuccess ? "profile-sync-msg profile-sync-msg--success" : "auth-error"} style={{ padding: '6px', fontSize: '0.8rem', borderRadius: '4px', marginTop: '4px' }}>
+                                    {linkMsg}
+                                  </div>
+                                )}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+
+                        {/* Discord Connection */}
+                        <div className="profile-field-item" style={{ minHeight: '120px', alignItems: 'start', paddingTop: '16px' }}>
+                          <i className="profile-field-icon fab fa-discord" style={{ color: '#5865f2', background: 'rgba(88, 101, 242, 0.09)', borderColor: 'rgba(88, 101, 242, 0.16)' }}></i>
+                          <span className="profile-field-label">Discord Connection</span>
+                          <div className="profile-field-value" style={{ width: '100%', marginTop: '6px' }}>
+                            {user.discord_id ? (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <span className="profile-badge profile-badge--verified" style={{ alignSelf: 'flex-start', background: 'rgba(88, 101, 242, 0.15)', color: '#5865f2', borderColor: 'rgba(88, 101, 242, 0.3)' }}>
+                                  <i className="fab fa-discord"></i> {dict.profile.linked_discord}
+                                </span>
+                                {user.avatar_url && (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '2px' }}>
+                                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                                    <img src={user.avatar_url} alt="Discord avatar" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
+                                    <span style={{ fontSize: '0.85rem', color: '#aaa9a6' }}>Discord Account Connected</span>
+                                  </div>
+                                )}
+                                <div style={{ marginTop: '4px' }}>
+                                  <button className="btn-profile-sync" onClick={handleSyncDiscord} disabled={syncing} style={{ padding: '6px 12px', height: 'auto', fontSize: '0.8rem' }}>
+                                    <i className="fas fa-sync-alt"></i> {syncing ? dict.profile.syncing : dict.profile.sync_btn}
+                                  </button>
+                                  {syncMsg && (
+                                    <div className={`profile-sync-msg ${syncSuccess ? 'profile-sync-msg--success' : 'profile-sync-msg--error'}`} style={{ fontSize: '0.85rem', marginTop: '6px' }}>
+                                      {syncMsg}
+                                    </div>
+                                  )}
+                                </div>
+                              </div>
+                            ) : (
+                              <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                                <span className="profile-badge profile-badge--unverified" style={{ alignSelf: 'flex-start' }}>
+                                  <i className="fas fa-exclamation-circle"></i> {dict.profile.unlinked_discord}
+                                </span>
+                                <span style={{ fontSize: '0.8rem', color: '#868582', lineHeight: '1.4' }}>
+                                  {dict.profile.join_discord_required}
+                                </span>
+                                <button className="btn-profile-discord" onClick={handleLinkDiscord} style={{ alignSelf: 'flex-start', padding: '6px 12px', height: 'auto', fontSize: '0.8rem', marginTop: '4px' }}>
+                                  <i className="fab fa-discord"></i> {dict.profile.link_discord_btn}
+                                </button>
+                              </div>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     </div>
-                  </div>
+                  )}
+
                 </div>
               </div>
             </div>
           </section>
+        )}
+        {/* Wiki Mobile floating action button and modal drawer */}
+        {activeTab === "wiki" && (
+          <>
+            <button className="mobile-fab wiki-fab" type="button" onClick={() => setWikiMenuOpen(true)}>
+              <i className="fa-solid fa-list-ol"></i>
+            </button>
+            {wikiMenuOpen && (
+              <div className="mobile-overlay" onClick={() => setWikiMenuOpen(false)}>
+                <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
+                  <div className="mobile-drawer__header">
+                    <h3>{dict.wiki_content?.sidebar_title}</h3>
+                    <button className="mobile-drawer__close" type="button" onClick={() => setWikiMenuOpen(false)}>
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                  <div className="mobile-drawer__nav">
+                    <button className={`wiki-nav-btn ${activeWikiTab === "intro" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("intro"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-circle-info"></i>
+                      <span>{dict.wiki_content?.nav_intro}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "recipes" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("recipes"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-receipt"></i>
+                      <span>{dict.wiki_content?.nav_recipes}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "mobs" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("mobs"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-skull"></i>
+                      <span>{dict.wiki_content?.nav_mobs}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "villagers" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("villagers"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-people-arrows"></i>
+                      <span>{dict.wiki_content?.nav_villagers}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "fishing" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("fishing"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-fish"></i>
+                      <span>{dict.wiki_content?.nav_fishing}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "items" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("items"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-gem"></i>
+                      <span>{dict.wiki_content?.nav_items}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "guilds" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guilds"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-shield-halved"></i>
+                      <span>{dict.wiki_content?.nav_guilds}</span>
+                    </button>
+                    <button className={`wiki-nav-btn ${activeWikiTab === "guide" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guide"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-book-open"></i>
+                      <span>{dict.wiki_content?.nav_guide}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
         )}
       </main>
       <footer className="site-footer" style={{
