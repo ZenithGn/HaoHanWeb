@@ -26,7 +26,6 @@ HaoHanWeb/
 │   └── package.json
 ├── docker-compose.yml
 ├── .dockerignore
-├── .env.example
 └── README.md
 ```
 
@@ -43,21 +42,21 @@ HaoHanWeb/
 Tạo file môi trường từ file mẫu:
 
 ```bash
-cp .env.example .env
 cp backend/.env.example backend/.env
+cp frontend/.env.example frontend/.env.local
 ```
 
-Các biến quan trọng:
+Các biến Backend quan trọng (`backend/.env`):
 
 ```env
-DB_HOST=localhost
+DB_HOST=
 DB_PORT=1433
-DB_NAME=HaoHanDB
+DB_NAME=
 DB_USERNAME=
 DB_PASSWORD=
 
 DISCORD_WEBHOOK_URL=
-RCON_HOST=127.0.0.1
+RCON_HOST=
 RCON_PORT=25575
 RCON_PASSWORD=
 
@@ -69,13 +68,12 @@ GAME_SERVER_TOKEN=
 JWT_SECRET=
 ```
 
-Frontend dùng API backend qua:
+Các biến Frontend quan trọng (`frontend/.env.local`):
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
+BACKEND_URL=http://localhost:3001
 ```
-
-Nếu cần, tạo `frontend/.env.local` và đặt biến trên trong file đó.
 
 ## Setup Và Chạy Nhanh Bằng Script
 
@@ -236,7 +234,7 @@ docker compose logs -f db
 ## Ghi Chú Phát Triển
 
 - Không commit file `.env`, key, token, database dump hoặc file build.
-- Giữ `.env.example` và `backend/.env.example` được cập nhật khi thêm biến môi trường mới.
+- Giữ backend/.env.example và frontend/.env.example được cập nhật khi thêm biến môi trường mới.
 - File SQL dump local như `HaoHanDB.sql` đang được ignore.
 - Frontend assets nằm trong `frontend/public/assets`.
 - Nội dung đa ngôn ngữ nằm trong `frontend/src/dictionaries`.
