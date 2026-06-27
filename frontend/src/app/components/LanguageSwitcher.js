@@ -44,7 +44,7 @@ export default function LanguageSwitcher({ lang }) {
     const newPath = segments.join('/') + hash;
     window.location.href = newPath;
   };
-  const currentFlag = lang === 'vi' ? '🇻🇳' : '🇬🇧';
+  const currentFlagSrc = lang === 'vi' ? '/assets/img/vie_flag.png' : '/assets/img/en_flag.png';
   return (
     <div className="floating-lang" ref={containerRef} aria-label="Language Selector">
       <button
@@ -52,8 +52,13 @@ export default function LanguageSwitcher({ lang }) {
         className="floating-lang__trigger"
         aria-expanded={isOpen}
         aria-label={`Change language (Current: ${lang === 'vi' ? 'Vietnamese' : 'English'})`}
+        style={{ overflow: 'hidden' }}
       >
-        {currentFlag}
+        <img
+          src={currentFlagSrc}
+          alt={lang === 'vi' ? 'Vietnamese' : 'English'}
+          style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+        />
       </button>
       {isOpen && (
         <div className="floating-lang__popover">
@@ -61,14 +66,22 @@ export default function LanguageSwitcher({ lang }) {
             onClick={(e) => { switchLang(e, 'vi'); setIsOpen(false); }}
             className={`floating-lang__option ${lang === 'vi' ? 'active' : ''}`}
           >
-            <span className="flag-emoji">🇻🇳</span>
+            <img
+              src="/assets/img/vie_flag.png"
+              alt="Tiếng Việt"
+              style={{ width: '22px', height: '15px', objectFit: 'cover', borderRadius: '2px' }}
+            />
             <span>Tiếng Việt</span>
           </button>
           <button
             onClick={(e) => { switchLang(e, 'en'); setIsOpen(false); }}
             className={`floating-lang__option ${lang === 'en' ? 'active' : ''}`}
           >
-            <span className="flag-emoji">🇬🇧</span>
+            <img
+              src="/assets/img/en_flag.png"
+              alt="English"
+              style={{ width: '22px', height: '15px', objectFit: 'cover', borderRadius: '2px' }}
+            />
             <span>English</span>
           </button>
         </div>

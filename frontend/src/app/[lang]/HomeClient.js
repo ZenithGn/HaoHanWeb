@@ -238,7 +238,26 @@ export default function HomeClient({ dict, lang }) {
       rights: dict.footer?.rights,
       disclaimer: dict.footer?.disclaimer,
       exploreHeader: hl.explore_header || (isVi ? "Khám Phá" : "Explore"),
-      communityHeader: hl.community_header || (isVi ? "Liên Kết Cộng Đồng" : "Community Links")
+      communityHeader: hl.community_header || (isVi ? "Liên Kết Cộng Đồng" : "Community Links"),
+      heroWelcomeBack: hl.hero_welcome_back,
+      heroWelcomeTo: hl.hero_welcome_to,
+      serversEyebrow: hl.servers_eyebrow,
+      serversSubtitle: hl.servers_subtitle,
+      featuresSubtitle: hl.features_subtitle,
+      faqEyebrow: hl.faq_eyebrow,
+      faqSubtitle: hl.faq_subtitle,
+      faqMorePrefix: hl.faq_more_prefix,
+      faqMoreDiscord: hl.faq_more_discord,
+      faqMoreOr: hl.faq_more_or,
+      faqMoreTicket: hl.faq_more_ticket,
+      copyIpBtn: hl.copy_ip_btn,
+      copiedIpBtn: hl.copied_ip_btn,
+      joinBtn: hl.join_btn,
+      galleryHeroEyebrow: hl.gallery_hero_eyebrow,
+      rulesHeroEyebrow: hl.rules_hero_eyebrow,
+      rulesHeroDesc: hl.rules_hero_desc,
+      rulesSection4Title: hl.rules_section4_title,
+      rulesTicketDesc: hl.rules_ticket_desc,
     };
   }, [dict, isVi]);
   const serverCardsTranslated = useMemo(() => [
@@ -266,7 +285,7 @@ export default function HomeClient({ dict, lang }) {
     {
       icon: "fa-solid fa-compass",
       title: dict.features_list.explore || "Explore the World",
-      desc: isVi ? "Thế giới rộng lớn vô tận, khám phá từng vùng đất bí ẩn." : "A vast world to discover — uncharted lands, hidden ruins, and endless horizons.",
+      desc: dict.features_list.explore_desc,
       img: "/assets/img/bg.png",
       accent: "#4ade80",
       large: true,
@@ -274,35 +293,35 @@ export default function HomeClient({ dict, lang }) {
     {
       icon: "fa-solid fa-shield-halved",
       title: dict.features_list.survival || "Survival & Progress",
-      desc: isVi ? "Sinh tồn có chiều sâu, phát triển nhân vật và xây dựng cơ đồ." : "Deep survival mechanics with meaningful character progression.",
+      desc: dict.features_list.survival_desc,
       img: "/assets/img/bg1.png",
       accent: "#fb923c",
     },
     {
       icon: "fa-solid fa-mountain-sun",
       title: dict.features_list.terrain || "Customizable Terrain",
-      desc: isVi ? "Địa hình độc đáo được tùy chỉnh mang lại phong cảnh đẹp mắt." : "Custom-sculpted biomes and terrain that create breathtaking landscapes.",
+      desc: dict.features_list.terrain_desc,
       img: "/assets/img/bg3.png",
       accent: "#38bdf8",
     },
     {
       icon: "fa-solid fa-wand-magic-sparkles",
       title: dict.features_list.custom || "Custom Mechanics",
-      desc: isVi ? "Cơ chế game độc quyền mang lại trải nghiệm mới mẻ." : "Exclusive game mechanics and plugins for a unique SMP experience.",
+      desc: dict.features_list.custom_desc,
       img: "/assets/img/bg2.png",
       accent: "#c084fc",
     },
     {
       icon: "fa-solid fa-box-archive",
       title: dict.features_list.modpack || "Get Modpack",
-      desc: isVi ? "Modpack được tuyển chọn kỹ lưỡng, dễ cài đặt và tương thích." : "A curated modpack for the best visual and gameplay enhancements.",
+      desc: dict.features_list.modpack_desc,
       img: "/assets/img/bg4.png",
       accent: "#facc15",
     },
     {
       icon: "fa-solid fa-arrow-right-long",
       title: dict.features_list.more || "Learn More",
-      desc: isVi ? "Tìm hiểu thêm về server và cộng đồng của chúng tôi." : "Explore all that HaoHan SMP has to offer — join the community today.",
+      desc: dict.features_list.more_desc,
       img: "/assets/img/bg-checking-status.jpg",
       accent: "#ff5757",
     },
@@ -321,19 +340,7 @@ export default function HomeClient({ dict, lang }) {
     "/assets/img/bg-checking-status.jpg",
     "/assets/img/bg-status-server.png"
   ], []);
-  const galleryCaptions = useMemo(() => [
-    isVi ? "Khoảnh khắc sinh tồn" : "Survival moments",
-    isVi ? "Căn cứ người chơi" : "Player base",
-    isVi ? "Cảnh quan thiên nhiên" : "Scenic view",
-    isVi ? "Công trình cộng đồng" : "Community build",
-    isVi ? "Khám phá thế giới rộng lớn" : "Explore the vast world",
-    isVi ? "Sinh tồn cùng bạn bè" : "Survival with friends",
-    isVi ? "Địa hình tùy chỉnh" : "Customizable terrain",
-    isVi ? "Cơ chế tùy chỉnh độc đáo" : "Unique custom mechanics",
-    isVi ? "Hệ thống Modpack đa dạng" : "Diverse Modpack system",
-    isVi ? "Khu di tích cổ kính" : "Ancient ruins",
-    isVi ? "Bảng trạng thái máy chủ" : "Server status board"
-  ], [isVi]);
+  const galleryCaptions = useMemo(() => dict.gallery?.captions || [], [dict]);
   const galleryAlbums = useMemo(() => {
     const albums = dict.gallery?.albums || {};
     return [
@@ -497,11 +504,11 @@ export default function HomeClient({ dict, lang }) {
       if (response.ok && data.url) {
         window.location.href = data.url;
       } else {
-        alert(isVi ? "Không thể tải URL liên kết Discord." : "Could not load Discord link URL.");
+        alert(dict.alerts?.discord_url_error);
       }
     } catch (error) {
       console.error("Error fetching Discord URL:", error);
-      alert(isVi ? "Lỗi kết nối khi lấy URL Discord." : "Connection error getting Discord URL.");
+      alert(dict.alerts?.discord_connection_error);
     }
   };
   const handleSyncDiscord = async () => {
@@ -525,12 +532,12 @@ export default function HomeClient({ dict, lang }) {
         }
       } else {
         setSyncSuccess(false);
-        setSyncMsg(data.error || (isVi ? "Đồng bộ thất bại." : "Sync failed."));
+        setSyncMsg(data.error || dict.alerts?.sync_failed);
       }
     } catch (error) {
       console.error("Error syncing Discord:", error);
       setSyncSuccess(false);
-      setSyncMsg(isVi ? "Lỗi kết nối." : "Connection error.");
+      setSyncMsg(dict.alerts?.connection_error);
     } finally {
       setSyncing(false);
     }
@@ -615,8 +622,8 @@ export default function HomeClient({ dict, lang }) {
               <span className="haohan__subtitle-green">
                 <i className="fa-solid fa-leaf"></i>
                 {isLoggedIn && user
-                  ? (isVi ? `CHÀO MỪNG TRỞ LẠI, ${user.username.toUpperCase()}` : `WELCOME BACK, ${user.username.toUpperCase()}`)
-                  : (isVi ? "CHÀO MỪNG ĐẾN VỚI" : "WELCOME TO")
+                  ? labels.heroWelcomeBack?.replace('{name}', user.username.toUpperCase())
+                  : labels.heroWelcomeTo
                 }
                 <i className="fa-solid fa-leaf"></i>
               </span>
@@ -644,13 +651,11 @@ export default function HomeClient({ dict, lang }) {
               <div className="wrap">
                 <div className="section-header">
                   <span className="section-header__eyebrow">
-                    <i className="fa-solid fa-server"></i> {isVi ? "Kết nối ngay" : "Connect Now"}
+                    <i className="fa-solid fa-server"></i> {labels.serversEyebrow}
                   </span>
                   <h2 className="section-header__title">{labels.serversTitle}</h2>
                   <p className="section-header__subtitle">
-                    {isVi
-                      ? "Chọn server phù hợp và bắt đầu hành trình sinh tồn cùng cộng đồng."
-                      : "Pick your platform and start your survival journey with the community."}
+                    {labels.serversSubtitle}
                   </p>
                 </div>
                 <div className="mc-server-list">
@@ -677,9 +682,9 @@ export default function HomeClient({ dict, lang }) {
                         <div className="mc-server-top">
                           <h3 className="mc-server-title">{server.title}</h3>
                           <span className="mc-server-version">
-                            {idx === 0 && "Java & Bedrock (1.17 - 1.20+)"}
-                            {idx === 1 && "Bedrock Port: 19132"}
-                            {idx === 2 && "Discord Link"}
+                            {idx === 0 && dict.servers.java_bedrock_version}
+                            {idx === 1 && dict.servers.bedrock_port}
+                            {idx === 2 && dict.servers.discord_link_label}
                           </span>
                         </div>
                         <p className="mc-server-motd">{server.body}</p>
@@ -693,11 +698,11 @@ export default function HomeClient({ dict, lang }) {
                               setTimeout(() => setCopiedIp(false), 2000);
                             }}>
                               <i className="fa-solid fa-copy"></i>
-                              <span>{copiedIp ? (isVi ? "Đã copy!" : "Copied!") : (isVi ? "Copy IP" : "Copy IP")}</span>
+                              <span>{copiedIp ? labels.copiedIpBtn : labels.copyIpBtn}</span>
                             </button>
                           ) : (
                             <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" className="mc-join-link" onClick={(e) => e.stopPropagation()}>
-                              <i className="fa-brands fa-discord"></i> {isVi ? "Tham gia" : "Join"}
+                              <i className="fa-brands fa-discord"></i> {labels.joinBtn}
                             </a>
                           )}
                         </div>
@@ -730,9 +735,7 @@ export default function HomeClient({ dict, lang }) {
                 <div className="features-header">
                   <h2 className="features-title">{labels.featuresTitle}</h2>
                   <p className="features-subtitle">
-                    {isVi
-                      ? "Trải nghiệm Minecraft sinh tồn được nâng tầm với các tính năng độc quyền."
-                      : "An elevated Minecraft survival experience with exclusive features built for adventure."}
+                    {labels.featuresSubtitle}
                   </p>
                 </div>
                 <div className="feature-bento">
@@ -778,13 +781,11 @@ export default function HomeClient({ dict, lang }) {
                 <div className="faq__content">
                   <div className="section-header">
                     <span className="section-header__eyebrow">
-                      <i className="fa-solid fa-circle-question"></i> {isVi ? "Thắc mắc thường gặp" : "Common Questions"}
+                      <i className="fa-solid fa-circle-question"></i> {labels.faqEyebrow}
                     </span>
                     <h2 className="section-header__title">{labels.faqTitle}</h2>
                     <p className="section-header__subtitle">
-                      {isVi
-                        ? "Giải đáp những câu hỏi phổ biến nhất về server và cách tham gia."
-                        : "Answers to the most common questions about our server and how to join."}
+                      {labels.faqSubtitle}
                     </p>
                   </div>
                   {[1, 2, 3, 4, 5].map((item, idx) => {
@@ -804,31 +805,15 @@ export default function HomeClient({ dict, lang }) {
                     );
                   })}
                   <p className="faq-more-questions">
-                    {isVi ? (
-                      <>
-                        Bạn vẫn còn câu hỏi khác? Hãy đặt câu hỏi tại{" "}
-                        <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer">
-                          Discord của chúng tôi
-                        </a>{" "}
-                        hoặc{" "}
-                        <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-                          tạo Ticket hỗ trợ
-                        </a>
-                        !
-                      </>
-                    ) : (
-                      <>
-                        Still have questions? Ask them on our{" "}
-                        <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer">
-                          Discord server
-                        </a>{" "}
-                        or{" "}
-                        <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-                          open a support ticket
-                        </a>
-                        !
-                      </>
-                    )}
+                    {labels.faqMorePrefix}{" "}
+                    <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer">
+                      {labels.faqMoreDiscord}
+                    </a>{" "}
+                    {labels.faqMoreOr}{" "}
+                    <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+                      {labels.faqMoreTicket}
+                    </a>
+                    !
                   </p>
                 </div>
               </div>
@@ -844,7 +829,7 @@ export default function HomeClient({ dict, lang }) {
                   <i className="fa-solid fa-images"></i>
                 </div>
                 <div className="page-hero__copy">
-                  <span><i className="fa-solid fa-camera"></i> {isVi ? "Thư viện ảnh" : "Gallery Albums"}</span>
+                  <span><i className="fa-solid fa-camera"></i> {labels.galleryHeroEyebrow}</span>
                   <h1>HAOHAN <strong>GALLERY</strong></h1>
                   <p>{dict.gallery?.intro || (isVi ? "Nơi lưu giữ những khoảnh khắc đáng nhớ và các công trình tuyệt đẹp từ các thành viên." : "Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP. Click any image to view a full size version.")}</p>
                 </div>
@@ -892,9 +877,9 @@ export default function HomeClient({ dict, lang }) {
                   <img src="/assets/img/Fox_with_emerald.webp" alt="" aria-hidden="true" />
                 </div>
                 <div className="page-hero__copy">
-                  <span><i className="fa-solid fa-clover"></i> {isVi ? "Nội quy server" : "Server rules"}</span>
+                  <span><i className="fa-solid fa-clover"></i> {labels.rulesHeroEyebrow}</span>
                   <h1>HAOHAN <strong>SMP</strong></h1>
-                  <p>{isVi ? "Vui lòng đọc kỹ và tuân thủ các quy định dưới đây để có trải nghiệm tốt nhất cùng cộng đồng." : "Please read and follow the rules below to keep the community friendly and fair."}</p>
+                  <p>{labels.rulesHeroDesc}</p>
                 </div>
                 <div className="page-hero__cube" style={{ background: 'linear-gradient(#66bf49 0 30%, transparent 31%), repeating-linear-gradient(45deg, #8a6233 0 7px, #654826 7px 14px)' }} aria-hidden="true"></div>
               </div>
@@ -946,7 +931,7 @@ export default function HomeClient({ dict, lang }) {
               <section className="rules-line-section">
                 <div className="rules-line-section__header">
                   <span className="rules-line-section__num">4</span>
-                  <h2><i className="fa-solid fa-clover"></i> {isVi ? "Giải quyết vấn đề" : "Issue resolution"}</h2>
+                  <h2><i className="fa-solid fa-clover"></i> {labels.rulesSection4Title}</h2>
                 </div>
                 <div className="rules-line-section__content">
                   <ul>
@@ -957,7 +942,7 @@ export default function HomeClient({ dict, lang }) {
                   <div className="rules-ticket">
                     {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img src="/assets/img/logo.png" alt="" />
-                    <p>{isVi ? "Bạn có thể liên hệ admin bằng cách tạo một ticket để được giải quyết." : "You can contact admins by opening a ticket for support."}</p>
+                    <p>{labels.rulesTicketDesc}</p>
                   </div>
                   <div className="rules-note">
                     <i className="fa-solid fa-clover"></i>
@@ -977,48 +962,48 @@ export default function HomeClient({ dict, lang }) {
                   <i className="fa-solid fa-book-open"></i>
                 </div>
                 <div className="page-hero__copy">
-                  <span><i className="fa-solid fa-circle-info"></i> {isVi ? "Thư viện hướng dẫn" : "Knowledge Base"}</span>
+                  <span><i className="fa-solid fa-circle-info"></i> {dict.wiki_content?.hero_eyebrow}</span>
                   <h1>HAOHAN <strong>WIKI</strong></h1>
-                  <p>{isVi ? "Hệ thống cơ chế cốt lõi và hướng dẫn sinh tồn dành cho người chơi." : "Core gameplay mechanics and survival guidelines for newcomers."}</p>
+                  <p>{dict.wiki_content?.hero_desc}</p>
                 </div>
                 <div className="page-hero__cube" style={{ background: 'linear-gradient(#38bdf8 0 30%, transparent 31%), repeating-linear-gradient(45deg, #8a6233 0 7px, #654826 7px 14px)' }} aria-hidden="true"></div>
               </div>
             </header>
             <div className="wrap wiki-wrap" style={{ marginTop: '40px' }}>
               <div className="wiki-sidebar">
-                <h3 className="wiki-sidebar-title">{isVi ? "MỤC LỤC WIKI" : "WIKI INDEX"}</h3>
+                <h3 className="wiki-sidebar-title">{dict.wiki_content?.sidebar_title}</h3>
                 <nav className="wiki-sidebar-nav">
                   <button className={`wiki-nav-btn ${activeWikiTab === "intro" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("intro")}>
                     <i className="fa-solid fa-circle-info"></i>
-                    <span>{isVi ? "Giới thiệu chung" : "General Intro"}</span>
+                    <span>{dict.wiki_content?.nav_intro}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "recipes" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("recipes")}>
                     <i className="fa-solid fa-receipt"></i>
-                    <span>{isVi ? "Recipes (Công thức)" : "Recipes"}</span>
+                    <span>{dict.wiki_content?.nav_recipes}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "mobs" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("mobs")}>
                     <i className="fa-solid fa-skull"></i>
-                    <span>{isVi ? "Mobs (Quái vật)" : "Mobs"}</span>
+                    <span>{dict.wiki_content?.nav_mobs}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "villagers" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("villagers")}>
                     <i className="fa-solid fa-people-arrows"></i>
-                    <span>{isVi ? "Villager Trades (Giao dịch)" : "Villager Trades"}</span>
+                    <span>{dict.wiki_content?.nav_villagers}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "fishing" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("fishing")}>
                     <i className="fa-solid fa-fish"></i>
-                    <span>{isVi ? "Fishing (Câu cá)" : "Fishing"}</span>
+                    <span>{dict.wiki_content?.nav_fishing}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "items" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("items")}>
                     <i className="fa-solid fa-gem"></i>
-                    <span>{isVi ? "Custom Items (Vật phẩm)" : "Custom Items"}</span>
+                    <span>{dict.wiki_content?.nav_items}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "guilds" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("guilds")}>
                     <i className="fa-solid fa-shield-halved"></i>
-                    <span>{isVi ? "Guilds (Bang hội)" : "Guilds"}</span>
+                    <span>{dict.wiki_content?.nav_guilds}</span>
                   </button>
                   <button className={`wiki-nav-btn ${activeWikiTab === "guide" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("guide")}>
                     <i className="fa-solid fa-book-open"></i>
-                    <span>{isVi ? "Guide (Tân thủ)" : "Survival Guide"}</span>
+                    <span>{dict.wiki_content?.nav_guide}</span>
                   </button>
                 </nav>
               </div>
@@ -1026,42 +1011,53 @@ export default function HomeClient({ dict, lang }) {
               <div className="wiki-content">
                 {activeWikiTab === "intro" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-circle-info text-accent"></i> VỀ HAOHAN SMP</h2>
-                    <p className="wiki-intro-text">
-                      Dựa trên tinh thần <strong>'Made in Abyss'</strong>, thế giới thám hiểm sâu thẳm với map 7000 block chiều sâu, hệ thống quái vật tùy chỉnh và nhiều cơ chế độc quyền đang chờ đợi bạn.
-                    </p>
+                    <h2><i className="fa-solid fa-circle-info text-accent"></i> {dict.wiki_content?.intro_title}</h2>
+                    <p className="wiki-intro-text" dangerouslySetInnerHTML={{ __html: dict.wiki_content?.intro_desc }} />
 
-                    <h3 className="wiki-subtitle"><i className="fa-solid fa-circle-play text-accent-green"></i> Sẵn sàng? Tham gia ngay máy chủ:</h3>
+                    <h3 className="wiki-subtitle"><i className="fa-solid fa-circle-play text-accent-green"></i> {dict.wiki_content?.intro_servers_title}</h3>
                     <ul className="wiki-list">
                       <li>
-                        <strong>Sinh Tồn (Survival):</strong> <code>haohan.smp.hopto.org</code>
+                        <strong>{dict.wiki_content?.intro_survival_label}</strong> <code>haohansmp.io.vn</code>
                       </li>
                       <li>
-                        <strong>Sáng Tạo (Creative):</strong> <code>haohan.smp.gs</code>
+                        <strong>{dict.wiki_content?.intro_build_label}</strong> <code>None</code>
                       </li>
                       <li>
-                        <strong>Lưu trữ (Archive Maps):</strong> <code>archive.haohan.smp.gs</code>
+                        <strong>{dict.wiki_content?.intro_archive_label}</strong> <code>None</code>
                       </li>
                     </ul>
 
                     <p className="wiki-intro-text" style={{ marginTop: '16px', fontSize: '13.5px', fontStyle: 'italic' }}>
-                      Hãy chắc chắn đọc kỹ và tuân thủ <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ color: '#84ca32', fontWeight: 'bold' }}>Luật của Server</a> trước khi tham gia, và kết nối với <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ color: '#84ca32', fontWeight: 'bold' }}>Discord</a> để nhận hỗ trợ nhanh nhất từ đội ngũ Staff.
+                      {dict.wiki_content?.intro_rules_note
+                        ?.replace('{rules_link}', '').replace('{discord_link}', '')
+                        ?.split(dict.wiki_content?.intro_rules_link_text)[0]}
+                      <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ color: '#84ca32', fontWeight: 'bold' }}>{dict.wiki_content?.intro_rules_link_text}</a>
+                      {dict.wiki_content?.intro_rules_note
+                        ?.replace('{rules_link}', dict.wiki_content?.intro_rules_link_text)
+                        ?.replace('{discord_link}', dict.wiki_content?.intro_discord_link_text)
+                        ?.split(dict.wiki_content?.intro_rules_link_text)[1]
+                        ?.split(dict.wiki_content?.intro_discord_link_text)[0]}
+                      <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ color: '#84ca32', fontWeight: 'bold' }}>{dict.wiki_content?.intro_discord_link_text}</a>
+                      {dict.wiki_content?.intro_rules_note
+                        ?.replace('{rules_link}', dict.wiki_content?.intro_rules_link_text)
+                        ?.replace('{discord_link}', dict.wiki_content?.intro_discord_link_text)
+                        ?.split(dict.wiki_content?.intro_discord_link_text)[1]}
                     </p>
 
-                    <h3 className="wiki-subtitle" style={{ marginTop: '30px' }}><i className="fa-solid fa-compass text-accent-green"></i> Hướng Dẫn Cho Người Mới Bắt Đầu (Starting Guide)</h3>
+                    <h3 className="wiki-subtitle" style={{ marginTop: '30px' }}><i className="fa-solid fa-compass text-accent-green"></i> {dict.wiki_content?.intro_guide_title}</h3>
                     <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginTop: '14px' }}>
                       <a href="#wiki" onClick={(e) => { e.preventDefault(); setActiveWikiTab("guide"); }} className="wiki-guide-card">
                         <i className="fa-solid fa-graduation-cap"></i>
                         <div>
-                          <h4>Quickstart Guide for Beginners</h4>
-                          <p>Tìm hiểu các bước đi đầu tiên để sống sót và thăng tiến.</p>
+                          <h4>{dict.wiki_content?.intro_quickstart_title}</h4>
+                          <p>{dict.wiki_content?.intro_quickstart_desc}</p>
                         </div>
                       </a>
                       <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" className="wiki-guide-card">
                         <i className="fa-solid fa-cubes"></i>
                         <div>
-                          <h4>Server Modpack</h4>
-                          <p>Tải xuống và cài đặt bộ modpack chính thức tối ưu trải nghiệm chơi.</p>
+                          <h4>{dict.wiki_content?.intro_modpack_title}</h4>
+                          <p>{dict.wiki_content?.intro_modpack_desc}</p>
                         </div>
                       </a>
                     </div>
@@ -1070,14 +1066,14 @@ export default function HomeClient({ dict, lang }) {
 
                 {activeWikiTab === "recipes" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-receipt text-accent"></i> 1. RECIPES (CÔNG THỨC CHẾ TẠO MỚI)</h2>
-                    <p className="wiki-intro-text">Hệ thống bổ sung các công thức chế tạo đặc biệt (Custom Crafting Recipes) sử dụng các nguyên liệu hiếm hoi thu thập được từ thế giới Abyss:</p>
+                    <h2><i className="fa-solid fa-receipt text-accent"></i> {dict.wiki_content?.recipes_title}</h2>
+                    <p className="wiki-intro-text">{dict.wiki_content?.recipes_desc}</p>
                     <ul className="wiki-list">
                       <li>
-                        <strong>Chế biến thực phẩm cao cấp:</strong> Sử dụng các loại cá hiếm câu được từ các vùng nước sâu để nấu thành các món ăn thượng hạng, cung cấp các buff chỉ số mạnh mẽ như Tốc độ, Kháng lửa, Hồi máu nhanh kéo dài trong thời gian dài.
+                        <strong>{dict.wiki_content?.recipes_item1_title}</strong> {dict.wiki_content?.recipes_item1_desc}
                       </li>
                       <li>
-                        <strong>Nâng cấp tài nguyên quý:</strong> Tích hợp các công thức tối ưu hóa quặng thô, vàng khối và các phôi nâng cấp cổ xưa nhặt được từ rương báu hầm ngục để rèn thành các trang bị sinh tồn cao cấp.
+                        <strong>{dict.wiki_content?.recipes_item2_title}</strong> {dict.wiki_content?.recipes_item2_desc}
                       </li>
                     </ul>
                   </div>
@@ -1085,119 +1081,93 @@ export default function HomeClient({ dict, lang }) {
 
                 {activeWikiTab === "mobs" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-skull text-accent"></i> 2. MOBS (HỆ THỐNG QUÁI VẬT)</h2>
+                    <h2><i className="fa-solid fa-skull text-accent"></i> {dict.wiki_content?.mobs_title}</h2>
                     <div className="wiki-alert">
                       <i className="fa-solid fa-circle-info"></i>
-                      <span>Hệ thống sinh vật đặc quyền và thủ lĩnh boss bảo vệ các tầng hầm ngục (Mythic Mobs) đang được phát triển nâng cấp và sẽ được admin cập nhật chi tiết trong thời gian sớm nhất.</span>
+                      <span>{dict.wiki_content?.mobs_notice}</span>
                     </div>
                   </div>
                 )}
 
                 {activeWikiTab === "villagers" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-people-arrows text-accent"></i> 3. VILLAGER TRADES (GIAO DỊCH DÂN LÀNG)</h2>
-                    <p className="wiki-intro-text">Thay đổi hoàn toàn logic giao dịch của Dân làng Thủ thư để cân bằng game, tránh việc người chơi sở hữu trang bị quá bá đạo ở giai đoạn đầu:</p>
+                    <h2><i className="fa-solid fa-people-arrows text-accent"></i> {dict.wiki_content?.villagers_title}</h2>
+                    <p className="wiki-intro-text">{dict.wiki_content?.villagers_desc}</p>
                     <ul className="wiki-list">
-                      <li>
-                        <strong>Khóa sách phù phép cấp cao:</strong> Dân làng cấp 1 (Novice) hoàn toàn <strong>không bao giờ xuất hiện</strong> các sách tối thượng như <em>Sửa chữa (Mending)</em> hay <em>Bền bỉ III (Unbreaking 3)</em> khi người chơi cố tình đặt lại nghề.
-                      </li>
-                      <li>
-                        <strong>Hệ thống thăng cấp bậc bắt buộc:</strong> Người chơi bắt buộc phải giao dịch tích lũy để thăng cấp dân làng lên các bậc cao hơn (<em>Apprentice, Journeyman, Expert, Master</em>) mới có cơ hội mở khóa được các sách phù phép xịn.
-                      </li>
-                      <li>
-                        <strong>Giao dịch giới hạn theo vùng miền:</strong> Một số loại sách phù phép đặc biệt sẽ bị giới hạn theo chủng tộc, chỉ xuất hiện ở các dân làng thuộc quần xã cụ thể như vùng đầm lầy hoặc sa mạc.
-                      </li>
+                      <li><strong>{dict.wiki_content?.villagers_item1_title}</strong> {dict.wiki_content?.villagers_item1_desc}</li>
+                      <li><strong>{dict.wiki_content?.villagers_item2_title}</strong> {dict.wiki_content?.villagers_item2_desc}</li>
+                      <li><strong>{dict.wiki_content?.villagers_item3_title}</strong> {dict.wiki_content?.villagers_item3_desc}</li>
                     </ul>
                   </div>
                 )}
 
                 {activeWikiTab === "fishing" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-fish text-accent"></i> 4. FISHING (CƠ CHẾ CÂU CÁ ĐẠI TU)</h2>
-                    <p className="wiki-intro-text">Biến hoạt động câu cá nhàm chán mặc định thành một tính năng giải trí có chiều sâu, thử thách và phần thưởng cực kỳ xứng đáng:</p>
+                    <h2><i className="fa-solid fa-fish text-accent"></i> {dict.wiki_content?.fishing_title}</h2>
+                    <p className="wiki-intro-text">{dict.wiki_content?.fishing_desc}</p>
                     <ul className="wiki-list">
-                      <li>
-                        <strong>Mini-game giật cần câu áp lực:</strong> Khi cá cắn câu, một thanh trạng thái áp lực sẽ xuất hiện trực quan trên màn hình. Bạn phải nhấp nhả chuột khéo léo để giữ thanh áp lực trong vùng an toàn mới có thể kéo cá lên thành công.
-                      </li>
-                      <li>
-                        <strong>Ảnh hưởng bởi môi trường thực tế:</strong> Chủng loại cá câu được phụ thuộc hoàn toàn vào vị trí địa lý bạn đang đứng câu (sông, biển sâu, đầm lầy, Địa Ngục) và điều kiện thời tiết (trời mưa, ban đêm).
-                      </li>
-                      <li>
-                        <strong>Phân định chỉ số & độ hiếm:</strong> Mỗi sinh vật câu lên sẽ có cân nặng, kích thước hoàn toàn ngẫu nhiên và được phân bậc độ hiếm rõ rệt: <em>Thường, Hiếm, Sử Thi, Huyền Thoại</em>.
-                      </li>
+                      <li><strong>{dict.wiki_content?.fishing_item1_title}</strong> {dict.wiki_content?.fishing_item1_desc}</li>
+                      <li><strong>{dict.wiki_content?.fishing_item2_title}</strong> {dict.wiki_content?.fishing_item2_desc}</li>
+                      <li><strong>{dict.wiki_content?.fishing_item3_title}</strong> {dict.wiki_content?.fishing_item3_desc}</li>
                     </ul>
                   </div>
                 )}
 
                 {activeWikiTab === "items" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-gem text-accent"></i> 5. CUSTOM ITEMS (VẬT PHẨM ĐẶC BIỆT)</h2>
-                    <p className="wiki-intro-text">Danh sách các món đồ độc quyền sở hữu ngoại hình (custom texture) và tính năng riêng biệt, chỉ có thể kiếm được qua khám phá hiểm nguy:</p>
+                    <h2><i className="fa-solid fa-gem text-accent"></i> {dict.wiki_content?.items_title}</h2>
+                    <p className="wiki-intro-text">{dict.wiki_content?.items_desc}</p>
                     <ul className="wiki-list">
-                      <li>
-                        <strong>Cổ vật & Vũ khí ma thuật:</strong> Các món đồ sở hữu hiệu ứng kỹ năng chiến đấu đặc quyền, chỉ rơi ra khi tiêu diệt các thủ lĩnh Boss hoặc săn lùng cấu trúc Địa Ngục, các tầng hầm ngục sâu tối tăm.
-                      </li>
-                      <li>
-                        <strong>Trang bị tối thượng (Endgame Gear):</strong> Bộ giáp thần thoại, công cụ khai thác siêu tốc tìm thấy tại các lâu đài cổ kính lơ lửng ở đảo End xa xôi.
-                      </li>
-                      <li>
-                        <strong>Cá đặc sản & Thức uống độc lạ:</strong> Hàng chục loại cá có ngoại hình riêng (cá hồi mắt quỷ, mực phát quang...) và các loại nước uống đặc biệt mua tại Quán rượu giúp tăng mạnh chỉ số tạm thời.
-                      </li>
-                      <li>
-                        <strong>Đầu người chơi chiến tích (Player Heads):</strong> Rơi ra làm vật phẩm lưu niệm trưng bày với skin chính xác của người thua cuộc khi diễn ra hoạt động PvP đối kháng trong server.
-                      </li>
+                      <li><strong>{dict.wiki_content?.items_item1_title}</strong> {dict.wiki_content?.items_item1_desc}</li>
+                      <li><strong>{dict.wiki_content?.items_item2_title}</strong> {dict.wiki_content?.items_item2_desc}</li>
+                      <li><strong>{dict.wiki_content?.items_item3_title}</strong> {dict.wiki_content?.items_item3_desc}</li>
+                      <li><strong>{dict.wiki_content?.items_item4_title}</strong> {dict.wiki_content?.items_item4_desc}</li>
                     </ul>
                   </div>
                 )}
 
                 {activeWikiTab === "guilds" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-shield-halved text-accent"></i> 6. GUILDS (HỆ THỐNG BANG HỘI & LÃNH ĐỊA)</h2>
-                    <p className="wiki-intro-text">Hệ thống cho phép người chơi gắn kết, thành lập tổ đội và xây dựng căn cứ bất khả xâm phạm độc quyền:</p>
+                    <h2><i className="fa-solid fa-shield-halved text-accent"></i> {dict.wiki_content?.guilds_title}</h2>
+                    <p className="wiki-intro-text">{dict.wiki_content?.guilds_desc}</p>
                     <ul className="wiki-list">
-                      <li>
-                        <strong>Thành lập và quản lý Bang hội:</strong> Người chơi có thể tự tạo Guild riêng, mời đồng đội tham gia, phân chia cấp bậc quản lý rõ ràng và sở hữu một kênh chat nội bộ bảo mật hoàn toàn.
-                      </li>
-                      <li>
-                        <strong>Hệ thống Đất đai & Lãnh địa (Guild Claim):</strong> Thủ lĩnh bang hội có thể sử dụng tài nguyên hoặc điểm cống hiến để mua quyền sở hữu đất, bảo vệ căn cứ khỏi sự phá hoại (grief), trộm cắp hoặc đột nhập từ người chơi ngoài bang.
-                      </li>
-                      <li>
-                        <strong>Cấp độ Guild và Buff đặc quyền:</strong> Cùng nhau thực hiện các hoạt động thám hiểm và đóng góp tài nguyên để thăng cấp bang hội. Mỗi cấp độ Guild mở khóa sẽ mang lại các hiệu ứng buff vĩnh viễn (như tăng lượng máu tối đa, thêm hiệu suất khai thác, hoặc tăng may mắn câu cá) cho toàn bộ thành viên.
-                      </li>
+                      <li><strong>{dict.wiki_content?.guilds_item1_title}</strong> {dict.wiki_content?.guilds_item1_desc}</li>
+                      <li><strong>{dict.wiki_content?.guilds_item2_title}</strong> {dict.wiki_content?.guilds_item2_desc}</li>
+                      <li><strong>{dict.wiki_content?.guilds_item3_title}</strong> {dict.wiki_content?.guilds_item3_desc}</li>
                     </ul>
                   </div>
                 )}
 
                 {activeWikiTab === "guide" && (
                   <div className="wiki-article">
-                    <h2><i className="fa-solid fa-book-open text-accent"></i> GUIDE (HƯỚNG DẪN TÂN THỦ SINH TỒN)</h2>
+                    <h2><i className="fa-solid fa-book-open text-accent"></i> {dict.wiki_content?.guide_title}</h2>
 
-                    <h3 className="wiki-subtitle"><i className="fa-solid fa-earth-americas text-accent-green"></i> Thay đổi lớn về Thế giới & Công trình</h3>
+                    <h3 className="wiki-subtitle"><i className="fa-solid fa-earth-americas text-accent-green"></i> {dict.wiki_content?.guide_world_title}</h3>
                     <ul className="wiki-list">
                       <li>
-                        <strong>Địa hình siêu hùng vĩ:</strong> Giới hạn chiều cao của núi và độ sâu của hang động ngầm được mở rộng vượt trội. Bổ dung hàng trăm quần xã mới (hang động băng, thung lũng núi lửa; 8 vùng đất mới ở Địa Ngục; bầu trời tinh vân rực rỡ sắc màu ở End).
+                        <strong>{dict.wiki_content?.guide_world_item1_title}</strong> {dict.wiki_content?.guide_world_item1_desc}
                       </li>
                       <li>
-                        <strong>Kiến trúc thị trấn cổ kính:</strong> Toàn bộ làng mặc định biến thành các thị trấn kiên cố có tường thành bao quanh. Phong cách xây dựng và vật liệu của làng/tháp canh cướp dân làng sẽ tự động đồng bộ theo môi trường xung quanh.
+                        <strong>{dict.wiki_content?.guide_world_item2_title}</strong> {dict.wiki_content?.guide_world_item2_desc}
                       </li>
                       <li>
-                        <strong>Đại tu Hầm ngục & Mê cung:</strong> Hệ thống hầm mỏ, cổng hư hại, di tích đáy biển được mở rộng quy mô khổng lồ. Các đền thờ giờ đây là các mê cung phức tạp, có bẫy rập tinh vi và quái vật đột biến canh giữ rương báu (rương có tỷ lệ rơi tài nguyên, phôi nâng cấp cao hơn).
+                        <strong>{dict.wiki_content?.guide_world_item3_title}</strong> {dict.wiki_content?.guide_world_item3_desc}
                       </li>
                       <li>
-                        <strong>Trạm dừng chân ven đường:</strong> Xuất hiện các ngọn tháp canh cao để làm mốc định vị địa hình và các Quán rượu (Taverns) – nơi an toàn tuyệt đối để bạn thuê phòng ngủ và giao dịch với NPC thương nhân dọc hành trình.
+                        <strong>{dict.wiki_content?.guide_world_item4_title}</strong> {dict.wiki_content?.guide_world_item4_desc}
                       </li>
                     </ul>
 
-                    <h3 className="wiki-subtitle" style={{ marginTop: '24px' }}><i className="fa-solid fa-circle-check text-accent-green"></i> Các tiện ích chất lượng trải nghiệm (QoL)</h3>
+                    <h3 className="wiki-subtitle" style={{ marginTop: '24px' }}><i className="fa-solid fa-circle-check text-accent-green"></i> {dict.wiki_content?.guide_qol_title}</h3>
                     <ul className="wiki-list">
                       <li>
-                        <strong>Chống phá nổ địa hình (Anti-Grief):</strong> Quả cầu lửa của Ghast ở Địa Ngục vẫn gây sát thương lên nhân vật nhưng hoàn toàn không làm nổ block, giúp bảo vệ an toàn cho các công trình bạn xây.
+                        <strong>{dict.wiki_content?.guide_qol_item1_title}</strong> {dict.wiki_content?.guide_qol_item1_desc}
                       </li>
                       <li>
-                        <strong>Tùy biến bệ đỡ giáp (Armor Stand):</strong> Sử dụng một cuốn sách giao diện trực quan để tùy ý chỉnh tư thế, thêm cánh tay, phóng to/thu nhỏ hoặc ẩn bệ đỡ nhằm trang trí nhà cửa.
+                        <strong>{dict.wiki_content?.guide_qol_item2_title}</strong> {dict.wiki_content?.guide_qol_item2_desc}
                       </li>
                       <li>
-                        <strong>Lá cây rụng siêu tốc:</strong> Khi bạn chặt hết gỗ thân cây, toàn bộ lá cây xung quanh sẽ tự động tiêu biến hàng loạt ngay lập tức để tiết kiệm thời gian và giảm thiểu tối đa giật lag vùng.
+                        <strong>{dict.wiki_content?.guide_qol_item3_title}</strong> {dict.wiki_content?.guide_qol_item3_desc}
                       </li>
                     </ul>
                   </div>
@@ -1247,7 +1217,7 @@ export default function HomeClient({ dict, lang }) {
                   {labels.donate}
                 </h2>
                 <div style={{ color: '#d7d8dc', fontSize: '1.05rem', lineHeight: '1.6', textAlign: 'center', padding: '40px 0', fontFamily: "'Outfit', 'Inter', sans-serif" }}>
-                  {isVi ? "Nội dung Donate đang được cập nhật..." : "Donate content is being updated..."}
+                  {dict.donate?.updating_message}
                 </div>
               </div>
             </div>
@@ -1260,25 +1230,25 @@ export default function HomeClient({ dict, lang }) {
               <div className="profile-layout">
                 <aside className="profile-sidebar">
                   <header className="profile-card__header">
-                  <span className="profile-card__eyebrow">
-                    <i className="fa-solid fa-leaf"></i>
-                    {isVi ? "HÀNH TRANG NGƯỜI CHƠI" : "PLAYER JOURNEY"}
-                  </span>
-                  <h2>{dict.profile.title}</h2>
-                  <p>{isVi ? "Thông tin tài khoản và kết nối của bạn tại Hào Hán SMP." : "Your account details and connections on HaoHan SMP."}</p>
+                    <span className="profile-card__eyebrow">
+                      <i className="fa-solid fa-leaf"></i>
+                      {dict.profile.eyebrow}
+                    </span>
+                    <h2>{dict.profile.title}</h2>
+                    <p>{dict.profile.description}</p>
                   </header>
-                  <nav className="profile-sidebar-nav" aria-label={isVi ? "Điều hướng hồ sơ" : "Profile navigation"}>
+                  <nav className="profile-sidebar-nav" aria-label={dict.profile.nav_label}>
                     <button type="button" className="profile-sidebar-link profile-sidebar-link--active">
-                      <i className="fa-solid fa-user"></i><span>{isVi ? "Tổng quan" : "Overview"}</span>
+                      <i className="fa-solid fa-user"></i><span>{dict.profile.nav_overview}</span>
                     </button>
                     <button type="button" className="profile-sidebar-link">
-                      <i className="fa-solid fa-gear"></i><span>{isVi ? "Cài đặt tài khoản" : "Account Settings"}</span>
+                      <i className="fa-solid fa-gear"></i><span>{dict.profile.nav_settings}</span>
                     </button>
                     <button type="button" className="profile-sidebar-link">
-                      <i className="fa-regular fa-bell"></i><span>{isVi ? "Thông báo" : "Notifications"}</span>
+                      <i className="fa-regular fa-bell"></i><span>{dict.profile.nav_notifications}</span>
                     </button>
                     <button type="button" className="profile-sidebar-link">
-                      <i className="fa-solid fa-link"></i><span>{isVi ? "Kết nối" : "Connections"}</span>
+                      <i className="fa-solid fa-link"></i><span>{dict.profile.nav_connections}</span>
                     </button>
                     <button type="button" className="profile-sidebar-link profile-sidebar-link--logout" onClick={handleLogout}>
                       <i className="fa-solid fa-arrow-right-from-bracket"></i><span>{dict.profile.logout_btn}</span>
@@ -1286,124 +1256,124 @@ export default function HomeClient({ dict, lang }) {
                   </nav>
                 </aside>
                 <div className="profile-card">
-                <div className="profile-card-grid">
-                  <div className="profile-avatar-wrapper">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img
-                      className="profile-avatar"
-                      src={`https://minotar.net/avatar/${user.username}/120`}
-                      alt={user.username}
-                    />
-                    <div className={`profile-discord-badge ${!user.discord_id ? "profile-discord-badge--unlinked" : ""}`}>
-                      {user.discord_id && user.avatar_url ? (
-                        /* eslint-disable-next-line @next/next/no-img-element */
-                        <img
-                          src={user.avatar_url}
-                          alt="Discord avatar"
-                          style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
-                        />
-                      ) : (
-                        <i className="fab fa-discord"></i>
-                      )}
+                  <div className="profile-card-grid">
+                    <div className="profile-avatar-wrapper">
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img
+                        className="profile-avatar"
+                        src={`https://minotar.net/avatar/${user.username}/120`}
+                        alt={user.username}
+                      />
+                      <div className={`profile-discord-badge ${!user.discord_id ? "profile-discord-badge--unlinked" : ""}`}>
+                        {user.discord_id && user.avatar_url ? (
+                          /* eslint-disable-next-line @next/next/no-img-element */
+                          <img
+                            src={user.avatar_url}
+                            alt="Discord avatar"
+                            style={{ width: '100%', height: '100%', borderRadius: '50%', objectFit: 'cover' }}
+                          />
+                        ) : (
+                          <i className="fab fa-discord"></i>
+                        )}
+                      </div>
                     </div>
-                  </div>
-                  <div className="profile-info">
-                    <div className="profile-name-row">
-                      <h3 className="profile-username">{user.username}</h3>
-                      {user.uuid ? (
-                        <span className="profile-badge profile-badge--verified">
-                          <i className="fas fa-check-circle"></i> {dict.profile.linked_minecraft}
-                        </span>
-                      ) : (
-                        <span className="profile-badge profile-badge--unverified">
-                          <i className="fas fa-exclamation-circle"></i> {dict.profile.unlinked_minecraft}
-                        </span>
+                    <div className="profile-info">
+                      <div className="profile-name-row">
+                        <h3 className="profile-username">{user.username}</h3>
+                        {user.uuid ? (
+                          <span className="profile-badge profile-badge--verified">
+                            <i className="fas fa-check-circle"></i> {dict.profile.linked_minecraft}
+                          </span>
+                        ) : (
+                          <span className="profile-badge profile-badge--unverified">
+                            <i className="fas fa-exclamation-circle"></i> {dict.profile.unlinked_minecraft}
+                          </span>
+                        )}
+                      </div>
+                      <p className="profile-welcome">
+                        {dict.profile.welcome_message}
+                      </p>
+                      <div className="profile-fields-grid">
+                        <div className="profile-field-item">
+                          <i className="profile-field-icon fa-solid fa-cube"></i>
+                          <span className="profile-field-label">{dict.profile.username_label}</span>
+                          <span className="profile-field-value profile-field-value--accent">{user.username}</span>
+                        </div>
+                        <div className="profile-field-item">
+                          <i className="profile-field-icon fa-solid fa-envelope"></i>
+                          <span className="profile-field-label">Email</span>
+                          <span className="profile-field-value">{user.email}</span>
+                        </div>
+                        <div className="profile-field-item">
+                          <i className="profile-field-icon fa-solid fa-clock"></i>
+                          <span className="profile-field-label">{dict.profile.playtime_label}</span>
+                          <span className="profile-field-value">
+                            {dict.profile.playtime_value
+                              .replace('{hours}', Math.floor((user.play_time || 0) / 3600))
+                              .replace('{minutes}', Math.floor(((user.play_time || 0) % 3600) / 60))}
+                          </span>
+                        </div>
+                        <div className="profile-field-item">
+                          <i className="profile-field-icon fa-brands fa-discord"></i>
+                          <span className="profile-field-label">{dict.profile.discord_status_label}</span>
+                          <span className="profile-field-value">
+                            {user.discord_id ? (
+                              <span className="profile-connection profile-connection--linked">
+                                <i className="fab fa-discord"></i> {dict.profile.linked_discord}
+                              </span>
+                            ) : (
+                              <span className="profile-connection">
+                                <i className="fab fa-discord"></i> {dict.profile.unlinked_discord}
+                              </span>
+                            )}
+                          </span>
+                        </div>
+                        <div className="profile-field-item">
+                          <i className="profile-field-icon fa-solid fa-shield-halved"></i>
+                          <span className="profile-field-label">{dict.profile.role_label}</span>
+                          <span className="profile-field-value">{user.role || dict.profile.default_role}</span>
+                        </div>
+                        <div className="profile-field-item">
+                          <i className="profile-field-icon fa-solid fa-fingerprint"></i>
+                          <span className="profile-field-label">{dict.profile.uuid_label}</span>
+                          <span className="profile-field-value profile-field-value--code">{user.uuid || "---"}</span>
+                        </div>
+                      </div>
+                      {!user.uuid && (
+                        <div className="profile-tip-box" style={{ marginTop: '10px' }}>
+                          <i className="fas fa-info-circle"></i>
+                          <span>{dict.profile.minecraft_link_tip}</span>
+                        </div>
                       )}
-                    </div>
-                    <p className="profile-welcome">
-                      {isVi ? "Chào mừng đến với Hào Hán SMP! Hoàn thiện hồ sơ và bắt đầu cuộc phiêu lưu của bạn." : "Welcome to HaoHan SMP! Complete your profile and start your adventure."}
-                    </p>
-                    <div className="profile-fields-grid">
-                      <div className="profile-field-item">
-                        <i className="profile-field-icon fa-solid fa-cube"></i>
-                        <span className="profile-field-label">{dict.profile.username_label || (isVi ? "Tài khoản Minecraft" : "Minecraft Account")}</span>
-                        <span className="profile-field-value profile-field-value--accent">{user.username}</span>
-                      </div>
-                      <div className="profile-field-item">
-                        <i className="profile-field-icon fa-solid fa-envelope"></i>
-                        <span className="profile-field-label">Email</span>
-                        <span className="profile-field-value">{user.email}</span>
-                      </div>
-                      <div className="profile-field-item">
-                        <i className="profile-field-icon fa-solid fa-clock"></i>
-                        <span className="profile-field-label">{dict.profile.playtime_label}</span>
-                        <span className="profile-field-value">
-                          {dict.profile.playtime_value
-                            .replace('{hours}', Math.floor((user.play_time || 0) / 3600))
-                            .replace('{minutes}', Math.floor(((user.play_time || 0) % 3600) / 60))}
-                        </span>
-                      </div>
-                      <div className="profile-field-item">
-                        <i className="profile-field-icon fa-brands fa-discord"></i>
-                        <span className="profile-field-label">{dict.profile.discord_status_label || (isVi ? "Liên kết Discord" : "Discord Connection")}</span>
-                        <span className="profile-field-value">
+                      <div className="profile-actions-row" style={{ marginTop: '20px' }}>
+                        <div className="profile-actions-left">
                           {user.discord_id ? (
-                            <span className="profile-connection profile-connection--linked">
+                            <span className="profile-sync-msg profile-sync-msg--success" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
                               <i className="fab fa-discord"></i> {dict.profile.linked_discord}
                             </span>
                           ) : (
-                            <span className="profile-connection">
-                              <i className="fab fa-discord"></i> {dict.profile.unlinked_discord}
+                            <button className="btn-profile-discord" onClick={handleLinkDiscord}>
+                              <i className="fab fa-discord"></i> {dict.profile.link_discord_btn}
+                            </button>
+                          )}
+                          {user.discord_id && (
+                            <button className="btn-profile-sync" onClick={handleSyncDiscord} disabled={syncing}>
+                              <i className="fas fa-sync-alt"></i> {syncing ? dict.profile.syncing : dict.profile.sync_btn}
+                            </button>
+                          )}
+                          {syncMsg && (
+                            <span className={`profile-sync-msg ${syncSuccess ? 'profile-sync-msg--success' : 'profile-sync-msg--error'}`}>
+                              {syncMsg}
                             </span>
                           )}
-                        </span>
+                        </div>
+                        <button className="btn-profile-logout" onClick={handleLogout}>
+                          <i className="fas fa-sign-out-alt"></i> {dict.profile.logout_btn}
+                        </button>
                       </div>
-                      <div className="profile-field-item">
-                        <i className="profile-field-icon fa-solid fa-shield-halved"></i>
-                        <span className="profile-field-label">{dict.profile.role_label}</span>
-                        <span className="profile-field-value">{user.role || (isVi ? "Thành viên" : "Member")}</span>
-                      </div>
-                      <div className="profile-field-item">
-                        <i className="profile-field-icon fa-solid fa-fingerprint"></i>
-                        <span className="profile-field-label">{dict.profile.uuid_label}</span>
-                        <span className="profile-field-value profile-field-value--code">{user.uuid || "---"}</span>
-                      </div>
-                    </div>
-                    {!user.uuid && (
-                      <div className="profile-tip-box" style={{ marginTop: '10px' }}>
-                        <i className="fas fa-info-circle"></i>
-                        <span>{dict.profile.minecraft_link_tip}</span>
-                      </div>
-                    )}
-                    <div className="profile-actions-row" style={{ marginTop: '20px' }}>
-                      <div className="profile-actions-left">
-                        {user.discord_id ? (
-                          <span className="profile-sync-msg profile-sync-msg--success" style={{ display: 'inline-flex', alignItems: 'center', gap: '6px' }}>
-                            <i className="fab fa-discord"></i> {dict.profile.linked_discord}
-                          </span>
-                        ) : (
-                          <button className="btn-profile-discord" onClick={handleLinkDiscord}>
-                            <i className="fab fa-discord"></i> {dict.profile.link_discord_btn}
-                          </button>
-                        )}
-                        {user.discord_id && (
-                          <button className="btn-profile-sync" onClick={handleSyncDiscord} disabled={syncing}>
-                            <i className="fas fa-sync-alt"></i> {syncing ? dict.profile.syncing : dict.profile.sync_btn}
-                          </button>
-                        )}
-                        {syncMsg && (
-                          <span className={`profile-sync-msg ${syncSuccess ? 'profile-sync-msg--success' : 'profile-sync-msg--error'}`}>
-                            {syncMsg}
-                          </span>
-                        )}
-                      </div>
-                      <button className="btn-profile-logout" onClick={handleLogout}>
-                        <i className="fas fa-sign-out-alt"></i> {dict.profile.logout_btn}
-                      </button>
                     </div>
                   </div>
                 </div>
-              </div>
               </div>
             </div>
           </section>
