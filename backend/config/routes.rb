@@ -10,6 +10,7 @@ Rails.application.routes.draw do
   # Authentication API
   post '/api/auth/register', to: 'api/auth#register'
   post '/api/auth/login', to: 'api/auth#login'
+  post '/api/auth/update-profile', to: 'api/auth#update_profile'
 
   # Game Account Linking API
   post '/api/game/generate-link-code', to: 'api/game_link#generate_link_code'
