@@ -183,12 +183,13 @@ button {
 }
 
 .haohan__logo-main:hover {
-  transform: scale(1.1) rotate(0.5deg);
-  filter: drop-shadow(0 12px 30px rgba(255, 149, 46, 0.3));
+  transform: scale(1.03);
+  filter: drop-shadow(0 10px 20px rgba(0, 0, 0, 0.7));
 }
 
 .haohan__logo-main:active {
-  transform: scale(1.2) rotate(-0.5deg);
+  transform: scale(1.1);
+  filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.8));
   transition: transform 0.1s ease;
 }
 
