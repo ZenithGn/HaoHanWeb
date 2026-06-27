@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../components/AuthContext";
+import Script from "next/script";
 const serverIp = "haohansmp.io.vn";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
@@ -177,6 +178,84 @@ function SectionStars({ count = 25 }) {
   return <canvas ref={canvasRef} className="section-stars-canvas" />;
 }
 
+function MinecraftSkinViewer({ username }) {
+  const containerRef = useRef(null);
+  const viewerInstanceRef = useRef(null);
+  const [isAnimating, setIsAnimating] = useState(true);
+
+  useEffect(() => {
+    if (!containerRef.current) return;
+
+    let active = true;
+    let viewerInstance = null;
+
+    import("skinview3d").then((skinview3d) => {
+      if (!active || !containerRef.current) return;
+
+      // Clean up previous instance and clear inner HTML
+      if (viewerInstanceRef.current) {
+        viewerInstanceRef.current.dispose();
+      }
+      containerRef.current.innerHTML = "";
+
+      try {
+        const canvas = document.createElement("canvas");
+        containerRef.current.appendChild(canvas);
+
+        const playerSkinName = username && username !== "---" ? username : "Steve";
+
+        const viewer = new skinview3d.SkinViewer({
+          canvas: canvas,
+          width: 140,
+          height: 240,
+          skin: `https://minotar.net/download/${playerSkinName}`
+        });
+
+        viewer.controls.enableZoom = false;
+        viewer.controls.enableRotate = true;
+
+        if (isAnimating) {
+          viewer.animation = new skinview3d.WalkingAnimation();
+          viewer.autoRotate = true;
+        } else {
+          viewer.animation = null;
+          viewer.autoRotate = false;
+        }
+        viewer.autoRotateSpeed = 0.8;
+
+        viewerInstanceRef.current = viewer;
+        viewerInstance = viewer;
+      } catch (err) {
+        console.error("Error rendering 3D skin viewer:", err);
+      }
+    });
+
+    return () => {
+      active = false;
+      if (viewerInstance) {
+        viewerInstance.dispose();
+      }
+      if (containerRef.current) {
+        containerRef.current.innerHTML = "";
+      }
+    };
+  }, [username, isAnimating]);
+
+  return (
+    <div className="minecraft-3d-skin-wrapper">
+      <div ref={containerRef} className="minecraft-3d-skin-container" />
+      <button 
+        type="button" 
+        className="minecraft-3d-skin-toggle" 
+        onClick={() => setIsAnimating(!isAnimating)}
+        title={isAnimating ? "Pause Animation" : "Play Animation"}
+      >
+        <i className={`fa-solid ${isAnimating ? "fa-pause" : "fa-play"}`}></i>
+      </button>
+    </div>
+  );
+}
+
 export default function HomeClient({ dict, lang }) {
   const [currentLang, setCurrentLang] = useState(lang);
   const [copiedIp, setCopiedIp] = useState(false);
@@ -216,6 +295,8 @@ export default function HomeClient({ dict, lang }) {
   const [linkingGame, setLinkingGame] = useState(false);
   const [linkMsg, setLinkMsg] = useState("");
   const [linkSuccess, setLinkSuccess] = useState(true);
+  const profileNavRef = useRef(null);
+  const profileNavIndicatorRef = useRef(null);
 
   useEffect(() => {
     if (user && user.email) {
@@ -567,6 +648,40 @@ export default function HomeClient({ dict, lang }) {
       }
     }
   }, [activeTab]);
+
+  useEffect(() => {
+    const updateIndicator = () => {
+      const nav = profileNavRef.current;
+      const indicator = profileNavIndicatorRef.current;
+      if (!nav || !indicator || activeTab !== "profile" || !isLoggedIn) return;
+
+      const activeBtn = nav.querySelector(".profile-sidebar-link--active");
+      if (!activeBtn) {
+        indicator.style.opacity = "0";
+        return;
+      }
+
+      const navRect = nav.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      const top = btnRect.top - navRect.top;
+      const height = btnRect.height;
+
+      indicator.style.opacity = "1";
+      indicator.style.transform = `translateY(${top}px)`;
+      indicator.style.height = `${height}px`;
+    };
+
+    // Run immediately and after layout rendering
+    updateIndicator();
+    const timeout = setTimeout(updateIndicator, 50);
+
+    window.addEventListener("resize", updateIndicator);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [profileSubTab, activeTab, isLoggedIn]);
 
   const toggleLang = () => {
     const next = currentLang === "vi" ? "en" : "vi";
@@ -1560,7 +1675,8 @@ export default function HomeClient({ dict, lang }) {
                     <h2>{dict.profile.title}</h2>
                     <p>{dict.profile.description}</p>
                   </header>
-                  <nav className="profile-sidebar-nav" aria-label={dict.profile.nav_label}>
+                  <nav className="profile-sidebar-nav" ref={profileNavRef} aria-label={dict.profile.nav_label}>
+                    <div className="profile-sidebar-indicator" ref={profileNavIndicatorRef}></div>
                     <button
                       type="button"
                       className={`profile-sidebar-link ${profileSubTab === "overview" ? "profile-sidebar-link--active" : ""}`}
@@ -1589,14 +1705,17 @@ export default function HomeClient({ dict, lang }) {
                 </aside>
                 <div className="profile-card">
                   {profileSubTab === "overview" && (
-                    <div className="profile-card-grid">
-                      <div className="profile-avatar-wrapper">
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img
-                          className="profile-avatar"
-                          src={`https://minotar.net/avatar/${user.username}/120`}
-                          alt={user.username}
-                        />
+                    <div className="profile-card-grid profile-tab-content">
+                      <div className="profile-left-col">
+                        <div className="profile-avatar-wrapper">
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            className="profile-avatar"
+                            src={`https://minotar.net/avatar/${user.username}/120`}
+                            alt={user.username}
+                          />
+                        </div>
+                        <MinecraftSkinViewer username={user.username} />
                       </div>
                       <div className="profile-info">
                         <div className="profile-name-row">
@@ -1656,7 +1775,7 @@ export default function HomeClient({ dict, lang }) {
                   )}
 
                   {profileSubTab === "settings" && (
-                    <div style={{ padding: '0 0 0 clamp(20px, 4vw, 40px)', width: '100%', fontFamily: "'Outfit', sans-serif" }}>
+                    <div className="profile-tab-content" style={{ padding: '0 0 0 clamp(20px, 4vw, 40px)', width: '100%', fontFamily: "'Outfit', sans-serif" }}>
                       <h3 style={{ color: '#ff952e', fontSize: '1.6rem', fontWeight: '700', marginBottom: '8px', letterSpacing: '-0.5px' }}>
                         {dict.profile.settings_title}
                       </h3>
@@ -1867,7 +1986,7 @@ export default function HomeClient({ dict, lang }) {
                   )}
 
                   {profileSubTab === "connections" && (
-                    <div style={{ padding: '0 0 0 clamp(20px, 4vw, 40px)', width: '100%', fontFamily: "'Outfit', sans-serif" }}>
+                    <div className="profile-tab-content" style={{ padding: '0 0 0 clamp(20px, 4vw, 40px)', width: '100%', fontFamily: "'Outfit', sans-serif" }}>
                       <h3 style={{ color: '#ff952e', fontSize: '1.6rem', fontWeight: '700', marginBottom: '8px', letterSpacing: '-0.5px' }}>
                         {dict.profile.connections_title}
                       </h3>

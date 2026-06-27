@@ -14,7 +14,8 @@
     "negotiator": "^1.0.0",
     "next": "16.2.9",
     "react": "19.2.4",
-    "react-dom": "19.2.4"
+    "react-dom": "19.2.4",
+    "skinview3d": "^3.4.2"
   },
   "devDependencies": {
     "eslint": "^9",
