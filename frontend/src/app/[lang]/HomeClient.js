@@ -374,6 +374,9 @@ export default function HomeClient({ dict, lang }) {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedTopicImageIndex, setSelectedTopicImageIndex] = useState(0);
 
+  const [selectedFeature, setSelectedFeature] = useState(null);
+  const [activeFeatureImgIndex, setActiveFeatureImgIndex] = useState(0);
+
   // Account Settings form states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -615,49 +618,128 @@ export default function HomeClient({ dict, lang }) {
   ], [dict]);
   const featureCards = useMemo(() => [
     {
+      id: "explore",
       icon: "fa-solid fa-compass",
       title: dict.features_list.explore || "Explore the World",
       desc: dict.features_list.explore_desc,
-      img: "/assets/img/bg.png",
+      img: "/assets/img/feature/struct1.png",
       accent: "#4ade80",
       large: true,
+      wikiTab: "guide",
     },
     {
+      id: "survival",
       icon: "fa-solid fa-shield-halved",
       title: dict.features_list.survival || "Survival & Progress",
       desc: dict.features_list.survival_desc,
-      img: "/assets/img/bg1.png",
+      img: "/assets/img/feature/gameplay.png",
       accent: "#fb923c",
+      wikiTab: "guide",
     },
     {
+      id: "terrain",
       icon: "fa-solid fa-mountain-sun",
       title: dict.features_list.terrain || "Customizable Terrain",
       desc: dict.features_list.terrain_desc,
-      img: "/assets/img/bg3.png",
+      img: "/assets/img/feature/terrain1.png",
       accent: "#38bdf8",
+      wikiTab: "guide",
     },
     {
+      id: "custom",
       icon: "fa-solid fa-wand-magic-sparkles",
       title: dict.features_list.custom || "Custom Mechanics",
       desc: dict.features_list.custom_desc,
-      img: "/assets/img/bg2.png",
+      img: "/assets/img/feature/gameplay1.png",
       accent: "#c084fc",
+      wikiTab: "recipes",
     },
     {
+      id: "modpack",
       icon: "fa-solid fa-box-archive",
       title: dict.features_list.modpack || "Get Modpack",
       desc: dict.features_list.modpack_desc,
-      img: "/assets/img/bg4.png",
+      img: "/assets/img/feature/struct2.png",
       accent: "#facc15",
+      wikiTab: "intro",
     },
     {
+      id: "more",
       icon: "fa-solid fa-arrow-right-long",
       title: dict.features_list.more || "Learn More",
       desc: dict.features_list.more_desc,
-      img: "/assets/img/bg-checking-status.jpg",
+      img: "/assets/img/feature/terrain2.png",
       accent: "#ff5757",
+      wikiTab: "intro",
     },
   ], [dict, isVi]);
+
+  const featureImages = useMemo(() => ({
+    explore: Array.from({ length: 10 }, (_, i) => `/assets/img/feature/struct${i + 1}.png`),
+    survival: Array.from({ length: 6 }, (_, i) => `/assets/img/feature/gameplay${i === 0 ? "" : i}.png`),
+    terrain: Array.from({ length: 5 }, (_, i) => `/assets/img/feature/terrain${i + 1}.png`),
+    custom: [
+      "/assets/img/feature/gameplay1.png",
+      "/assets/img/feature/gameplay3.png",
+      "/assets/img/feature/gameplay4.png",
+      "/assets/img/feature/gameplay5.png",
+    ],
+    modpack: [
+      "/assets/img/feature/gameplay4.png",
+      "/assets/img/feature/struct2.png",
+    ],
+    more: [
+      "/assets/img/feature/struct6.png",
+      "/assets/img/feature/terrain5.png",
+      "/assets/img/feature/gameplay2.png",
+    ],
+  }), []);
+
+  const featureExplanations = useMemo(() => ({
+    explore: {
+      title: isVi ? "Khám Phá Thế Giới" : "Explore the World",
+      desc: isVi 
+        ? "Hành trình phiêu lưu qua thế giới sinh tồn rộng lớn vô tận. Bạn sẽ tìm thấy những cấu trúc được tạo tự nhiên cực kỳ độc đáo và hoành tráng, các công trình của cộng đồng và các tàn tích khảo cổ học chứa nhiều báu vật quý giá."
+        : "Embark on an adventure through an endless survival world. You will discover unique and grand structures, community builds, and archaeological ruins containing rare treasures.",
+      wikiLabel: isVi ? "Xem hướng dẫn sinh tồn" : "View Survival Guide"
+    },
+    survival: {
+      title: isVi ? "Sinh Tồn và Phát Triển" : "Survival & Progress",
+      desc: isVi 
+        ? "Cơ chế sinh tồn có chiều sâu đòi hỏi sự hợp tác và trao đổi tài nguyên giữa các người chơi. Xây dựng căn cứ vững chắc, thiết lập nông trại tự động và khẳng định vị thế của bạn trong nền kinh tế năng động."
+        : "Deep survival mechanics requiring cooperation and resource trading among players. Build secure bases, establish automated farms, and make your mark in a dynamic economy.",
+      wikiLabel: isVi ? "Xem hướng dẫn sinh tồn" : "View Survival Guide"
+    },
+    terrain: {
+      title: isVi ? "Địa Hình Tùy Chỉnh" : "Customizable Terrain",
+      desc: isVi 
+        ? "Hệ thống phát sinh địa hình đặc sắc, mang đến những ngọn núi hùng vĩ, thung lũng thơ mộng và các quần xã sinh vật được cải tiến đầy tính nghệ thuật giúp bạn thỏa sức sáng tạo công trình lý tưởng."
+        : "A unique terrain generation system, bringing majestic mountains, romantic valleys, and artistically enhanced biomes for you to build your dream creations.",
+      wikiLabel: isVi ? "Xem địa hình & thế giới" : "View World Guide"
+    },
+    custom: {
+      title: isVi ? "Cơ Chế Tùy Chỉnh" : "Custom Mechanics",
+      desc: isVi 
+        ? "Các tính năng đặc biệt chỉ có tại HaoHan SMP bao gồm: hệ thống nhiệm vụ phong phú, câu cá tùy chỉnh độc đáo, quái vật thông minh hơn, trao đổi dân làng nâng cấp, và các công thức chế tạo đặc biệt."
+        : "Special features exclusive to HaoHan SMP: rich quest system, unique custom fishing, smarter monsters, upgraded villager trades, and special crafting recipes.",
+      wikiLabel: isVi ? "Xem công thức & vật phẩm" : "View Custom Items"
+    },
+    modpack: {
+      title: isVi ? "Nhận Modpack" : "Get Modpack",
+      desc: isVi 
+        ? "Modpack tùy chỉnh của chúng tôi giúp tối ưu hóa hiệu năng cực tốt, tích hợp sẵn các gói Shader đẹp mắt, âm thanh vòm sống động và các tính năng tiện ích (QoL) nhằm mang lại trải nghiệm mượt mà nhất."
+        : "Our custom modpack optimizes performance, integrates beautiful Shader packs, immersive 3D surround sound, and helpful quality-of-life (QoL) features for the smoothest experience.",
+      wikiLabel: isVi ? "Tải xuống Modpack tại Wiki" : "Download Modpack on Wiki"
+    },
+    more: {
+      title: isVi ? "Tìm Hiểu Thêm" : "Learn More",
+      desc: isVi 
+        ? "Hãy tham gia cộng đồng Discord để giao lưu cùng hàng nghìn người chơi khác, xem cập nhật nhật ký thay đổi của máy chủ và cùng nhau thảo luận, đóng góp xây dựng server ngày một hoàn thiện."
+        : "Join our Discord community to connect with thousands of other players, check server changelogs, discuss, and contribute to making our server even better.",
+      wikiLabel: isVi ? "Xem thông tin máy chủ" : "View Server Info"
+    }
+  }), [isVi]);
+
   const featuresTranslated = useMemo(() => featureCards.map(c => [c.img, c.title]), [featureCards]);
   const galleryImages = useMemo(() => [
     "/assets/img/b1.png",
@@ -1196,6 +1278,14 @@ export default function HomeClient({ dict, lang }) {
       setLinkingGame(false);
     }
   };
+
+  const handleFeatureWikiClick = (wikiTab) => {
+    setSelectedFeature(null);
+    setActiveTab("wiki");
+    setActiveWikiTab(wikiTab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}${topbar && mobileMenuOpen ? " topbar__actions--open" : ""}`}>
       {isLoggedIn && user ? (
@@ -1392,7 +1482,11 @@ export default function HomeClient({ dict, lang }) {
                     <div
                       className={`feature-card${card.large ? " feature-card--large" : ""}`}
                       key={card.title}
-                      style={{ "--card-accent": card.accent }}
+                      style={{ "--card-accent": card.accent, cursor: "pointer" }}
+                      onClick={() => {
+                        setSelectedFeature(card);
+                        setActiveFeatureImgIndex(0);
+                      }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img className="feature-card__bg" src={card.img} alt="" aria-hidden="true" />
@@ -3218,6 +3312,82 @@ export default function HomeClient({ dict, lang }) {
           </p>
         </div>
       </footer>
+      {selectedFeature && (
+        <div className="feature-modal-overlay" onClick={() => setSelectedFeature(null)}>
+          <div className="feature-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button className="feature-modal-close" onClick={() => setSelectedFeature(null)} aria-label="Close feature details">
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+            
+            <div className="feature-modal-grid">
+              {/* Left Column: Image Explorer */}
+              <div className="feature-modal-media">
+                <div className="feature-modal-preview-wrapper">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={featureImages[selectedFeature.id][activeFeatureImgIndex]}
+                    alt={selectedFeature.title}
+                    className="feature-modal-preview-img"
+                  />
+                  <div className="feature-modal-index-tag">
+                    {activeFeatureImgIndex + 1} / {featureImages[selectedFeature.id].length}
+                  </div>
+                </div>
+                
+                {/* Thumbnails list */}
+                <div className="feature-modal-thumbs">
+                  {featureImages[selectedFeature.id].map((thumbUrl, idx) => {
+                    const isActive = activeFeatureImgIndex === idx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveFeatureImgIndex(idx)}
+                        className={`feature-modal-thumb-btn ${isActive ? 'feature-modal-thumb-btn--active' : ''}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={thumbUrl} alt="" className="feature-modal-thumb-img" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+              
+              {/* Right Column: Explanations & Actions */}
+              <div className="feature-modal-info">
+                <div className="feature-modal-header">
+                  <div className="feature-modal-icon-badge" style={{ color: selectedFeature.accent }}>
+                    <i className={selectedFeature.icon}></i>
+                  </div>
+                  <h3 className="feature-modal-title">
+                    {featureExplanations[selectedFeature.id]?.title || selectedFeature.title}
+                  </h3>
+                </div>
+                
+                <p className="feature-modal-desc">
+                  {featureExplanations[selectedFeature.id]?.desc || selectedFeature.desc}
+                </p>
+                
+                <div className="feature-modal-actions">
+                  <button
+                    onClick={() => handleFeatureWikiClick(selectedFeature.wikiTab)}
+                    className="feature-modal-wiki-btn"
+                    style={{
+                      background: `linear-gradient(135deg, ${selectedFeature.accent} 0%, rgba(20,16,12,0.8) 120%)`,
+                      border: `1px solid ${selectedFeature.accent}80`,
+                      boxShadow: `0 4px 20px ${selectedFeature.accent}40`
+                    }}
+                  >
+                    <i className="fa-solid fa-book-open"></i>
+                    <span>
+                      {featureExplanations[selectedFeature.id]?.wikiLabel || (isVi ? "Xem chi tiết trên Wiki" : "View details on Wiki")}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {activeImgIndex !== null && (
         <div className="lightbox-overlay" onClick={() => setActiveImgIndex(null)}>
           <button className="lightbox-close" onClick={() => setActiveImgIndex(null)} aria-label="Close lightbox">&times;</button>
