@@ -347,7 +347,16 @@
     "donor_board_subtitle": "Cảm ơn những hảo hán đã đồng hành và hỗ trợ server",
     "quick_amounts": "Chọn nhanh số tiền:",
     "empty_donors": "Chưa có lượt đóng góp nào.",
-    "anonymous": "Hảo Hán Ẩn Danh"
+    "anonymous": "Hảo Hán Ẩn Danh",
+    "thank_you": "CẢM ƠN BẠN",
+    "supporters_title": "Supporters",
+    "supporters_desc": "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền.",
+    "disclaimer_name": "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán.",
+    "disclaimer_redirect": "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau.",
+    "creating": "Đang tạo...",
+    "support_us": "Ủng hộ chúng tôi",
+    "donator_section_title": "Donator",
+    "confirm_disclaimer": "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
   },
   "auth": {
     "login_title": "Đăng Nhập",
@@ -546,7 +555,8 @@
     "rules_hero_eyebrow": "Nội quy server",
     "rules_hero_desc": "Vui lòng đọc kỹ và tuân thủ các quy định dưới đây để có trải nghiệm tốt nhất cùng cộng đồng.",
     "rules_section4_title": "Giải quyết vấn đề",
-    "rules_ticket_desc": "Bạn có thể liên hệ admin bằng cách tạo một ticket để được giải quyết."
+    "rules_ticket_desc": "Bạn có thể liên hệ admin bằng cách tạo một ticket để được giải quyết.",
+    "rules_nav_title": "MỤC LỤC NỘI QUY"
   },
   "wiki": {
     "title": "Tài Liệu Hướng Dẫn - Wiki",
@@ -669,5 +679,174 @@
     "guide_qol_item2_desc": "Sử dụng một cuốn sách giao diện trực quan để tùy ý chỉnh tư thế, thêm cánh tay, phóng to/thu nhỏ hoặc ẩn bệ đỡ nhằm trang trí nhà cửa.",
     "guide_qol_item3_title": "Lá cây rụng siêu tốc:",
     "guide_qol_item3_desc": "Khi bạn chặt hết gỗ thân cây, toàn bộ lá cây xung quanh sẽ tự động tiêu biến hàng loạt ngay lập tức để tiết kiệm thời gian và giảm thiểu tối đa giật lag vùng."
+  },
+  "feature_explanations": {
+    "explore": {
+      "title": "Khám Phá Thế Giới",
+      "desc": "Hành trình phiêu lưu qua thế giới sinh tồn rộng lớn vô tận. Bạn sẽ tìm thấy những cấu trúc được tạo tự nhiên cực kỳ độc đáo và hoành tráng, các công trình của cộng đồng và các tàn tích khảo cổ học chứa nhiều báu vật quý giá.",
+      "wikiLabel": "Xem hướng dẫn sinh tồn"
+    },
+    "survival": {
+      "title": "Sinh Tồn và Phát Triển",
+      "desc": "Cơ chế sinh tồn có chiều sâu đòi hỏi sự hợp tác và trao đổi tài nguyên giữa các người chơi. Xây dựng căn cứ vững chắc, thiết lập nông trại tự động và khẳng định vị thế của bạn trong nền kinh tế năng động.",
+      "wikiLabel": "Xem hướng dẫn sinh tồn"
+    },
+    "terrain": {
+      "title": "Địa Hình Tùy Chỉnh",
+      "desc": "Hệ thống phát sinh địa hình đặc sắc, mang đến những ngọn núi hùng vĩ, thung lũng thơ mộng và các quần xã sinh vật được cải tiến đầy tính nghệ thuật giúp bạn thỏa sức sáng tạo công trình lý tưởng.",
+      "wikiLabel": "Xem địa hình & thế giới"
+    },
+    "custom": {
+      "title": "Cơ Chế Tùy Chỉnh",
+      "desc": "Các tính năng đặc biệt chỉ có tại HaoHan SMP bao gồm: hệ thống nhiệm vụ phong phú, câu cá tùy chỉnh độc đáo, quái vật thông minh hơn, trao đổi dân làng nâng cấp, và các công thức chế tạo đặc biệt.",
+      "wikiLabel": "Xem công thức & vật phẩm"
+    },
+    "modpack": {
+      "title": "Nhận Modpack",
+      "desc": "Modpack tùy chỉnh của chúng tôi giúp tối ưu hóa hiệu năng cực tốt, tích hợp sẵn các gói Shader đẹp mắt, âm thanh vòm sống động và các tính năng tiện ích (QoL) nhằm mang lại trải nghiệm mượt mà nhất.",
+      "wikiLabel": "Tải xuống Modpack tại Wiki"
+    },
+    "more": {
+      "title": "Tìm Hiểu Thêm",
+      "desc": "Hãy tham gia cộng đồng Discord để giao lưu cùng hàng nghìn người chơi khác, xem cập nhật nhật ký thay đổi của máy chủ và cùng nhau thảo luận, đóng góp xây dựng server ngày một hoàn thiện.",
+      "wikiLabel": "Xem thông tin máy chủ"
+    }
+  },
+  "gallery_albums": [
+    {
+      "season": "1",
+      "name": "The beginning",
+      "duration": "06/2021 - 02/2022",
+      "desc": "Giai đoạn máy chủ thử nghiệm giới hạn, hoạt động dưới chế độ riêng tư.",
+      "topics": [
+        {
+          "title": "Căn cứ thời sơ khai",
+          "desc": "Những công trình đơn sơ của các thành viên thời kỳ đầu.",
+          "coverIndex": 0,
+          "images": [
+            { "index": 0, "title": "Nhà gỗ bên hồ", "desc": "Một căn nhà gỗ đơn sơ ấm cúng thời kỳ đầu." },
+            { "index": 1, "title": "Tháp canh đá", "desc": "Tháp quan sát bằng đá bảo vệ làng sinh tồn." },
+            { "index": 2, "title": "Căn cứ Redstone sơ khai", "desc": "Thử nghiệm cơ chế Redstone đơn giản đầu tiên." },
+            { "index": 3, "title": "Cổng Nether cổ kính", "desc": "Thiết kế cổng địa ngục được trang trí đẹp mắt." },
+            { "index": 4, "title": "Nhà kho nhỏ", "desc": "Khu vực lưu trữ tài nguyên nhỏ của nhóm bạn." },
+            { "index": 5, "title": "Trang trại lúa mì", "desc": "Cánh đồng lúa mì đảm bảo nguồn thức ăn thời kỳ đầu." },
+            { "index": 6, "title": "Khu khai thác khoáng sản", "desc": "Mỏ đá khai thác vật liệu thô sơ." }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "2",
+      "name": "Hảo Hán SMP - Archive & Rewind",
+      "duration": "06/2022 - 08/2022",
+      "desc": "Giai đoạn máy chủ gặp nhiều khó khăn về mặt tài chính và duy trì kinh phí.",
+      "topics": [
+        {
+          "title": "Căn cứ của thành viên",
+          "desc": "Khám phá các căn cứ sinh tồn đầy sáng tạo và hoành tráng.",
+          "coverIndex": 7,
+          "images": [
+            { "index": 7, "title": "Căn cứ chính (Toàn cảnh)", "desc": "Hình ảnh toàn cảnh căn cứ chính quy mô lớn của thành viên Season 2." },
+            { "index": 8, "title": "Khuôn viên căn cứ", "desc": "Cận cảnh khuôn viên căn cứ với thiết kế kết hợp kính và đá." },
+            { "index": 9, "title": "Sân vườn hồ nước", "desc": "Một góc sân vườn thơ mộng bên bờ hồ." },
+            { "index": 10, "title": "Đại bản doanh", "desc": "Căn cứ lớn tích hợp đầy đủ công năng sinh tồn." }
+          ]
+        },
+        {
+          "title": "Sinh hoạt chung",
+          "desc": "Các hoạt động giao lưu và tập trung đông vui.",
+          "coverIndex": 11,
+          "images": [
+            { "index": 11, "title": "Họp mặt thành viên", "desc": "Các thành viên tụ họp thảo luận và chụp ảnh lưu niệm." },
+            { "index": 12, "title": "Giao thương bến thuyền", "desc": "Các hoạt động chèo thuyền thư giãn bên sông." },
+            { "index": 13, "title": "Nhóm bạn thân thiết", "desc": "Khoảnh khắc vui vẻ đứng cùng nhau trò chuyện." },
+            { "index": 14, "title": "Gặp gỡ bên lửa trại", "desc": "Tụ họp trò chuyện ấm cúng bên ánh lửa." },
+            { "index": 15, "title": "Du ngoạn thế giới", "desc": "Nhóm bạn đồng hành phiêu lưu khám phá vùng đất mới." }
+          ]
+        },
+        {
+          "title": "Chiến đấu & Sinh tồn",
+          "desc": "Các trận chiến kịch tính và kỹ năng sinh tồn cốt lõi.",
+          "coverIndex": 16,
+          "images": [
+            { "index": 16, "title": "Đấu trường giao hữu", "desc": "Trận thư hùng kịch tính giữa các chiến binh thời kỳ đầu." },
+            { "index": 17, "title": "Lập hàng phòng ngự", "desc": "Hợp tác phòng thủ vững chắc bằng khiên chắn." }
+          ]
+        },
+        {
+          "title": "Cày cuốc căng thẳng",
+          "desc": "Khoảnh khắc cày cuốc quên ngày tháng.",
+          "coverIndex": 18,
+          "images": [
+            { "index": 18, "title": "Độ cày cuốc của thành viên", "desc": "Các thành viên online nhiệt tình lúc 21h18 ngày 04/07/2022." }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "3",
+      "name": "Hảo Hán SMP - Hardaya",
+      "duration": "07/2023 - 08/2024",
+      "desc": "Khởi nguồn câu chuyện sinh tồn cổ điển của các thành viên HaoHan với những kỳ quan và cơ chế hoàn toàn mới.",
+      "topics": [
+        {
+          "title": "Căn cứ trung tâm",
+          "desc": "Toàn cảnh khu vực spawn và căn cứ chính của Season 3.",
+          "coverIndex": 19,
+          "images": [
+            { "index": 19, "title": "Tổng quan spawn Season 3", "desc": "Cận cảnh khu vực hồi sinh trung tâm với các lối đi và kiến trúc hiện đại." },
+            { "index": 20, "title": "Khu nhà rông", "desc": "Khu nhà cộng đồng xây dựng hoàn toàn từ gỗ vân sam." },
+            { "index": 21, "title": "Biệt thự hiện đại", "desc": "Biệt thự kính sang trọng nằm biệt lập trên đồi." },
+            { "index": 22, "title": "Trạm trung chuyển", "desc": "Trạm tàu điện ngầm kết nối các căn cứ trong server." },
+            { "index": 23, "title": "Lâu đài trung cổ", "desc": "Lâu đài đá kiên cố đứng sừng sững bên vách núi." },
+            { "index": 24, "title": "Hải đăng bờ biển", "desc": "Hải đăng phát sáng chỉ đường cho tàu bè cập bến." }
+          ]
+        },
+        {
+          "title": "Trang trí nội thất",
+          "desc": "Các góc trang trí nội thất chi tiết, sáng tạo của người chơi.",
+          "coverIndex": 25,
+          "images": [
+            { "index": 25, "title": "Phòng khách ấm cúng", "desc": "Trang trí lò sưởi và ghế sofa trong phòng khách." },
+            { "index": 26, "title": "Hầm rượu cổ", "desc": "Cách bố trí các thùng ủ rượu bằng gỗ sồi dưới hầm." },
+            { "index": 27, "title": "Góc học tập", "desc": "Trang trí kệ sách và bàn làm việc yên tĩnh." }
+          ]
+        },
+        {
+          "title": "Sinh hoạt & Giao thương",
+          "desc": "Các khoảnh khắc tương tác xã hội và giao lưu kinh tế.",
+          "coverIndex": 28,
+          "images": [
+            { "index": 28, "title": "Hẹn hò ngắm cảnh", "desc": "Khoảnh khắc hai người chơi ngồi ngắm hoàng hôn bên nhau." },
+            { "index": 29, "title": "Thỏa thuận giao dịch", "desc": "Trao đổi vật phẩm giá trị cao tại khu chợ trung tâm." }
+          ]
+        },
+        {
+          "title": "Sự cố & Hài hước",
+          "desc": "Những lỗi game ngộ nghĩnh và khoảnh khắc trêu đùa nhau.",
+          "coverIndex": 30,
+          "images": [
+            { "index": 30, "title": "Lỗi Zombie xếp chồng", "desc": "Hiện tượng xếp chồng hài hước của quái vật." },
+            { "index": 31, "title": "Lỗi Zombie xếp chồng", "desc": "Hiện tượng xếp chồng hài hước của quái vật." },
+            { "index": 32, "title": "Admin 'lạm quyền'", "desc": "Khoảnh khắc đùa vui khi Admin sử dụng quyền lực tối cao." }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "4",
+      "name": "Reborn",
+      "duration": "09/2024 - Hiện tại",
+      "desc": "Giai đoạn máy chủ phát triển đột phá với các cập nhật tính năng mới nhất.",
+      "topics": []
+    }
+  ],
+  "donate_form_messages": {
+    "error_empty_name": "Vui lòng nhập tên nhân vật Minecraft.",
+    "error_min_amount": "Số tiền ủng hộ tối thiểu là 1.000 VND.",
+    "error_login_required": "Bạn cần đăng nhập trước khi tạo thanh toán PayOS.",
+    "status_creating_link": "Đang tạo liên kết thanh toán PayOS...",
+    "status_redirecting": "Đã tạo thanh toán, đang chuyển sang PayOS...",
+    "error_create_failed": "Không thể tạo thanh toán PayOS. Vui lòng thử lại."
   }
 }

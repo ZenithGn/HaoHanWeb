@@ -495,32 +495,30 @@ export default function HomeClient({ dict, lang }) {
   const labels = useMemo(() => {
     const hl = dict.home_labels || {};
     return {
-      navHome: hl.nav_home || (isVi ? "Trang chủ" : "Home"),
-      navFeatures: hl.nav_features || (isVi ? "Tính năng" : "Features"),
-      navGallery: hl.nav_gallery || (isVi ? "Thư viện" : "Gallery"),
-      navRules: hl.nav_rules || (isVi ? "Luật" : "Rules"),
+      navHome: hl.nav_home,
+      navFeatures: hl.nav_features,
+      navGallery: hl.nav_gallery,
+      navRules: hl.nav_rules,
       navWiki: hl.nav_wiki || "Wiki",
       navProfile: hl.nav_profile || "Profile",
-      signup: hl.signup || (isVi ? "Đăng ký" : "Sign up"),
-      login: hl.login || (isVi ? "Đăng nhập" : "Login"),
-      haohanTitle: hl.title || (isVi ? "Chào mừng đến với HaoHan SMP" : "Welcome to HaoHan SMP"),
-      haohanWelcomeBack: hl.welcome_back || (isVi ? "Chào mừng trở lại" : "Welcome back"),
-      haohanDesc: hl.desc || (isVi
-        ? "Cộng đồng Minecraft sinh tồn do người chơi vận hành, mang đến trải nghiệm sinh tồn cốt lõi, roleplay và phát triển lâu dài."
-        : "A community-run Minecraft survival server offering a focused co-op, roleplay and long-term survival experience."),
-      discord: hl.join_discord || (isVi ? "Tham gia Discord" : "Join Discord"),
-      donate: hl.donate || (isVi ? "Ủng hộ chúng tôi" : "Support us"),
-      serversTitle: dict.servers?.title || hl.servers_title || (isVi ? "Danh sách máy chủ" : "Our Servers"),
-      featuresTitle: dict.features_list?.title || hl.features_title || (isVi ? "Tính năng" : "Features"),
-      galleryTitle: hl.gallery_title || (isVi ? "Thư viện ảnh" : "Gallery"),
+      signup: hl.signup,
+      login: hl.login,
+      haohanTitle: hl.title,
+      haohanWelcomeBack: hl.hero_welcome_back,
+      haohanDesc: hl.desc,
+      discord: hl.join_discord,
+      donate: hl.donate,
+      serversTitle: hl.servers_title,
+      featuresTitle: hl.features_title,
+      galleryTitle: hl.gallery_title,
       faqTitle: hl.faq_title || "FAQ",
-      serverIpLabel: hl.server_ip || (isVi ? "IP máy chủ:" : "Server IP:"),
-      copied: hl.copied || (isVi ? "Đã copy" : "Copied"),
-      discordBtn: hl.discord_connect || (isVi ? "Kết nối Discord" : "Discord Connect"),
+      serverIpLabel: hl.server_ip,
+      copied: hl.copied,
+      discordBtn: hl.discord_connect,
       rights: dict.footer?.rights,
       disclaimer: dict.footer?.disclaimer,
-      exploreHeader: hl.explore_header || (isVi ? "Khám Phá" : "Explore"),
-      communityHeader: hl.community_header || (isVi ? "Liên Kết Cộng Đồng" : "Community Links"),
+      exploreHeader: hl.explore_header,
+      communityHeader: hl.community_header,
       heroWelcomeBack: hl.hero_welcome_back,
       heroWelcomeTo: hl.hero_welcome_to,
       serversEyebrow: hl.servers_eyebrow,
@@ -709,50 +707,7 @@ export default function HomeClient({ dict, lang }) {
     ],
   }), []);
 
-  const featureExplanations = useMemo(() => ({
-    explore: {
-      title: isVi ? "Khám Phá Thế Giới" : "Explore the World",
-      desc: isVi
-        ? "Hành trình phiêu lưu qua thế giới sinh tồn rộng lớn vô tận. Bạn sẽ tìm thấy những cấu trúc được tạo tự nhiên cực kỳ độc đáo và hoành tráng, các công trình của cộng đồng và các tàn tích khảo cổ học chứa nhiều báu vật quý giá."
-        : "Embark on an adventure through an endless survival world. You will discover unique and grand structures, community builds, and archaeological ruins containing rare treasures.",
-      wikiLabel: isVi ? "Xem hướng dẫn sinh tồn" : "View Survival Guide"
-    },
-    survival: {
-      title: isVi ? "Sinh Tồn và Phát Triển" : "Survival & Progress",
-      desc: isVi
-        ? "Cơ chế sinh tồn có chiều sâu đòi hỏi sự hợp tác và trao đổi tài nguyên giữa các người chơi. Xây dựng căn cứ vững chắc, thiết lập nông trại tự động và khẳng định vị thế của bạn trong nền kinh tế năng động."
-        : "Deep survival mechanics requiring cooperation and resource trading among players. Build secure bases, establish automated farms, and make your mark in a dynamic economy.",
-      wikiLabel: isVi ? "Xem hướng dẫn sinh tồn" : "View Survival Guide"
-    },
-    terrain: {
-      title: isVi ? "Địa Hình Tùy Chỉnh" : "Customizable Terrain",
-      desc: isVi
-        ? "Hệ thống phát sinh địa hình đặc sắc, mang đến những ngọn núi hùng vĩ, thung lũng thơ mộng và các quần xã sinh vật được cải tiến đầy tính nghệ thuật giúp bạn thỏa sức sáng tạo công trình lý tưởng."
-        : "A unique terrain generation system, bringing majestic mountains, romantic valleys, and artistically enhanced biomes for you to build your dream creations.",
-      wikiLabel: isVi ? "Xem địa hình & thế giới" : "View World Guide"
-    },
-    custom: {
-      title: isVi ? "Cơ Chế Tùy Chỉnh" : "Custom Mechanics",
-      desc: isVi
-        ? "Các tính năng đặc biệt chỉ có tại HaoHan SMP bao gồm: hệ thống nhiệm vụ phong phú, câu cá tùy chỉnh độc đáo, quái vật thông minh hơn, trao đổi dân làng nâng cấp, và các công thức chế tạo đặc biệt."
-        : "Special features exclusive to HaoHan SMP: rich quest system, unique custom fishing, smarter monsters, upgraded villager trades, and special crafting recipes.",
-      wikiLabel: isVi ? "Xem công thức & vật phẩm" : "View Custom Items"
-    },
-    modpack: {
-      title: isVi ? "Nhận Modpack" : "Get Modpack",
-      desc: isVi
-        ? "Modpack tùy chỉnh của chúng tôi giúp tối ưu hóa hiệu năng cực tốt, tích hợp sẵn các gói Shader đẹp mắt, âm thanh vòm sống động và các tính năng tiện ích (QoL) nhằm mang lại trải nghiệm mượt mà nhất."
-        : "Our custom modpack optimizes performance, integrates beautiful Shader packs, immersive 3D surround sound, and helpful quality-of-life (QoL) features for the smoothest experience.",
-      wikiLabel: isVi ? "Tải xuống Modpack tại Wiki" : "Download Modpack on Wiki"
-    },
-    more: {
-      title: isVi ? "Tìm Hiểu Thêm" : "Learn More",
-      desc: isVi
-        ? "Hãy tham gia cộng đồng Discord để giao lưu cùng hàng nghìn người chơi khác, xem cập nhật nhật ký thay đổi của máy chủ và cùng nhau thảo luận, đóng góp xây dựng server ngày một hoàn thiện."
-        : "Join our Discord community to connect with thousands of other players, check server changelogs, discuss, and contribute to making our server even better.",
-      wikiLabel: isVi ? "Xem thông tin máy chủ" : "View Server Info"
-    }
-  }), [isVi]);
+  const featureExplanations = useMemo(() => dict.feature_explanations || {}, [dict]);
 
   const featuresTranslated = useMemo(() => featureCards.map(c => [c.img, c.title]), [featureCards]);
   const galleryImages = useMemo(() => [
@@ -779,7 +734,7 @@ export default function HomeClient({ dict, lang }) {
     "/assets/img/gallery/ss2/shield.jpg",     // index 17
     "/assets/img/gallery/ss2/qua_nghien(21h18-04-07-2022).png", // index 18
 
-    // Season 3 images (Index 19 to 31)
+    // Season 3 images (Index 19 to 32)
     "/assets/img/gallery/ss3/mainbase.png",   // index 19
     "/assets/img/gallery/ss3/mainbase1.jpg",  // index 20
     "/assets/img/gallery/ss3/mainbase2.jpg",  // index 21
@@ -791,148 +746,12 @@ export default function HomeClient({ dict, lang }) {
     "/assets/img/gallery/ss3/decor2.jpg",     // index 27
     "/assets/img/gallery/ss3/friend.jpg",     // index 28
     "/assets/img/gallery/ss3/deal.jpg",       // index 29
-    "/assets/img/gallery/ss3/zoombie_bug.jpg", // index 30
-    "/assets/img/gallery/ss3/admin_abuse_power.jpg", // index 31
+    "/assets/img/gallery/ss3/zoombie_bug.png", // index 30
+    "/assets/img/gallery/ss3/zoombie_bug1.png", // index 31
+    "/assets/img/gallery/ss3/admin_abuse_power.jpg", // index 32
   ], []);
   const galleryCaptions = useMemo(() => dict.gallery?.captions || [], [dict]);
-  const galleryAlbums = useMemo(() => {
-    return [
-      {
-        season: "1",
-        name: isVi ? "The beginning" : "The beginning",
-        duration: "06/2021 - 02/2022",
-        desc: isVi
-          ? "Giai đoạn máy chủ thử nghiệm giới hạn, hoạt động dưới chế độ riêng tư."
-          : "A private server stage with limited member access for testing.",
-        topics: [
-          {
-            title: isVi ? "Căn cứ thời sơ khai" : "Classic Member Bases",
-            desc: isVi ? "Những công trình đơn sơ của các thành viên thời kỳ đầu." : "Simple bases and buildings of the first members.",
-            coverIndex: 0,
-            images: [
-              { index: 0, title: isVi ? "Nhà gỗ bên hồ" : "Lakeside Wooden Cabin", desc: isVi ? "Một căn nhà gỗ đơn sơ ấm cúng thời kỳ đầu." : "A simple cozy wooden base built early on." },
-              { index: 1, title: isVi ? "Tháp canh đá" : "Stone Watchtower", desc: isVi ? "Tháp quan sát bằng đá bảo vệ làng sinh tồn." : "A stone tower looking over the spawn area." },
-              { index: 2, title: isVi ? "Căn cứ Redstone sơ khai" : "Early Redstone Base", desc: isVi ? "Thử nghiệm cơ chế Redstone đơn giản đầu tiên." : "Early simple Redstone farm experimentations." },
-              { index: 3, title: isVi ? "Cổng Nether cổ kính" : "Nether Portal Arch", desc: isVi ? "Thiết kế cổng địa ngục được trang trí đẹp mắt." : "A nicely decorated portal leading to the Nether." },
-              { index: 4, title: isVi ? "Nhà kho nhỏ" : "Cozy Warehouse", desc: isVi ? "Khu vực lưu trữ tài nguyên nhỏ của nhóm bạn." : "A small resource storage point shared by friends." },
-              { index: 5, title: isVi ? "Trang trại lúa mì" : "Wheat Plantation", desc: isVi ? "Cánh đồng lúa mì đảm bảo nguồn thức ăn thời kỳ đầu." : "Small agricultural wheat farm for basic foods." },
-              { index: 6, title: isVi ? "Khu khai thác khoáng sản" : "Mining Quarry", desc: isVi ? "Mỏ đá khai thác vật liệu thô sơ." : "Raw material mining site near base." }
-            ]
-          }
-        ]
-      },
-      {
-        season: "2",
-        name: isVi ? "Hảo Hán SMP - Archive & Rewind" : "Hảo Hán SMP - Archive & Rewind",
-        duration: "06/2022 - 08/2022",
-        desc: isVi
-          ? "Giai đoạn máy chủ gặp nhiều khó khăn về mặt tài chính và duy trì kinh phí."
-          : "A challenging period for the server due to limited funding and resources.",
-        topics: [
-          {
-            title: isVi ? "Căn cứ của thành viên" : "Member Bases",
-            desc: isVi ? "Khám phá các căn cứ sinh tồn đầy sáng tạo và hoành tráng." : "Explore wonderlands and creative survival bases.",
-            coverIndex: 7,
-            images: [
-              { index: 7, title: isVi ? "Căn cứ chính (Toàn cảnh)" : "Main Base (Overview)", desc: isVi ? "Hình ảnh toàn cảnh căn cứ chính quy mô lớn của thành viên Season 2." : "Panoramic view of a large base constructed by members in Season 2." },
-              { index: 8, title: isVi ? "Khuôn viên căn cứ" : "Base Grounds", desc: isVi ? "Cận cảnh khuôn viên căn cứ với thiết kế kết hợp kính và đá." : "Close up base view featuring stone and glass architecture." },
-              { index: 9, title: isVi ? "Sân vườn hồ nước" : "Lakeside Garden", desc: isVi ? "Một góc sân vườn thơ mộng bên bờ hồ." : "A serene lakeside garden corner." },
-              { index: 10, title: isVi ? "Đại bản doanh" : "Grand Headquarters", desc: isVi ? "Căn cứ lớn tích hợp đầy đủ công năng sinh tồn." : "Fully functional survival grand base." }
-            ]
-          },
-          {
-            title: isVi ? "Sinh hoạt chung" : "Community Life",
-            desc: isVi ? "Các hoạt động giao lưu và tập trung đông vui." : "Shared moments and collective activities.",
-            coverIndex: 11,
-            images: [
-              { index: 11, title: isVi ? "Họp mặt thành viên" : "Server Meeting", desc: isVi ? "Các thành viên tụ họp thảo luận và chụp ảnh lưu niệm." : "Members gather to discuss and take photos." },
-              { index: 12, title: isVi ? "Giao thương bến thuyền" : "Boat Port Gathering", desc: isVi ? "Các hoạt động chèo thuyền thư giãn bên sông." : "Relaxing boating and trading activities." },
-              { index: 13, title: isVi ? "Nhóm bạn thân thiết" : "Close Friends", desc: isVi ? "Khoảnh khắc vui vẻ đứng cùng nhau trò chuyện." : "A fun moment standing together with friends." },
-              { index: 14, title: isVi ? "Gặp gỡ bên lửa trại" : "Campfire Gathering", desc: isVi ? "Tụ họp trò chuyện ấm cúng bên ánh lửa." : "A cozy chat around the glowing campfire." },
-              { index: 15, title: isVi ? "Du ngoạn thế giới" : "Exploring the World", desc: isVi ? "Nhóm bạn đồng hành phiêu lưu khám phá vùng đất mới." : "Travelling companions exploring new biomes." }
-            ]
-          },
-          {
-            title: isVi ? "Chiến đấu & Sinh tồn" : "Combat & Survival",
-            desc: isVi ? "Các trận chiến kịch tính và kỹ năng sinh tồn cốt lõi." : "Intense battles and survival skills.",
-            coverIndex: 16,
-            images: [
-              { index: 16, title: isVi ? "Đấu trường giao hữu" : "Friendly PvP Fight", desc: isVi ? "Trận thư hùng kịch tính giữa các chiến binh thời kỳ đầu." : "An exciting friendly combat between early members." },
-              { index: 17, title: isVi ? "Lập hàng phòng ngự" : "Shield Wall Defense", desc: isVi ? "Hợp tác phòng thủ vững chắc bằng khiên chắn." : "Cooperating to defend using shields." }
-            ]
-          },
-          {
-            title: isVi ? "Cày cuốc căng thẳng" : "Hardcore Grinding",
-            desc: isVi ? "Khoảnh khắc cày cuốc quên ngày tháng." : "Obsessive building and grinding sessions.",
-            coverIndex: 18,
-            images: [
-              { index: 18, title: isVi ? "Độ cày cuốc của thành viên" : "Active Member Grind", desc: isVi ? "Các thành viên online nhiệt tình lúc 21h18 ngày 04/07/2022." : "Active members grinding in the server at 21:18 on July 4, 2022." }
-            ]
-          }
-        ]
-      },
-      {
-        season: "3",
-        name: isVi ? "Hảo Hán SMP - Hardaya" : "Hảo Hán SMP - Hardaya",
-        duration: "07/2023 - 08/2024",
-        desc: isVi
-          ? "Khởi nguồn câu chuyện sinh tồn cổ điển của các thành viên HaoHan với những kỳ quan và cơ chế hoàn toàn mới."
-          : "The beginning of classic survival story for HaoHan members with completely new wonders and mechanics.",
-        topics: [
-          {
-            title: isVi ? "Căn cứ trung tâm" : "Central Base",
-            desc: isVi ? "Toàn cảnh khu vực spawn và căn cứ chính của Season 3." : "Overview of spawn and central base for Season 3.",
-            coverIndex: 19,
-            images: [
-              { index: 19, title: isVi ? "Tổng quan spawn Season 3" : "S3 Spawn Overview", desc: isVi ? "Cận cảnh khu vực hồi sinh trung tâm với các lối đi và kiến trúc hiện đại." : "A view over the central spawn hub showing main pathways and houses." },
-              { index: 20, title: isVi ? "Khu nhà rông" : "Communal House Area", desc: isVi ? "Khu nhà cộng đồng xây dựng hoàn toàn từ gỗ vân sam." : "A community pavilion built entirely from dark spruce wood." },
-              { index: 21, title: isVi ? "Biệt thự hiện đại" : "Modern Villa Base", desc: isVi ? "Biệt thự kính sang trọng nằm biệt lập trên đồi." : "A sleek luxury glass villa sitting alone on a hill." },
-              { index: 22, title: isVi ? "Trạm trung chuyển" : "Transit Station", desc: isVi ? "Trạm tàu điện ngầm kết nối các căn cứ trong server." : "Underground rail station linking player bases." },
-              { index: 23, title: isVi ? "Lâu đài trung cổ" : "Medieval Castle", desc: isVi ? "Lâu đài đá kiên cố đứng sừng sững bên vách núi." : "A fortified stone castle standing tall on a cliffside." },
-              { index: 24, title: isVi ? "Hải đăng bờ biển" : "Seaside Lighthouse", desc: isVi ? "Hải đăng phát sáng chỉ đường cho tàu bè cập bến." : "A glowing lighthouse guiding boats back to the port." }
-            ]
-          },
-          {
-            title: isVi ? "Trang trí nội thất" : "Interior Design & Decor",
-            desc: isVi ? "Các góc trang trí nội thất chi tiết, sáng tạo của người chơi." : "Players' creative and detailed interior designs.",
-            coverIndex: 25,
-            images: [
-              { index: 25, title: isVi ? "Phòng khách ấm cúng" : "Cozy Living Room", desc: isVi ? "Trang trí lò sưởi và ghế sofa trong phòng khách." : "A decorated fireplace and couch setup in the living area." },
-              { index: 26, title: isVi ? "Hầm rượu cổ" : "Old Wine Cellar", desc: isVi ? "Cách bố trí các thùng ủ rượu bằng gỗ sồi dưới hầm." : "An underground cellar filled with oak barrels." },
-              { index: 27, title: isVi ? "Góc học tập" : "Study & Library", desc: isVi ? "Trang trí kệ sách và bàn làm việc yên tĩnh." : "A quiet corner layout featuring bookshelves and a study desk." }
-            ]
-          },
-          {
-            title: isVi ? "Sinh hoạt & Giao thương" : "Community & Trade",
-            desc: isVi ? "Các khoảnh khắc tương tác xã hội và giao lưu kinh tế." : "Social interactions and server economic trade.",
-            coverIndex: 28,
-            images: [
-              { index: 28, title: isVi ? "Hẹn hò ngắm cảnh" : "Scenic Date", desc: isVi ? "Khoảnh khắc hai người chơi ngồi ngắm hoàng hôn bên nhau." : "Two players sitting together watching the sunset." },
-              { index: 29, title: isVi ? "Thỏa thuận giao dịch" : "Trading Deal", desc: isVi ? "Trao đổi vật phẩm giá trị cao tại khu chợ trung tâm." : "Bartering valuable resources at the central market." }
-            ]
-          },
-          {
-            title: isVi ? "Sự cố & Hài hước" : "Funny Glitches",
-            desc: isVi ? "Những lỗi game ngộ nghĩnh và khoảnh khắc trêu đùa nhau." : "Amusing bugs and playful server moments.",
-            coverIndex: 30,
-            images: [
-              { index: 30, title: isVi ? "Lỗi Zombie xếp chồng" : "Zombie Stacking Bug", desc: isVi ? "Hiện tượng xếp chồng hài hước của quái vật." : "A funny stacking glitch in the game." },
-              { index: 31, title: isVi ? "Admin 'lạm quyền'" : "Admin Abuse Power", desc: isVi ? "Khoảnh khắc đùa vui khi Admin sử dụng quyền lực tối cao." : "A playful moment when the Admin shows off supreme powers." }
-            ]
-          }
-        ]
-      },
-      {
-        season: "4",
-        name: isVi ? "Reborn" : "Reborn",
-        duration: isVi ? "09/2024 - Hiện tại" : "09/2024 - Present",
-        desc: isVi
-          ? "Giai đoạn máy chủ phát triển đột phá với các cập nhật tính năng mới nhất."
-          : "The next generation of survival with the latest updates.",
-        topics: []
-      }
-    ];
-  }, [isVi]);
+  const galleryAlbums = useMemo(() => dict.gallery_albums || [], [dict]);
   useEffect(() => {
     const moveIndicator = (indicator, linkEl, containerEl) => {
       if (!indicator || !linkEl || !containerEl) return;
@@ -1170,22 +989,22 @@ export default function HomeClient({ dict, lang }) {
     const amount = Number(donateAmount);
 
     if (!trimmedName) {
-      setDonateResult(isVi ? "Vui lòng nhập tên nhân vật Minecraft." : "Please enter your Minecraft character name.");
+      setDonateResult(dict.donate_form_messages?.error_empty_name);
       return;
     }
 
     if (!Number.isFinite(amount) || amount < 1000) {
-      setDonateResult(isVi ? "Số tiền ủng hộ tối thiểu là 1.000 VND." : "Minimum support amount is 1,000 VND.");
+      setDonateResult(dict.donate_form_messages?.error_min_amount);
       return;
     }
 
     if (!isLoggedIn) {
-      setDonateResult(isVi ? "Bạn cần đăng nhập trước khi tạo thanh toán PayOS." : "Please log in before creating a PayOS payment.");
+      setDonateResult(dict.donate_form_messages?.error_login_required);
       return;
     }
 
     setDonateLoading(true);
-    setDonateResult(isVi ? "Đang tạo liên kết thanh toán PayOS..." : "Creating PayOS checkout link...");
+    setDonateResult(dict.donate_form_messages?.status_creating_link);
 
     try {
       const token = getToken();
@@ -1204,14 +1023,14 @@ export default function HomeClient({ dict, lang }) {
       const data = await response.json().catch(() => ({}));
 
       if (response.ok && data.checkoutUrl) {
-        setDonateResult(isVi ? "Đã tạo thanh toán, đang chuyển sang PayOS..." : "Checkout created, redirecting to PayOS...");
+        setDonateResult(dict.donate_form_messages?.status_redirecting);
         window.location.href = data.checkoutUrl;
       } else {
-        setDonateResult(data.error || (isVi ? "Không thể tạo thanh toán PayOS. Vui lòng thử lại." : "Could not create PayOS checkout. Please try again."));
+        setDonateResult(data.error || dict.donate_form_messages?.error_create_failed);
       }
     } catch (error) {
       console.error("Error submitting donation:", error);
-      setDonateResult(isVi ? "Lỗi kết nối PayOS. Vui lòng thử lại sau." : "PayOS connection error. Please try again later.");
+      setDonateResult(dict.donate?.error2 || "Connection error. Please try again later.");
     } finally {
       setDonateLoading(false);
     }
@@ -2374,15 +2193,13 @@ export default function HomeClient({ dict, lang }) {
                   <div className="donate-supporters-header" style={{ marginBottom: '24px' }}>
                     <span className="donate-eyebrow">
                       <i className="fa-solid fa-heart" style={{ color: '#ff4d4d' }}></i>
-                      {isVi ? "CẢM ƠN BẠN" : "THANK YOU"}
+                      {dict.donate?.thank_you}
                     </span>
                     <h2 className="donate-supporters-title">
-                      {isVi ? "Supporters" : "Supporters"}
+                      {dict.donate?.supporters_title}
                     </h2>
                     <p className="donate-supporters-desc">
-                      {isVi
-                        ? "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền."
-                        : "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features."}
+                      {dict.donate?.supporters_desc}
                     </p>
                   </div>
 
@@ -2393,7 +2210,7 @@ export default function HomeClient({ dict, lang }) {
                     {/* Minecraft character name */}
                     <div className="donate-field">
                       <label htmlFor="donate-name" className="donate-label">
-                        {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
+                        {dict.donate?.name_label?.replace(':', '')}
                       </label>
                       <input
                         id="donate-name"
@@ -2409,7 +2226,7 @@ export default function HomeClient({ dict, lang }) {
                     {/* Support amount */}
                     <div className="donate-field">
                       <label htmlFor="donate-amount" className="donate-label">
-                        {isVi ? "Số tiền ủng hộ" : "Support amount"}
+                        {dict.donate?.amount_label?.replace(':', '')}
                       </label>
 
                       <div className="donate-presets">
@@ -2435,23 +2252,19 @@ export default function HomeClient({ dict, lang }) {
                         step="1000"
                         value={donateAmount}
                         onChange={(e) => setDonateAmount(e.target.value)}
-                        placeholder={isVi ? "Nhập số tiền..." : "Enter amount..."}
+                        placeholder={dict.donate?.amount_placeholder}
                         required
                         className="donate-input"
                       />
                     </div>
 
                     <button type="submit" disabled={donateLoading} className="donate-submit-btn">
-                      {donateLoading ? (isVi ? "Đang tạo..." : "Creating...") : (isVi ? "Ủng hộ chúng tôi" : "Support us")}
+                      {donateLoading ? dict.donate?.creating : dict.donate?.support_us}
                     </button>
 
                     <div className="donate-disclaimer">
-                      <p>{isVi
-                        ? "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán."
-                        : "*Your character name is used for support verification after payment."}</p>
-                      <p>{isVi
-                        ? "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau."
-                        : "You will be redirected to PayOS to complete the secure checkout."}</p>
+                      <p>{dict.donate?.disclaimer_name}</p>
+                      <p>{dict.donate?.disclaimer_redirect}</p>
                     </div>
 
                     {donateResult && (
@@ -2461,9 +2274,7 @@ export default function HomeClient({ dict, lang }) {
                     )}
 
                     <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
-                      {isVi
-                        ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
-                        : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
+                      {dict.donate?.confirm_disclaimer}
                     </p>
                   </form>
                 </div>
@@ -2473,7 +2284,7 @@ export default function HomeClient({ dict, lang }) {
                   <div className="rules-article" style={{ marginBottom: '16px' }}>
                     <h2>
                       <i className="fa-solid fa-crown"></i>
-                      {isVi ? "Donator" : "Donator"}
+                      {dict.donate?.donator_section_title}
                     </h2>
                   </div>
 

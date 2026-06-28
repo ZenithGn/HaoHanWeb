@@ -78,13 +78,11 @@ export default function RulesClient({ dict, lang }) {
             <header className="rules-card__header">
               <span className="rules-card__eyebrow">
                 <i className="fa-solid fa-clover"></i>
-                {isVi ? "Nội quy server" : "Server rules"}
+                {dict.home_labels?.rules_hero_eyebrow}
               </span>
               <h2>HAOHAN SMP</h2>
               <p>
-                {isVi
-                  ? "Vui lòng đọc kỹ và tuân thủ các quy định để có trải nghiệm tốt nhất."
-                  : "Please read and follow the rules below for the best experience."}
+                {dict.home_labels?.rules_hero_desc}
               </p>
             </header>
             <nav className="rules-sidebar-nav" ref={rulesNavRef}>
@@ -178,7 +176,7 @@ export default function RulesClient({ dict, lang }) {
                 <div className="rules-ticket" style={{ marginTop: "30px" }}>
                   {/* eslint-disable-next-line @next/next/no-img-element */}
                   <img src="/assets/img/logo.png" alt="" />
-                  <p>{isVi ? "Bạn có thể liên hệ admin bằng cách tạo một ticket để được giải quyết." : "You can contact admin by creating a support ticket."}</p>
+                  <p>{dict.home_labels?.rules_ticket_desc}</p>
                 </div>
 
                 <a className="rules-back-link" href={`/${lang}`}>
@@ -200,7 +198,7 @@ export default function RulesClient({ dict, lang }) {
           <div className="mobile-overlay" onClick={() => setRulesMenuOpen(false)}>
             <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
               <div className="mobile-drawer__header">
-                <h3>{isVi ? "MỤC LỤC NỘI QUY" : "RULES NAVIGATION"}</h3>
+                <h3>{dict.home_labels?.rules_nav_title}</h3>
                 <button className="mobile-drawer__close" type="button" onClick={() => setRulesMenuOpen(false)}>
                   <i className="fa-solid fa-xmark"></i>
                 </button>

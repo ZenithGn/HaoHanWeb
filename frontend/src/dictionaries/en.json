@@ -347,7 +347,16 @@
     "donor_board_subtitle": "Thanks to all the legends who support our server",
     "quick_amounts": "Quick select amount:",
     "empty_donors": "No donations yet.",
-    "anonymous": "Anonymous Legend"
+    "anonymous": "Anonymous Legend",
+    "thank_you": "THANK YOU",
+    "supporters_title": "Supporters",
+    "supporters_desc": "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features.",
+    "disclaimer_name": "*Your character name is used for support verification after payment.",
+    "disclaimer_redirect": "You will be redirected to PayOS to complete the secure checkout.",
+    "creating": "Creating...",
+    "support_us": "Support us",
+    "donator_section_title": "Donator",
+    "confirm_disclaimer": "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."
   },
   "auth": {
     "login_title": "Login",
@@ -546,7 +555,8 @@
     "rules_hero_eyebrow": "Server rules",
     "rules_hero_desc": "Please read and follow the rules below to keep the community friendly and fair.",
     "rules_section4_title": "Issue resolution",
-    "rules_ticket_desc": "You can contact admins by opening a ticket for support."
+    "rules_ticket_desc": "You can contact admins by opening a ticket for support.",
+    "rules_nav_title": "RULES NAVIGATION"
   },
   "wiki": {
     "title": "Server Guide - Wiki",
@@ -669,5 +679,174 @@
     "guide_qol_item2_desc": "Use an intuitive book interface to freely adjust poses, add arms, resize, or hide armor stands for home decoration.",
     "guide_qol_item3_title": "Fast leaf decay:",
     "guide_qol_item3_desc": "When you chop all the wood from a tree trunk, all surrounding leaves will automatically vanish instantly to save time and minimize regional lag."
+  },
+  "feature_explanations": {
+    "explore": {
+      "title": "Explore the World",
+      "desc": "Embark on an adventure through an endless survival world. You will discover unique and grand structures, community builds, and archaeological ruins containing rare treasures.",
+      "wikiLabel": "View Survival Guide"
+    },
+    "survival": {
+      "title": "Survival & Progress",
+      "desc": "Deep survival mechanics requiring cooperation and resource trading among players. Build secure bases, establish automated farms, and make your mark in a dynamic economy.",
+      "wikiLabel": "View Survival Guide"
+    },
+    "terrain": {
+      "title": "Customizable Terrain",
+      "desc": "A unique terrain generation system, bringing majestic mountains, romantic valleys, and artistically enhanced biomes for you to build your dream creations.",
+      "wikiLabel": "View World Guide"
+    },
+    "custom": {
+      "title": "Custom Mechanics",
+      "desc": "Special features exclusive to HaoHan SMP: rich quest system, unique custom fishing, smarter monsters, upgraded villager trades, and special crafting recipes.",
+      "wikiLabel": "View Custom Items"
+    },
+    "modpack": {
+      "title": "Get Modpack",
+      "desc": "Our custom modpack optimizes performance, integrates beautiful Shader packs, immersive 3D surround sound, and helpful quality-of-life (QoL) features for the smoothest experience.",
+      "wikiLabel": "Download Modpack on Wiki"
+    },
+    "more": {
+      "title": "Learn More",
+      "desc": "Join our Discord community to connect with thousands of other players, check server changelogs, discuss, and contribute to making our server even better.",
+      "wikiLabel": "View Server Info"
+    }
+  },
+  "gallery_albums": [
+    {
+      "season": "1",
+      "name": "The beginning",
+      "duration": "06/2021 - 02/2022",
+      "desc": "A private server stage with limited member access for testing.",
+      "topics": [
+        {
+          "title": "Classic Member Bases",
+          "desc": "Simple bases and buildings of the first members.",
+          "coverIndex": 0,
+          "images": [
+            { "index": 0, "title": "Lakeside Wooden Cabin", "desc": "A simple cozy wooden base built early on." },
+            { "index": 1, "title": "Stone Watchtower", "desc": "A stone tower looking over the spawn area." },
+            { "index": 2, "title": "Early Redstone Base", "desc": "Early simple Redstone farm experimentations." },
+            { "index": 3, "title": "Nether Portal Arch", "desc": "A nicely decorated portal leading to the Nether." },
+            { "index": 4, "title": "Cozy Warehouse", "desc": "A small resource storage point shared by friends." },
+            { "index": 5, "title": "Wheat Plantation", "desc": "Small agricultural wheat farm for basic foods." },
+            { "index": 6, "title": "Mining Quarry", "desc": "Raw material mining site near base." }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "2",
+      "name": "Hảo Hán SMP - Archive & Rewind",
+      "duration": "06/2022 - 08/2022",
+      "desc": "A challenging period for the server due to limited funding and resources.",
+      "topics": [
+        {
+          "title": "Member Bases",
+          "desc": "Explore wonderlands and creative survival bases.",
+          "coverIndex": 7,
+          "images": [
+            { "index": 7, "title": "Main Base (Overview)", "desc": "Panoramic view of a large base constructed by members in Season 2." },
+            { "index": 8, "title": "Base Grounds", "desc": "Close up base view featuring stone and glass architecture." },
+            { "index": 9, "title": "Lakeside Garden", "desc": "A serene lakeside garden corner." },
+            { "index": 10, "title": "Grand Headquarters", "desc": "Fully functional survival grand base." }
+          ]
+        },
+        {
+          "title": "Community Life",
+          "desc": "Shared moments and collective activities.",
+          "coverIndex": 11,
+          "images": [
+            { "index": 11, "title": "Server Meeting", "desc": "Members gather to discuss and take photos." },
+            { "index": 12, "title": "Boat Port Gathering", "desc": "Relaxing boating and trading activities." },
+            { "index": 13, "title": "Close Friends", "desc": "A fun moment standing together with friends." },
+            { "index": 14, "title": "Campfire Gathering", "desc": "A cozy chat around the glowing campfire." },
+            { "index": 15, "title": "Exploring the World", "desc": "Travelling companions exploring new biomes." }
+          ]
+        },
+        {
+          "title": "Combat & Survival",
+          "desc": "Intense battles and survival skills.",
+          "coverIndex": 16,
+          "images": [
+            { "index": 16, "title": "Friendly PvP Fight", "desc": "An exciting friendly combat between early members." },
+            { "index": 17, "title": "Shield Wall Defense", "desc": "Cooperating to defend using shields." }
+          ]
+        },
+        {
+          "title": "Hardcore Grinding",
+          "desc": "Obsessive building and grinding sessions.",
+          "coverIndex": 18,
+          "images": [
+            { "index": 18, "title": "Active Member Grind", "desc": "Active members grinding in the server at 21:18 on July 4, 2022." }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "3",
+      "name": "Hảo Hán SMP - Hardaya",
+      "duration": "07/2023 - 08/2024",
+      "desc": "The beginning of classic survival story for HaoHan members with completely new wonders and mechanics.",
+      "topics": [
+        {
+          "title": "Central Base",
+          "desc": "Overview of spawn and central base for Season 3.",
+          "coverIndex": 19,
+          "images": [
+            { "index": 19, "title": "S3 Spawn Overview", "desc": "A view over the central spawn hub showing main pathways and houses." },
+            { "index": 20, "title": "Communal House Area", "desc": "A community pavilion built entirely from dark spruce wood." },
+            { "index": 21, "title": "Modern Villa Base", "desc": "A sleek luxury glass villa sitting alone on a hill." },
+            { "index": 22, "title": "Transit Station", "desc": "Underground rail station linking player bases." },
+            { "index": 23, "title": "Medieval Castle", "desc": "A fortified stone castle standing tall on a cliffside." },
+            { "index": 24, "title": "Seaside Lighthouse", "desc": "A glowing lighthouse guiding boats back to the port." }
+          ]
+        },
+        {
+          "title": "Interior Design & Decor",
+          "desc": "Players' creative and detailed interior designs.",
+          "coverIndex": 25,
+          "images": [
+            { "index": 25, "title": "Cozy Living Room", "desc": "A decorated fireplace and couch setup in the living area." },
+            { "index": 26, "title": "Old Wine Cellar", "desc": "An underground cellar filled with oak barrels." },
+            { "index": 27, "title": "Study & Library", "desc": "A quiet corner layout featuring bookshelves and a study desk." }
+          ]
+        },
+        {
+          "title": "Community & Trade",
+          "desc": "Social interactions and server economic trade.",
+          "coverIndex": 28,
+          "images": [
+            { "index": 28, "title": "Scenic Date", "desc": "Two players sitting together watching the sunset." },
+            { "index": 29, "title": "Trading Deal", "desc": "Bartering valuable resources at the central market." }
+          ]
+        },
+        {
+          "title": "Funny Moments & Glitches",
+          "desc": "Amusing bugs and playful server moments.",
+          "coverIndex": 30,
+          "images": [
+            { "index": 30, "title": "Zombie Stacking Bug", "desc": "A funny stacking glitch in the game." },
+            { "index": 31, "title": "Zombie Stacking Bug", "desc": "A funny stacking glitch in the game." },
+            { "index": 32, "title": "Admin Abuse Power", "desc": "A playful moment when the Admin shows off supreme powers." }
+          ]
+        }
+      ]
+    },
+    {
+      "season": "4",
+      "name": "Reborn",
+      "duration": "09/2024 - Present",
+      "desc": "The next generation of survival with the latest updates.",
+      "topics": []
+    }
+  ],
+  "donate_form_messages": {
+    "error_empty_name": "Please enter your Minecraft character name.",
+    "error_min_amount": "Minimum support amount is 1,000 VND.",
+    "error_login_required": "Please log in before creating a PayOS payment.",
+    "status_creating_link": "Creating PayOS checkout link...",
+    "status_redirecting": "Checkout created, redirecting to PayOS...",
+    "error_create_failed": "Could not create PayOS checkout. Please try again."
   }
 }
