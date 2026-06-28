@@ -330,9 +330,9 @@ function MinecraftSkinViewer({ username }) {
   return (
     <div className="minecraft-3d-skin-wrapper">
       <div ref={containerRef} className="minecraft-3d-skin-container" />
-      <button 
-        type="button" 
-        className="minecraft-3d-skin-toggle" 
+      <button
+        type="button"
+        className="minecraft-3d-skin-toggle"
         onClick={() => setIsAnimating(!isAnimating)}
         title={isAnimating ? "Pause Animation" : "Play Animation"}
       >
@@ -374,6 +374,9 @@ export default function HomeClient({ dict, lang }) {
   const [selectedTopic, setSelectedTopic] = useState(null);
   const [selectedTopicImageIndex, setSelectedTopicImageIndex] = useState(0);
 
+  const [selectedFeature, setSelectedFeature] = useState(null);
+  const [activeFeatureImgIndex, setActiveFeatureImgIndex] = useState(0);
+
   // Account Settings form states
   const [currentPassword, setCurrentPassword] = useState("");
   const [newEmail, setNewEmail] = useState("");
@@ -399,20 +402,20 @@ export default function HomeClient({ dict, lang }) {
 
   // Discord role → color mapping (matches server role colors)
   const ROLE_COLORS = {
-    'Owner':          { color: '#f1c40f', bg: 'rgba(241, 196, 15, 0.12)', border: 'rgba(241, 196, 15, 0.25)' },
-    'Administrator':  { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
-    'Cán Bộ':         { color: '#2ecc71', bg: 'rgba(46, 204, 113, 0.12)', border: 'rgba(46, 204, 113, 0.25)' },
-    'Hảo Hán Bot':    { color: '#3498db', bg: 'rgba(52, 152, 219, 0.12)', border: 'rgba(52, 152, 219, 0.25)' },
-    'Helper':         { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
+    'Owner': { color: '#f1c40f', bg: 'rgba(241, 196, 15, 0.12)', border: 'rgba(241, 196, 15, 0.25)' },
+    'Administrator': { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
+    'Cán Bộ': { color: '#2ecc71', bg: 'rgba(46, 204, 113, 0.12)', border: 'rgba(46, 204, 113, 0.25)' },
+    'Hảo Hán Bot': { color: '#3498db', bg: 'rgba(52, 152, 219, 0.12)', border: 'rgba(52, 152, 219, 0.25)' },
+    'Helper': { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
     'HaoHan Support': { color: '#2ecc71', bg: 'rgba(46, 204, 113, 0.12)', border: 'rgba(46, 204, 113, 0.25)' },
-    'Donator':        { color: '#f39c12', bg: 'rgba(243, 156, 18, 0.12)', border: 'rgba(243, 156, 18, 0.25)' },
-    'Animator':       { color: '#9b59b6', bg: 'rgba(155, 89, 182, 0.12)', border: 'rgba(155, 89, 182, 0.25)' },
-    'Booster':        { color: '#f47fff', bg: 'rgba(244, 127, 255, 0.12)', border: 'rgba(244, 127, 255, 0.25)' },
-    'Dev':            { color: '#3498db', bg: 'rgba(52, 152, 219, 0.12)', border: 'rgba(52, 152, 219, 0.25)' },
-    'Youtuber':       { color: '#e74c3c', bg: 'rgba(231, 76, 60, 0.12)', border: 'rgba(231, 76, 60, 0.25)' },
-    'Emoji Man':      { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
-    'Members':        { color: '#95a5a6', bg: 'rgba(149, 165, 166, 0.12)', border: 'rgba(149, 165, 166, 0.25)' },
-    'default':        { color: '#95a5a6', bg: 'rgba(149, 165, 166, 0.12)', border: 'rgba(149, 165, 166, 0.25)' },
+    'Donator': { color: '#f39c12', bg: 'rgba(243, 156, 18, 0.12)', border: 'rgba(243, 156, 18, 0.25)' },
+    'Animator': { color: '#9b59b6', bg: 'rgba(155, 89, 182, 0.12)', border: 'rgba(155, 89, 182, 0.25)' },
+    'Booster': { color: '#f47fff', bg: 'rgba(244, 127, 255, 0.12)', border: 'rgba(244, 127, 255, 0.25)' },
+    'Dev': { color: '#3498db', bg: 'rgba(52, 152, 219, 0.12)', border: 'rgba(52, 152, 219, 0.25)' },
+    'Youtuber': { color: '#e74c3c', bg: 'rgba(231, 76, 60, 0.12)', border: 'rgba(231, 76, 60, 0.25)' },
+    'Emoji Man': { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
+    'Members': { color: '#95a5a6', bg: 'rgba(149, 165, 166, 0.12)', border: 'rgba(149, 165, 166, 0.25)' },
+    'default': { color: '#95a5a6', bg: 'rgba(149, 165, 166, 0.12)', border: 'rgba(149, 165, 166, 0.25)' },
   };
 
   const getRoleStyle = (roleName) => {
@@ -425,17 +428,17 @@ export default function HomeClient({ dict, lang }) {
     if (savedActiveTab) {
       setActiveTab(savedActiveTab);
     }
-    
+
     const savedRulesSubTab = sessionStorage.getItem('rulesSubTab');
     if (savedRulesSubTab) {
       setRulesSubTab(savedRulesSubTab);
     }
-    
+
     const savedActiveWikiTab = sessionStorage.getItem('activeWikiTab');
     if (savedActiveWikiTab) {
       setActiveWikiTab(savedActiveWikiTab);
     }
-    
+
     const savedProfileSubTab = sessionStorage.getItem('profileSubTab');
     if (savedProfileSubTab) {
       setProfileSubTab(savedProfileSubTab);
@@ -623,141 +626,310 @@ export default function HomeClient({ dict, lang }) {
   ], [dict]);
   const featureCards = useMemo(() => [
     {
+      id: "explore",
       icon: "fa-solid fa-compass",
       title: dict.features_list.explore || "Explore the World",
       desc: dict.features_list.explore_desc,
-      img: "/assets/img/bg.png",
+      img: "/assets/img/feature/struct1.png",
       accent: "#4ade80",
       large: true,
+      wikiTab: "guide",
     },
     {
+      id: "survival",
       icon: "fa-solid fa-shield-halved",
       title: dict.features_list.survival || "Survival & Progress",
       desc: dict.features_list.survival_desc,
-      img: "/assets/img/bg1.png",
+      img: "/assets/img/feature/gameplay.png",
       accent: "#fb923c",
+      wikiTab: "guide",
     },
     {
+      id: "terrain",
       icon: "fa-solid fa-mountain-sun",
       title: dict.features_list.terrain || "Customizable Terrain",
       desc: dict.features_list.terrain_desc,
-      img: "/assets/img/bg3.png",
+      img: "/assets/img/feature/terrain1.png",
       accent: "#38bdf8",
+      wikiTab: "guide",
     },
     {
+      id: "custom",
       icon: "fa-solid fa-wand-magic-sparkles",
       title: dict.features_list.custom || "Custom Mechanics",
       desc: dict.features_list.custom_desc,
-      img: "/assets/img/bg2.png",
+      img: "/assets/img/feature/gameplay1.png",
       accent: "#c084fc",
+      wikiTab: "recipes",
     },
     {
+      id: "modpack",
       icon: "fa-solid fa-box-archive",
       title: dict.features_list.modpack || "Get Modpack",
       desc: dict.features_list.modpack_desc,
-      img: "/assets/img/bg4.png",
+      img: "/assets/img/feature/struct2.png",
       accent: "#facc15",
+      wikiTab: "intro",
     },
     {
+      id: "more",
       icon: "fa-solid fa-arrow-right-long",
       title: dict.features_list.more || "Learn More",
       desc: dict.features_list.more_desc,
-      img: "/assets/img/bg-checking-status.jpg",
+      img: "/assets/img/feature/terrain2.png",
       accent: "#ff5757",
+      wikiTab: "intro",
     },
   ], [dict, isVi]);
+
+  const featureImages = useMemo(() => ({
+    explore: Array.from({ length: 12 }, (_, i) => `/assets/img/feature/struct${i + 1}.png`),
+    survival: Array.from({ length: 10 }, (_, i) => `/assets/img/feature/gameplay${i === 0 ? "" : i}.png`),
+    terrain: Array.from({ length: 13 }, (_, i) => `/assets/img/feature/terrain${i + 1}.png`),
+    custom: [
+      "/assets/img/feature/gameplay1.png",
+      "/assets/img/feature/gameplay3.png",
+      "/assets/img/feature/gameplay4.png",
+      "/assets/img/feature/gameplay5.png",
+      "/assets/img/feature/gameplay6.png",
+      "/assets/img/feature/gameplay7.png",
+    ],
+    modpack: [
+      "/assets/img/feature/gameplay4.png",
+      "/assets/img/feature/struct2.png",
+      "/assets/img/feature/struct11.png",
+      "/assets/img/feature/struct12.png",
+    ],
+    more: [
+      "/assets/img/feature/struct6.png",
+      "/assets/img/feature/terrain5.png",
+      "/assets/img/feature/gameplay2.png",
+      "/assets/img/feature/terrain12.png",
+      "/assets/img/feature/terrain13.png",
+    ],
+  }), []);
+
+  const featureExplanations = useMemo(() => ({
+    explore: {
+      title: isVi ? "Khám Phá Thế Giới" : "Explore the World",
+      desc: isVi
+        ? "Hành trình phiêu lưu qua thế giới sinh tồn rộng lớn vô tận. Bạn sẽ tìm thấy những cấu trúc được tạo tự nhiên cực kỳ độc đáo và hoành tráng, các công trình của cộng đồng và các tàn tích khảo cổ học chứa nhiều báu vật quý giá."
+        : "Embark on an adventure through an endless survival world. You will discover unique and grand structures, community builds, and archaeological ruins containing rare treasures.",
+      wikiLabel: isVi ? "Xem hướng dẫn sinh tồn" : "View Survival Guide"
+    },
+    survival: {
+      title: isVi ? "Sinh Tồn và Phát Triển" : "Survival & Progress",
+      desc: isVi
+        ? "Cơ chế sinh tồn có chiều sâu đòi hỏi sự hợp tác và trao đổi tài nguyên giữa các người chơi. Xây dựng căn cứ vững chắc, thiết lập nông trại tự động và khẳng định vị thế của bạn trong nền kinh tế năng động."
+        : "Deep survival mechanics requiring cooperation and resource trading among players. Build secure bases, establish automated farms, and make your mark in a dynamic economy.",
+      wikiLabel: isVi ? "Xem hướng dẫn sinh tồn" : "View Survival Guide"
+    },
+    terrain: {
+      title: isVi ? "Địa Hình Tùy Chỉnh" : "Customizable Terrain",
+      desc: isVi
+        ? "Hệ thống phát sinh địa hình đặc sắc, mang đến những ngọn núi hùng vĩ, thung lũng thơ mộng và các quần xã sinh vật được cải tiến đầy tính nghệ thuật giúp bạn thỏa sức sáng tạo công trình lý tưởng."
+        : "A unique terrain generation system, bringing majestic mountains, romantic valleys, and artistically enhanced biomes for you to build your dream creations.",
+      wikiLabel: isVi ? "Xem địa hình & thế giới" : "View World Guide"
+    },
+    custom: {
+      title: isVi ? "Cơ Chế Tùy Chỉnh" : "Custom Mechanics",
+      desc: isVi
+        ? "Các tính năng đặc biệt chỉ có tại HaoHan SMP bao gồm: hệ thống nhiệm vụ phong phú, câu cá tùy chỉnh độc đáo, quái vật thông minh hơn, trao đổi dân làng nâng cấp, và các công thức chế tạo đặc biệt."
+        : "Special features exclusive to HaoHan SMP: rich quest system, unique custom fishing, smarter monsters, upgraded villager trades, and special crafting recipes.",
+      wikiLabel: isVi ? "Xem công thức & vật phẩm" : "View Custom Items"
+    },
+    modpack: {
+      title: isVi ? "Nhận Modpack" : "Get Modpack",
+      desc: isVi
+        ? "Modpack tùy chỉnh của chúng tôi giúp tối ưu hóa hiệu năng cực tốt, tích hợp sẵn các gói Shader đẹp mắt, âm thanh vòm sống động và các tính năng tiện ích (QoL) nhằm mang lại trải nghiệm mượt mà nhất."
+        : "Our custom modpack optimizes performance, integrates beautiful Shader packs, immersive 3D surround sound, and helpful quality-of-life (QoL) features for the smoothest experience.",
+      wikiLabel: isVi ? "Tải xuống Modpack tại Wiki" : "Download Modpack on Wiki"
+    },
+    more: {
+      title: isVi ? "Tìm Hiểu Thêm" : "Learn More",
+      desc: isVi
+        ? "Hãy tham gia cộng đồng Discord để giao lưu cùng hàng nghìn người chơi khác, xem cập nhật nhật ký thay đổi của máy chủ và cùng nhau thảo luận, đóng góp xây dựng server ngày một hoàn thiện."
+        : "Join our Discord community to connect with thousands of other players, check server changelogs, discuss, and contribute to making our server even better.",
+      wikiLabel: isVi ? "Xem thông tin máy chủ" : "View Server Info"
+    }
+  }), [isVi]);
+
   const featuresTranslated = useMemo(() => featureCards.map(c => [c.img, c.title]), [featureCards]);
   const galleryImages = useMemo(() => [
-    "/assets/img/b1.png",
-    "/assets/img/b2.png",
-    "/assets/img/b3.png",
-    "/assets/img/b4.png",
-    "/assets/img/bg.png",
-    "/assets/img/bg1.png",
-    "/assets/img/bg2.png",
-    "/assets/img/bg3.png",
-    "/assets/img/bg4.png",
-    "/assets/img/bg-checking-status.jpg",
-    "/assets/img/bg-status-server.png"
+    // Season 1 base images (Index 0 to 6)
+    "/assets/img/gallery/ss1/mainbase3.jpg",  // index 0
+    "/assets/img/gallery/ss1/mainbase4.jpg",  // index 1
+    "/assets/img/gallery/ss1/mainbase5.jpg",  // index 2
+    "/assets/img/gallery/ss1/mainbase7.jpg",  // index 3
+    "/assets/img/gallery/ss1/mainbase8.jpg",  // index 4
+    "/assets/img/gallery/ss1/mainbase9.jpg",  // index 5
+    "/assets/img/gallery/ss1/mainbase10.jpg", // index 6
+
+    // Season 2 images (Index 7 to 18)
+    "/assets/img/gallery/ss2/mainbase.png",   // index 7
+    "/assets/img/gallery/ss2/mainbase1.jpg",  // index 8
+    "/assets/img/gallery/ss2/mainbase2.jpg",  // index 9
+    "/assets/img/gallery/ss2/mainbase11.jpg", // index 10
+    "/assets/img/gallery/ss2/meeting.jpg",    // index 11
+    "/assets/img/gallery/ss2/boat.jpg",       // index 12
+    "/assets/img/gallery/ss2/friend.jpg",     // index 13
+    "/assets/img/gallery/ss2/friend1.jpg",    // index 14
+    "/assets/img/gallery/ss2/friend2.jpg",    // index 15
+    "/assets/img/gallery/ss2/fight.jpg",      // index 16
+    "/assets/img/gallery/ss2/shield.jpg",     // index 17
+    "/assets/img/gallery/ss2/qua_nghien(21h18-04-07-2022).png", // index 18
+
+    // Season 3 images (Index 19 to 31)
+    "/assets/img/gallery/ss3/mainbase.png",   // index 19
+    "/assets/img/gallery/ss3/mainbase1.jpg",  // index 20
+    "/assets/img/gallery/ss3/mainbase2.jpg",  // index 21
+    "/assets/img/gallery/ss3/mainbase3.jpg",  // index 22
+    "/assets/img/gallery/ss3/mainbase4.jpg",  // index 23
+    "/assets/img/gallery/ss3/mainbase5.jpg",  // index 24
+    "/assets/img/gallery/ss3/decor.jpg",      // index 25
+    "/assets/img/gallery/ss3/decor1.jpg",     // index 26
+    "/assets/img/gallery/ss3/decor2.jpg",     // index 27
+    "/assets/img/gallery/ss3/friend.jpg",     // index 28
+    "/assets/img/gallery/ss3/deal.jpg",       // index 29
+    "/assets/img/gallery/ss3/zoombie_bug.jpg", // index 30
+    "/assets/img/gallery/ss3/admin_abuse_power.jpg", // index 31
   ], []);
   const galleryCaptions = useMemo(() => dict.gallery?.captions || [], [dict]);
   const galleryAlbums = useMemo(() => {
     return [
       {
-        season: "3",
-        name: isVi ? "HaoHan Origins" : "HaoHan Origins",
-        duration: "01/2024 - 06/2024",
-        desc: isVi 
-          ? "Khởi nguồn câu chuyện sinh tồn cổ điển của các thành viên HaoHan với những kỳ quan và cơ chế hoàn toàn mới."
-          : "The beginning of classic survival story for HaoHan members with completely new wonders and mechanics.",
+        season: "1",
+        name: isVi ? "The beginning" : "The beginning",
+        duration: "06/2021 - 02/2022",
+        desc: isVi
+          ? "Giai đoạn máy chủ thử nghiệm giới hạn, hoạt động dưới chế độ riêng tư."
+          : "A private server stage with limited member access for testing.",
         topics: [
           {
-            title: isVi ? "Công trình vĩ đại" : "Epic Builds",
-            desc: isVi ? "Các lâu đài và kỳ quan được xây dựng bởi thành viên." : "Castles and wonders constructed by players.",
+            title: isVi ? "Căn cứ thời sơ khai" : "Classic Member Bases",
+            desc: isVi ? "Những công trình đơn sơ của các thành viên thời kỳ đầu." : "Simple bases and buildings of the first members.",
             coverIndex: 0,
             images: [
-              { index: 0, title: isVi ? "Lâu đài trên mây" : "Cloud Castle", desc: isVi ? "Xây dựng bởi đội ngũ kiến trúc sư HaoHan tại tọa độ x: 1200, z: -450." : "Constructed by HaoHan architects team at coordinates x: 1200, z: -450." },
-              { index: 1, title: isVi ? "Khu chợ cổ trấn" : "Ancient Town Market", desc: isVi ? "Điểm giao thương sầm uất nhất của Season 3, nơi tụ họp thương nhân." : "The most bustling trading point of Season 3, a gathering place for merchants." },
-              { index: 2, title: isVi ? "Nhà thờ Gothic" : "Gothic Cathedral", desc: isVi ? "Công trình tâm linh kỳ vĩ với hơn 500,000 khối đá tỉ mỉ." : "A magnificent spiritual monument built with over 500,000 detailed blocks." },
-            ]
-          },
-          {
-            title: isVi ? "Hoạt động cộng đồng" : "Community Events",
-            desc: isVi ? "Khoảnh khắc vui vẻ bên nhau trong các sự kiện in-game." : "Fun moments together during in-game events.",
-            coverIndex: 3,
-            images: [
-              { index: 3, title: isVi ? "Ảnh tập thể Season 3" : "S3 Group Photo", desc: isVi ? "Đông đảo thành viên tề tựu tại Sảnh chính trước giờ reset." : "Many members gathered at the main Hall before the reset time." },
-              { index: 4, title: isVi ? "Đua thuyền rồng" : "Dragon Boat Racing", desc: isVi ? "Giải đấu thể thao kịch tính trên sông băng thu hút nhiều khán giả." : "An exciting sports tournament on ice river attracting many spectators." }
+              { index: 0, title: isVi ? "Nhà gỗ bên hồ" : "Lakeside Wooden Cabin", desc: isVi ? "Một căn nhà gỗ đơn sơ ấm cúng thời kỳ đầu." : "A simple cozy wooden base built early on." },
+              { index: 1, title: isVi ? "Tháp canh đá" : "Stone Watchtower", desc: isVi ? "Tháp quan sát bằng đá bảo vệ làng sinh tồn." : "A stone tower looking over the spawn area." },
+              { index: 2, title: isVi ? "Căn cứ Redstone sơ khai" : "Early Redstone Base", desc: isVi ? "Thử nghiệm cơ chế Redstone đơn giản đầu tiên." : "Early simple Redstone farm experimentations." },
+              { index: 3, title: isVi ? "Cổng Nether cổ kính" : "Nether Portal Arch", desc: isVi ? "Thiết kế cổng địa ngục được trang trí đẹp mắt." : "A nicely decorated portal leading to the Nether." },
+              { index: 4, title: isVi ? "Nhà kho nhỏ" : "Cozy Warehouse", desc: isVi ? "Khu vực lưu trữ tài nguyên nhỏ của nhóm bạn." : "A small resource storage point shared by friends." },
+              { index: 5, title: isVi ? "Trang trại lúa mì" : "Wheat Plantation", desc: isVi ? "Cánh đồng lúa mì đảm bảo nguồn thức ăn thời kỳ đầu." : "Small agricultural wheat farm for basic foods." },
+              { index: 6, title: isVi ? "Khu khai thác khoáng sản" : "Mining Quarry", desc: isVi ? "Mỏ đá khai thác vật liệu thô sơ." : "Raw material mining site near base." }
             ]
           }
         ]
       },
       {
         season: "2",
-        name: isVi ? "HaoHan Reborn" : "HaoHan Reborn",
-        duration: "06/2021 - 12/2023",
-        desc: isVi 
-          ? "Thời kỳ máy chủ chuyển mình mạnh mẽ với các bản cập nhật công nghệ và cơ sở hạ tầng đột phá."
-          : "The era of server breakthrough transformation with technology and infrastructure updates.",
+        name: isVi ? "Hảo Hán SMP - Archive & Rewind" : "Hảo Hán SMP - Archive & Rewind",
+        duration: "06/2022 - 08/2022",
+        desc: isVi
+          ? "Giai đoạn máy chủ gặp nhiều khó khăn về mặt tài chính và duy trì kinh phí."
+          : "A challenging period for the server due to limited funding and resources.",
         topics: [
           {
-            title: isVi ? "Thế giới Survival" : "Survival World",
-            desc: isVi ? "Khám phá các vùng đất kỳ thú và căn cứ sinh tồn đầy sáng tạo." : "Explore wonderlands and creative survival bases.",
-            coverIndex: 5,
+            title: isVi ? "Căn cứ của thành viên" : "Member Bases",
+            desc: isVi ? "Khám phá các căn cứ sinh tồn đầy sáng tạo và hoành tráng." : "Explore wonderlands and creative survival bases.",
+            coverIndex: 7,
             images: [
-              { index: 5, title: isVi ? "Căn cứ dưới lòng đất" : "Underground Bunker", desc: isVi ? "Căn cứ tự động hóa hoàn toàn với hệ thống phân loại kho thông minh." : "Fully automated base with smart warehouse sorting system." },
-              { index: 6, title: isVi ? "Trang trại sắt khổng lồ" : "Iron Golem Farm", desc: isVi ? "Cỗ máy sản xuất tài nguyên tự động hiệu suất cực cao." : "Extremely high efficiency automated resource production machine." }
+              { index: 7, title: isVi ? "Căn cứ chính (Toàn cảnh)" : "Main Base (Overview)", desc: isVi ? "Hình ảnh toàn cảnh căn cứ chính quy mô lớn của thành viên Season 2." : "Panoramic view of a large base constructed by members in Season 2." },
+              { index: 8, title: isVi ? "Khuôn viên căn cứ" : "Base Grounds", desc: isVi ? "Cận cảnh khuôn viên căn cứ với thiết kế kết hợp kính và đá." : "Close up base view featuring stone and glass architecture." },
+              { index: 9, title: isVi ? "Sân vườn hồ nước" : "Lakeside Garden", desc: isVi ? "Một góc sân vườn thơ mộng bên bờ hồ." : "A serene lakeside garden corner." },
+              { index: 10, title: isVi ? "Đại bản doanh" : "Grand Headquarters", desc: isVi ? "Căn cứ lớn tích hợp đầy đủ công năng sinh tồn." : "Fully functional survival grand base." }
             ]
           },
           {
-            title: isVi ? "Đấu trường PvP" : "PvP Arena",
-            desc: isVi ? "Nơi diễn ra các trận thư hùng kịch tính giữa các chiến binh." : "Where intense battles take place between warriors.",
-            coverIndex: 7,
+            title: isVi ? "Sinh hoạt chung" : "Community Life",
+            desc: isVi ? "Các hoạt động giao lưu và tập trung đông vui." : "Shared moments and collective activities.",
+            coverIndex: 11,
             images: [
-              { index: 7, title: isVi ? "Đấu trường La Mã" : "Colosseum PvP", desc: isVi ? "Vòng chung kết giải đấu PvP đợt Giáng Sinh vô cùng nảy lửa." : "Extremely fiery PvP tournament finals during Christmas season." },
-              { index: 8, title: isVi ? "Pháo đài công thành" : "Siege Fortress", desc: isVi ? "Hoạt động công thành chiến quy tụ hàng chục clan tham gia." : "Siege warfare activity gathering dozens of clans." }
+              { index: 11, title: isVi ? "Họp mặt thành viên" : "Server Meeting", desc: isVi ? "Các thành viên tụ họp thảo luận và chụp ảnh lưu niệm." : "Members gather to discuss and take photos." },
+              { index: 12, title: isVi ? "Giao thương bến thuyền" : "Boat Port Gathering", desc: isVi ? "Các hoạt động chèo thuyền thư giãn bên sông." : "Relaxing boating and trading activities." },
+              { index: 13, title: isVi ? "Nhóm bạn thân thiết" : "Close Friends", desc: isVi ? "Khoảnh khắc vui vẻ đứng cùng nhau trò chuyện." : "A fun moment standing together with friends." },
+              { index: 14, title: isVi ? "Gặp gỡ bên lửa trại" : "Campfire Gathering", desc: isVi ? "Tụ họp trò chuyện ấm cúng bên ánh lửa." : "A cozy chat around the glowing campfire." },
+              { index: 15, title: isVi ? "Du ngoạn thế giới" : "Exploring the World", desc: isVi ? "Nhóm bạn đồng hành phiêu lưu khám phá vùng đất mới." : "Travelling companions exploring new biomes." }
+            ]
+          },
+          {
+            title: isVi ? "Chiến đấu & Sinh tồn" : "Combat & Survival",
+            desc: isVi ? "Các trận chiến kịch tính và kỹ năng sinh tồn cốt lõi." : "Intense battles and survival skills.",
+            coverIndex: 16,
+            images: [
+              { index: 16, title: isVi ? "Đấu trường giao hữu" : "Friendly PvP Fight", desc: isVi ? "Trận thư hùng kịch tính giữa các chiến binh thời kỳ đầu." : "An exciting friendly combat between early members." },
+              { index: 17, title: isVi ? "Lập hàng phòng ngự" : "Shield Wall Defense", desc: isVi ? "Hợp tác phòng thủ vững chắc bằng khiên chắn." : "Cooperating to defend using shields." }
+            ]
+          },
+          {
+            title: isVi ? "Cày cuốc căng thẳng" : "Hardcore Grinding",
+            desc: isVi ? "Khoảnh khắc cày cuốc quên ngày tháng." : "Obsessive building and grinding sessions.",
+            coverIndex: 18,
+            images: [
+              { index: 18, title: isVi ? "Độ cày cuốc của thành viên" : "Active Member Grind", desc: isVi ? "Các thành viên online nhiệt tình lúc 21h18 ngày 04/07/2022." : "Active members grinding in the server at 21:18 on July 4, 2022." }
             ]
           }
         ]
       },
       {
-        season: "1",
-        name: isVi ? "HaoHan Classic" : "HaoHan Classic",
-        duration: "03/2020 - 05/2021",
-        desc: isVi 
-          ? "Hành trình khởi đầu của cộng đồng HaoHan SMP đầy ắp kỷ niệm thô sơ nhưng ấm cúng."
-          : "The initial journey of HaoHan SMP community filled with raw but warm memories.",
+        season: "3",
+        name: isVi ? "Hảo Hán SMP - Hardaya" : "Hảo Hán SMP - Hardaya",
+        duration: "07/2023 - 08/2024",
+        desc: isVi
+          ? "Khởi nguồn câu chuyện sinh tồn cổ điển của các thành viên HaoHan với những kỳ quan và cơ chế hoàn toàn mới."
+          : "The beginning of classic survival story for HaoHan members with completely new wonders and mechanics.",
         topics: [
           {
-            title: isVi ? "Bản làng sơ khai" : "Classic Village",
-            desc: isVi ? "Nhìn lại căn nhà gỗ đầu tiên và những người bạn thuở sơ khai." : "Looking back at the first wooden house and initial friends.",
-            coverIndex: 9,
+            title: isVi ? "Căn cứ trung tâm" : "Central Base",
+            desc: isVi ? "Toàn cảnh khu vực spawn và căn cứ chính của Season 3." : "Overview of spawn and central base for Season 3.",
+            coverIndex: 19,
             images: [
-              { index: 9, title: isVi ? "Ngôi làng khởi đầu" : "Spawn Village", desc: isVi ? "Nơi tụ họp đầu tiên của các thành viên đặt nền móng cho server." : "The first meeting place of members laying foundation for the server." },
-              { index: 10, title: isVi ? "Nhà kho cộng đồng" : "Spawn Warehouse", desc: isVi ? "Nhà kho chung chia sẻ tài nguyên thời kỳ đầu nhiều khó khăn." : "Shared warehouse sharing resources during difficult early days." }
+              { index: 19, title: isVi ? "Tổng quan spawn Season 3" : "S3 Spawn Overview", desc: isVi ? "Cận cảnh khu vực hồi sinh trung tâm với các lối đi và kiến trúc hiện đại." : "A view over the central spawn hub showing main pathways and houses." },
+              { index: 20, title: isVi ? "Khu nhà rông" : "Communal House Area", desc: isVi ? "Khu nhà cộng đồng xây dựng hoàn toàn từ gỗ vân sam." : "A community pavilion built entirely from dark spruce wood." },
+              { index: 21, title: isVi ? "Biệt thự hiện đại" : "Modern Villa Base", desc: isVi ? "Biệt thự kính sang trọng nằm biệt lập trên đồi." : "A sleek luxury glass villa sitting alone on a hill." },
+              { index: 22, title: isVi ? "Trạm trung chuyển" : "Transit Station", desc: isVi ? "Trạm tàu điện ngầm kết nối các căn cứ trong server." : "Underground rail station linking player bases." },
+              { index: 23, title: isVi ? "Lâu đài trung cổ" : "Medieval Castle", desc: isVi ? "Lâu đài đá kiên cố đứng sừng sững bên vách núi." : "A fortified stone castle standing tall on a cliffside." },
+              { index: 24, title: isVi ? "Hải đăng bờ biển" : "Seaside Lighthouse", desc: isVi ? "Hải đăng phát sáng chỉ đường cho tàu bè cập bến." : "A glowing lighthouse guiding boats back to the port." }
+            ]
+          },
+          {
+            title: isVi ? "Trang trí nội thất" : "Interior Design & Decor",
+            desc: isVi ? "Các góc trang trí nội thất chi tiết, sáng tạo của người chơi." : "Players' creative and detailed interior designs.",
+            coverIndex: 25,
+            images: [
+              { index: 25, title: isVi ? "Phòng khách ấm cúng" : "Cozy Living Room", desc: isVi ? "Trang trí lò sưởi và ghế sofa trong phòng khách." : "A decorated fireplace and couch setup in the living area." },
+              { index: 26, title: isVi ? "Hầm rượu cổ" : "Old Wine Cellar", desc: isVi ? "Cách bố trí các thùng ủ rượu bằng gỗ sồi dưới hầm." : "An underground cellar filled with oak barrels." },
+              { index: 27, title: isVi ? "Góc học tập" : "Study & Library", desc: isVi ? "Trang trí kệ sách và bàn làm việc yên tĩnh." : "A quiet corner layout featuring bookshelves and a study desk." }
+            ]
+          },
+          {
+            title: isVi ? "Sinh hoạt & Giao thương" : "Community & Trade",
+            desc: isVi ? "Các khoảnh khắc tương tác xã hội và giao lưu kinh tế." : "Social interactions and server economic trade.",
+            coverIndex: 28,
+            images: [
+              { index: 28, title: isVi ? "Hẹn hò ngắm cảnh" : "Scenic Date", desc: isVi ? "Khoảnh khắc hai người chơi ngồi ngắm hoàng hôn bên nhau." : "Two players sitting together watching the sunset." },
+              { index: 29, title: isVi ? "Thỏa thuận giao dịch" : "Trading Deal", desc: isVi ? "Trao đổi vật phẩm giá trị cao tại khu chợ trung tâm." : "Bartering valuable resources at the central market." }
+            ]
+          },
+          {
+            title: isVi ? "Sự cố & Hài hước" : "Funny Glitches",
+            desc: isVi ? "Những lỗi game ngộ nghĩnh và khoảnh khắc trêu đùa nhau." : "Amusing bugs and playful server moments.",
+            coverIndex: 30,
+            images: [
+              { index: 30, title: isVi ? "Lỗi Zombie xếp chồng" : "Zombie Stacking Bug", desc: isVi ? "Hiện tượng xếp chồng hài hước của quái vật." : "A funny stacking glitch in the game." },
+              { index: 31, title: isVi ? "Admin 'lạm quyền'" : "Admin Abuse Power", desc: isVi ? "Khoảnh khắc đùa vui khi Admin sử dụng quyền lực tối cao." : "A playful moment when the Admin shows off supreme powers." }
             ]
           }
         ]
+      },
+      {
+        season: "4",
+        name: isVi ? "Reborn" : "Reborn",
+        duration: isVi ? "09/2024 - Hiện tại" : "09/2024 - Present",
+        desc: isVi
+          ? "Giai đoạn máy chủ phát triển đột phá với các cập nhật tính năng mới nhất."
+          : "The next generation of survival with the latest updates.",
+        topics: []
       }
     ];
   }, [isVi]);
@@ -1014,7 +1186,7 @@ export default function HomeClient({ dict, lang }) {
 
     setDonateLoading(true);
     setDonateResult(isVi ? "Đang tạo liên kết thanh toán PayOS..." : "Creating PayOS checkout link...");
-    
+
     try {
       const token = getToken();
       const response = await fetch(`${API_BASE}/api/donations/payos/create`, {
@@ -1030,7 +1202,7 @@ export default function HomeClient({ dict, lang }) {
         }),
       });
       const data = await response.json().catch(() => ({}));
-      
+
       if (response.ok && data.checkoutUrl) {
         setDonateResult(isVi ? "Đã tạo thanh toán, đang chuyển sang PayOS..." : "Checkout created, redirecting to PayOS...");
         window.location.href = data.checkoutUrl;
@@ -1207,6 +1379,14 @@ export default function HomeClient({ dict, lang }) {
       setLinkingGame(false);
     }
   };
+
+  const handleFeatureWikiClick = (wikiTab) => {
+    setSelectedFeature(null);
+    setActiveTab("wiki");
+    setActiveWikiTab(wikiTab);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}${topbar && mobileMenuOpen ? " topbar__actions--open" : ""}`}>
       {isLoggedIn && user ? (
@@ -1403,7 +1583,11 @@ export default function HomeClient({ dict, lang }) {
                     <div
                       className={`feature-card${card.large ? " feature-card--large" : ""}`}
                       key={card.title}
-                      style={{ "--card-accent": card.accent }}
+                      style={{ "--card-accent": card.accent, cursor: "pointer" }}
+                      onClick={() => {
+                        setSelectedFeature(card);
+                        setActiveFeatureImgIndex(0);
+                      }}
                     >
                       {/* eslint-disable-next-line @next/next/no-img-element */}
                       <img className="feature-card__bg" src={card.img} alt="" aria-hidden="true" />
@@ -1522,7 +1706,7 @@ export default function HomeClient({ dict, lang }) {
                 </p>
               </div>
             </header>
-            
+
             <div className="wrap gallery-page__wrap" style={{ marginTop: '40px' }}>
               {selectedTopic ? (
                 /* Topic Media Explorer (Split Pane layout) */
@@ -1553,41 +1737,23 @@ export default function HomeClient({ dict, lang }) {
                   </div>
 
                   {/* Split layout */}
-                  <div style={{ display: 'grid', gridTemplateColumns: 'minmax(250px, 300px) 1fr', gap: '30px', minHeight: '500px', width: '100%' }}>
+                  <div className="gallery-explorer-layout">
                     {/* Left Sidebar - Images List */}
-                    <div style={{
-                      background: 'rgba(20, 16, 12, 0.32)',
-                      border: '1px solid rgba(255, 149, 46, 0.12)',
-                      borderRadius: '10px',
-                      padding: '16px',
-                      maxHeight: '600px',
-                      overflowY: 'auto',
-                      display: 'flex',
-                      flexDirection: 'column',
-                      gap: '12px'
-                    }}>
-                      <h4 style={{ color: '#ff952e', margin: '0 0 4px 0', fontSize: '1rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '0.5px', fontFamily: "'Outfit', sans-serif" }}>
+                    <div className="gallery-explorer-sidebar">
+                      <h4>
                         {isVi ? "Danh sách ảnh" : "Images List"}
                       </h4>
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                      <div className="gallery-explorer-sidebar-list">
                         {selectedTopic.images.map((img, idx) => {
                           const isActive = selectedTopicImageIndex === idx;
                           return (
                             <button
                               key={idx}
                               onClick={() => setSelectedTopicImageIndex(idx)}
+                              className="gallery-explorer-thumb-btn"
                               style={{
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '12px',
-                                width: '100%',
                                 background: isActive ? 'rgba(255, 149, 46, 0.15)' : 'rgba(20, 16, 12, 0.2)',
-                                border: isActive ? '1px solid #ff952e' : '1px solid rgba(255, 255, 255, 0.08)',
-                                borderRadius: '8px',
-                                padding: '8px',
-                                cursor: 'pointer',
-                                textAlign: 'left',
-                                transition: 'all 0.2s'
+                                border: isActive ? '1px solid #ff952e' : '1px solid rgba(255, 255, 255, 0.08)'
                               }}
                             >
                               {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -1611,35 +1777,17 @@ export default function HomeClient({ dict, lang }) {
                     </div>
 
                     {/* Right Main Detail View */}
-                    <div style={{ display: 'flex', flexDirection: 'column', gap: '20px' }}>
-                      <div style={{
-                        position: 'relative',
-                        width: '100%',
-                        height: '450px',
-                        background: 'rgba(0, 0, 0, 0.4)',
-                        border: '1px solid rgba(255, 255, 255, 0.1)',
-                        borderRadius: '12px',
-                        overflow: 'hidden',
-                        boxShadow: '0 15px 30px rgba(0,0,0,0.5)',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center'
-                      }}>
+                    <div className="gallery-explorer-detail-pane">
+                      <div className="gallery-explorer-main-view">
                         {/* eslint-disable-next-line @next/next/no-img-element */}
                         <img
                           src={galleryImages[selectedTopic.images[selectedTopicImageIndex].index]}
                           alt={selectedTopic.images[selectedTopicImageIndex].title}
-                          style={{ maxWidth: '100%', maxHeight: '100%', objectFit: 'contain', display: 'block' }}
+                          className="gallery-explorer-main-img"
                         />
                       </div>
 
-                      <div style={{
-                        background: 'rgba(20, 16, 12, 0.4)',
-                        border: '1px solid rgba(255, 149, 46, 0.15)',
-                        borderRadius: '10px',
-                        padding: '20px',
-                        fontFamily: "'Outfit', sans-serif"
-                      }}>
+                      <div className="gallery-explorer-desc-box">
                         <h4 style={{ color: '#ff952e', margin: '0 0 8px 0', fontSize: '1.25rem', fontWeight: '700' }}>
                           {selectedTopic.images[selectedTopicImageIndex].title}
                         </h4>
@@ -1652,53 +1800,28 @@ export default function HomeClient({ dict, lang }) {
                 </div>
               ) : (
                 /* Seasons and Topic Cards view */
-                <div className="gallery-albums" style={{ background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 }}>
+                <div className="gallery-timeline-container">
                   {galleryAlbums.map((album) => (
-                    <section className="gallery-year" key={album.season} style={{ marginBottom: '50px' }}>
-                      <div style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center',
-                        borderLeft: '4px solid #ff952e',
-                        paddingLeft: '16px',
-                        marginBottom: '16px',
-                        flexWrap: 'wrap',
-                        gap: '12px'
-                      }}>
-                        <h3 style={{
-                          margin: 0,
-                          color: '#ffffff',
-                          fontFamily: "'Be Vietnam Pro', 'Outfit', sans-serif",
-                          fontSize: '1.5rem',
-                          fontWeight: '800',
-                          letterSpacing: '0.5px'
-                        }}>
+                    <section className="gallery-timeline-item" key={album.season}>
+                      {/* Timeline dot ring */}
+                      <div className="gallery-timeline-dot">
+                        <div className="gallery-timeline-dot-inner"></div>
+                      </div>
+
+                      <div className="gallery-timeline-header">
+                        <h3 className="gallery-timeline-title">
                           Season {album.season}: {album.name}
                         </h3>
-                        <span style={{
-                          background: 'rgba(255, 149, 46, 0.1)',
-                          border: '1px solid rgba(255, 149, 46, 0.25)',
-                          color: '#ff982f',
-                          borderRadius: '20px',
-                          padding: '4px 14px',
-                          fontSize: '0.8rem',
-                          fontWeight: '800',
-                          fontFamily: "'Outfit', sans-serif",
-                          letterSpacing: '0.5px'
-                        }}>
+                        <span className="gallery-timeline-badge">
                           {album.duration}
                         </span>
                       </div>
-                      <p style={{
-                        margin: '0 0 24px 16px',
-                        color: '#aaa9a6',
-                        fontSize: '0.95rem',
-                        lineHeight: '1.6',
-                        fontFamily: "'Outfit', sans-serif"
-                      }}>
+
+                      <p className="gallery-timeline-desc">
                         {album.desc}
                       </p>
-                      <div className="gallery-album-grid" style={{ paddingLeft: '16px' }}>
+
+                      <div className="gallery-album-grid">
                         {album.topics.map((topic, topicIdx) => (
                           <a
                             key={topicIdx}
@@ -2244,7 +2367,7 @@ export default function HomeClient({ dict, lang }) {
             <SectionStars count={25} />
             <div className="wrap rules-page-wrap">
               <div className="donate-page-layout">
-                
+
                 {/* Left Column: Donation Form */}
                 <div className="donate-form-col">
                   {/* Top Row: Supporters Header */}
@@ -2257,7 +2380,7 @@ export default function HomeClient({ dict, lang }) {
                       {isVi ? "Supporters" : "Supporters"}
                     </h2>
                     <p className="donate-supporters-desc">
-                      {isVi 
+                      {isVi
                         ? "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền."
                         : "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features."}
                     </p>
@@ -2266,15 +2389,15 @@ export default function HomeClient({ dict, lang }) {
                   {/* Separation Line */}
                   <div style={{ borderBottom: '2px solid rgba(255, 149, 46, 0.3)', marginBottom: '36px' }}></div>
                   <form onSubmit={handleDonateSubmit} className="donate-form">
-                    
+
                     {/* Minecraft character name */}
                     <div className="donate-field">
                       <label htmlFor="donate-name" className="donate-label">
                         {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
                       </label>
-                      <input 
+                      <input
                         id="donate-name"
-                        type="text" 
+                        type="text"
                         value={donateName}
                         onChange={(e) => setDonateName(e.target.value)}
                         placeholder={dict.donate.name_placeholder}
@@ -2288,7 +2411,7 @@ export default function HomeClient({ dict, lang }) {
                       <label htmlFor="donate-amount" className="donate-label">
                         {isVi ? "Số tiền ủng hộ" : "Support amount"}
                       </label>
-                      
+
                       <div className="donate-presets">
                         {DONATION_PRESETS.map((preset) => {
                           const isSelected = Number(donateAmount) === preset;
@@ -2305,9 +2428,9 @@ export default function HomeClient({ dict, lang }) {
                         })}
                       </div>
 
-                      <input 
+                      <input
                         id="donate-amount"
-                        type="number" 
+                        type="number"
                         min="1000"
                         step="1000"
                         value={donateAmount}
@@ -2323,10 +2446,10 @@ export default function HomeClient({ dict, lang }) {
                     </button>
 
                     <div className="donate-disclaimer">
-                      <p>{isVi 
+                      <p>{isVi
                         ? "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán."
                         : "*Your character name is used for support verification after payment."}</p>
-                      <p>{isVi 
+                      <p>{isVi
                         ? "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau."
                         : "You will be redirected to PayOS to complete the secure checkout."}</p>
                     </div>
@@ -2336,9 +2459,9 @@ export default function HomeClient({ dict, lang }) {
                         {donateResult}
                       </div>
                     )}
-                    
+
                     <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
-                      {isVi 
+                      {isVi
                         ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
                         : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
                     </p>
@@ -2358,7 +2481,7 @@ export default function HomeClient({ dict, lang }) {
                     {visibleSupporters.map((supporter, index) => {
                       const overallIndex = (currentSupporterPage - 1) * DONORS_PER_PAGE + index;
                       const isTop1 = overallIndex === 0;
-                      
+
                       const displayName = supporter.displayName || supporter.display_name || supporter.username || 'Unknown User';
                       const minecraftName = supporter.minecraftName || supporter.minecraft_name;
                       const username = supporter.username || displayName;
@@ -2368,7 +2491,7 @@ export default function HomeClient({ dict, lang }) {
                       const useDefaultDiscordBanner = supporterIdentity.some((value) =>
                         value === 'pico' || value === 'picosvip' || value === 'picoxsvipmax'
                       );
-                      
+
                       const keyName = displayName.toLowerCase().trim();
                       const fallbackProfile = discordProfiles[keyName] || {
                         status: overallIndex % 3 === 0 ? "dnd" : (overallIndex % 3 === 1 ? "online" : "idle"),
@@ -2378,33 +2501,33 @@ export default function HomeClient({ dict, lang }) {
                       };
 
                       const discordAccount = supporter.discordAccount || supporter.discord_account || {};
-                      
-                      // Resolve Discord avatar if synced, else fallback to Discord default avatar
-                      const avatar = supporter.avatarUrl || supporter.avatar_url || 
-                                     discordAccount.guild_avatar_url || discordAccount.guildAvatarUrl || 
-                                     discordAccount.avatar_url || discordAccount.avatarUrl || 
-                                     fallbackProfile.avatar ||
-                                     `https://cdn.discordapp.com/embed/avatars/${(username.charCodeAt(0) || 0) % 6}.png`;
 
-                      const displayTitle = discordAccount.guild_nickname || discordAccount.guildNickname || 
-                                           discordAccount.global_name || discordAccount.globalName || 
-                                           displayName;
+                      // Resolve Discord avatar if synced, else fallback to Discord default avatar
+                      const avatar = supporter.avatarUrl || supporter.avatar_url ||
+                        discordAccount.guild_avatar_url || discordAccount.guildAvatarUrl ||
+                        discordAccount.avatar_url || discordAccount.avatarUrl ||
+                        fallbackProfile.avatar ||
+                        `https://cdn.discordapp.com/embed/avatars/${(username.charCodeAt(0) || 0) % 6}.png`;
+
+                      const displayTitle = discordAccount.guild_nickname || discordAccount.guildNickname ||
+                        discordAccount.global_name || discordAccount.globalName ||
+                        displayName;
 
                       const discordTag = discordAccount.username ? `@${discordAccount.username}` : fallbackProfile.tag;
                       const bannerUrl = supporter.bannerUrl || supporter.banner_url ||
-                                        discordAccount.banner_url || discordAccount.bannerUrl ||
-                                        discordAccount.guild_banner_url || discordAccount.guildBannerUrl;
+                        discordAccount.banner_url || discordAccount.bannerUrl ||
+                        discordAccount.guild_banner_url || discordAccount.guildBannerUrl;
                       const accentColor = supporter.accentColor || supporter.accent_color;
                       const rowBackground = useDefaultDiscordBanner
                         ? DISCORD_DEFAULT_BANNER
                         : bannerUrl
-                        ? `linear-gradient(90deg, rgba(18, 14, 12, 0.78), rgba(18, 14, 12, 0.58)), url("${bannerUrl}")`
-                        : (accentColor
-                          ? `linear-gradient(90deg, rgba(18, 14, 12, 0.8), rgba(18, 14, 12, 0.55)), linear-gradient(135deg, #${Number(accentColor).toString(16).padStart(6, '0')}, #151515)`
-                          : fallbackProfile.banner);
+                          ? `linear-gradient(90deg, rgba(18, 14, 12, 0.78), rgba(18, 14, 12, 0.58)), url("${bannerUrl}")`
+                          : (accentColor
+                            ? `linear-gradient(90deg, rgba(18, 14, 12, 0.8), rgba(18, 14, 12, 0.55)), linear-gradient(135deg, #${Number(accentColor).toString(16).padStart(6, '0')}, #151515)`
+                            : fallbackProfile.banner);
 
                       return (
-                        <div 
+                        <div
                           key={`${username}-${index}`}
                           className={`donate-donor-row ${isTop1 ? 'donate-donor-row--top1' : ''} ${useDefaultDiscordBanner ? 'donate-donor-row--default-discord' : ''}`}
                           style={{
@@ -2416,11 +2539,11 @@ export default function HomeClient({ dict, lang }) {
                           <div className="donate-donor-rank">
                             <span className="donate-rank-number">{overallIndex + 1}</span>
                           </div>
-                          
+
                           <div className="donate-donor-avatar" style={{ position: 'relative', width: '38px', height: '38px', borderRadius: '50%', overflow: 'hidden' }}>
                             {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img 
-                              src={avatar} 
+                            <img
+                              src={avatar}
                               alt={displayTitle}
                               style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                               onError={(e) => {
@@ -2448,7 +2571,7 @@ export default function HomeClient({ dict, lang }) {
                     const pages = [];
                     const total = supporterPageCount;
                     const current = currentSupporterPage;
-                    
+
                     if (total <= 7) {
                       for (let i = 1; i <= total; i++) pages.push(i);
                     } else {
@@ -2463,7 +2586,7 @@ export default function HomeClient({ dict, lang }) {
 
                     return (
                       <div className="donate-pagination">
-                        <button 
+                        <button
                           type="button"
                           className="donate-page-arrow"
                           onClick={() => setSupporterPage(p => Math.max(1, p - 1))}
@@ -2531,7 +2654,7 @@ export default function HomeClient({ dict, lang }) {
                           })}
                         </div>
 
-                        <button 
+                        <button
                           type="button"
                           className="donate-page-arrow"
                           onClick={() => setSupporterPage(p => Math.min(supporterPageCount, p + 1))}
@@ -3229,6 +3352,82 @@ export default function HomeClient({ dict, lang }) {
           </p>
         </div>
       </footer>
+      {selectedFeature && (
+        <div className="feature-modal-overlay" onClick={() => setSelectedFeature(null)}>
+          <div className="feature-modal-card" onClick={(e) => e.stopPropagation()}>
+            <button className="feature-modal-close" onClick={() => setSelectedFeature(null)} aria-label="Close feature details">
+              <i className="fa-solid fa-xmark"></i>
+            </button>
+
+            <div className="feature-modal-grid">
+              {/* Left Column: Image Explorer */}
+              <div className="feature-modal-media">
+                <div className="feature-modal-preview-wrapper">
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img
+                    src={featureImages[selectedFeature.id][activeFeatureImgIndex]}
+                    alt={selectedFeature.title}
+                    className="feature-modal-preview-img"
+                  />
+                  <div className="feature-modal-index-tag">
+                    {activeFeatureImgIndex + 1} / {featureImages[selectedFeature.id].length}
+                  </div>
+                </div>
+
+                {/* Thumbnails list */}
+                <div className="feature-modal-thumbs">
+                  {featureImages[selectedFeature.id].map((thumbUrl, idx) => {
+                    const isActive = activeFeatureImgIndex === idx;
+                    return (
+                      <button
+                        key={idx}
+                        onClick={() => setActiveFeatureImgIndex(idx)}
+                        className={`feature-modal-thumb-btn ${isActive ? 'feature-modal-thumb-btn--active' : ''}`}
+                      >
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src={thumbUrl} alt="" className="feature-modal-thumb-img" />
+                      </button>
+                    );
+                  })}
+                </div>
+              </div>
+
+              {/* Right Column: Explanations & Actions */}
+              <div className="feature-modal-info">
+                <div className="feature-modal-header">
+                  <div className="feature-modal-icon-badge" style={{ color: selectedFeature.accent }}>
+                    <i className={selectedFeature.icon}></i>
+                  </div>
+                  <h3 className="feature-modal-title">
+                    {featureExplanations[selectedFeature.id]?.title || selectedFeature.title}
+                  </h3>
+                </div>
+
+                <p className="feature-modal-desc">
+                  {featureExplanations[selectedFeature.id]?.desc || selectedFeature.desc}
+                </p>
+
+                <div className="feature-modal-actions">
+                  <button
+                    onClick={() => handleFeatureWikiClick(selectedFeature.wikiTab)}
+                    className="feature-modal-wiki-btn"
+                    style={{
+                      background: `linear-gradient(135deg, ${selectedFeature.accent} 0%, rgba(20,16,12,0.8) 120%)`,
+                      border: `1px solid ${selectedFeature.accent}80`,
+                      boxShadow: `0 4px 20px ${selectedFeature.accent}40`
+                    }}
+                  >
+                    <i className="fa-solid fa-book-open"></i>
+                    <span>
+                      {featureExplanations[selectedFeature.id]?.wikiLabel || (isVi ? "Xem chi tiết trên Wiki" : "View details on Wiki")}
+                    </span>
+                  </button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
       {activeImgIndex !== null && (
         <div className="lightbox-overlay" onClick={() => setActiveImgIndex(null)}>
           <button className="lightbox-close" onClick={() => setActiveImgIndex(null)} aria-label="Close lightbox">&times;</button>
