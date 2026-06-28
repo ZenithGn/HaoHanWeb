@@ -368,6 +368,7 @@ export default function HomeClient({ dict, lang }) {
   const [donateLoading, setDonateLoading] = useState(false);
   const [supporters, setSupporters] = useState([]);
   const [supporterPage, setSupporterPage] = useState(1);
+  const [editingPageInput, setEditingPageInput] = useState(null);
 
   const [profileSubTab, setProfileSubTab] = useState("overview");
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -417,6 +418,54 @@ export default function HomeClient({ dict, lang }) {
   const getRoleStyle = (roleName) => {
     return ROLE_COLORS[roleName] || ROLE_COLORS['default'];
   };
+
+  // Load saved tabs from sessionStorage on mount
+  useEffect(() => {
+    const savedActiveTab = sessionStorage.getItem('activeTab');
+    if (savedActiveTab) {
+      setActiveTab(savedActiveTab);
+    }
+    
+    const savedRulesSubTab = sessionStorage.getItem('rulesSubTab');
+    if (savedRulesSubTab) {
+      setRulesSubTab(savedRulesSubTab);
+    }
+    
+    const savedActiveWikiTab = sessionStorage.getItem('activeWikiTab');
+    if (savedActiveWikiTab) {
+      setActiveWikiTab(savedActiveWikiTab);
+    }
+    
+    const savedProfileSubTab = sessionStorage.getItem('profileSubTab');
+    if (savedProfileSubTab) {
+      setProfileSubTab(savedProfileSubTab);
+    }
+  }, []);
+
+  // Save active tabs to sessionStorage when they change
+  useEffect(() => {
+    if (activeTab) {
+      sessionStorage.setItem('activeTab', activeTab);
+    }
+  }, [activeTab]);
+
+  useEffect(() => {
+    if (rulesSubTab) {
+      sessionStorage.setItem('rulesSubTab', rulesSubTab);
+    }
+  }, [rulesSubTab]);
+
+  useEffect(() => {
+    if (activeWikiTab) {
+      sessionStorage.setItem('activeWikiTab', activeWikiTab);
+    }
+  }, [activeWikiTab]);
+
+  useEffect(() => {
+    if (profileSubTab) {
+      sessionStorage.setItem('profileSubTab', profileSubTab);
+    }
+  }, [profileSubTab]);
 
   useEffect(() => {
     if (user && user.email) {
@@ -2169,13 +2218,15 @@ export default function HomeClient({ dict, lang }) {
           </section>
         )}
         {activeTab === "donate" && (
-          <section className="reveal visible" id="donate" style={{ minHeight: 'calc(100vh - 400px)' }}>
+          <section className="reveal visible rules-page" id="donate" style={{ minHeight: 'calc(100vh - 400px)' }}>
             <SectionStars count={25} />
-            <div className="wrap donate-page-wrap">
+            <div className="wrap rules-page-wrap">
               <div className="donate-page-layout">
-                {/* Left Column: Supporters */}
-                <div className="donate-supporters-col">
-                  <div className="donate-supporters-header">
+                
+                {/* Left Column: Donation Form */}
+                <div className="donate-form-col">
+                  {/* Top Row: Supporters Header */}
+                  <div className="donate-supporters-header" style={{ marginBottom: '24px' }}>
                     <span className="donate-eyebrow">
                       <i className="fa-solid fa-heart" style={{ color: '#ff4d4d' }}></i>
                       {isVi ? "CẢM ƠN BẠN" : "THANK YOU"}
@@ -2188,6 +2239,97 @@ export default function HomeClient({ dict, lang }) {
                         ? "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền."
                         : "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features."}
                     </p>
+                  </div>
+
+                  {/* Separation Line */}
+                  <div style={{ borderBottom: '2px solid rgba(255, 149, 46, 0.3)', marginBottom: '36px' }}></div>
+                  <form onSubmit={handleDonateSubmit} className="donate-form">
+                    
+                    {/* Minecraft character name */}
+                    <div className="donate-field">
+                      <label htmlFor="donate-name" className="donate-label">
+                        {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
+                      </label>
+                      <input 
+                        id="donate-name"
+                        type="text" 
+                        value={donateName}
+                        onChange={(e) => setDonateName(e.target.value)}
+                        placeholder={dict.donate.name_placeholder}
+                        required
+                        className="donate-input"
+                      />
+                    </div>
+
+                    {/* Support amount */}
+                    <div className="donate-field">
+                      <label htmlFor="donate-amount" className="donate-label">
+                        {isVi ? "Số tiền ủng hộ" : "Support amount"}
+                      </label>
+                      
+                      <div className="donate-presets">
+                        {DONATION_PRESETS.map((preset) => {
+                          const isSelected = Number(donateAmount) === preset;
+                          return (
+                            <button
+                              key={preset}
+                              type="button"
+                              onClick={() => setDonateAmount(preset.toString())}
+                              className={`donate-preset-btn ${isSelected ? 'donate-preset-btn--active' : ''}`}
+                            >
+                              {new Intl.NumberFormat('vi-VN').format(preset)} đ
+                            </button>
+                          );
+                        })}
+                      </div>
+
+                      <input 
+                        id="donate-amount"
+                        type="number" 
+                        min="1000"
+                        step="1000"
+                        value={donateAmount}
+                        onChange={(e) => setDonateAmount(e.target.value)}
+                        placeholder={isVi ? "Nhập số tiền..." : "Enter amount..."}
+                        required
+                        className="donate-input"
+                      />
+                    </div>
+
+                    <button type="submit" disabled={donateLoading} className="donate-submit-btn">
+                      {donateLoading ? (isVi ? "Đang tạo..." : "Creating...") : (isVi ? "Ủng hộ chúng tôi" : "Support us")}
+                    </button>
+
+                    <div className="donate-disclaimer">
+                      <p>{isVi 
+                        ? "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán."
+                        : "*Your character name is used for support verification after payment."}</p>
+                      <p>{isVi 
+                        ? "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau."
+                        : "You will be redirected to PayOS to complete the secure checkout."}</p>
+                    </div>
+
+                    {donateResult && (
+                      <div className="donate-result-msg">
+                        {donateResult}
+                      </div>
+                    )}
+                    
+                    <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                      {isVi 
+                        ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
+                        : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
+                    </p>
+                  </form>
+                </div>
+
+                {/* Right Column: Supporters Leaderboard */}
+                <div className="donate-supporters-col">
+                  <div className="rules-article" style={{ marginBottom: '16px' }}>
+                    <h2>
+                      <i className="fa-solid fa-crown"></i>
+                      {isVi ? "Donator" : "Donator"}
+                    </h2>
                   </div>
 
                   <div className="donate-leaderboard">
@@ -2279,119 +2421,110 @@ export default function HomeClient({ dict, lang }) {
                   </div>
 
                   {/* Pagination */}
-                  {supporterPageCount > 1 && (
-                    <div className="donate-pagination">
-                      <button 
-                        type="button"
-                        className="donate-page-btn"
-                        onClick={() => setSupporterPage(p => Math.max(1, p - 1))}
-                        disabled={currentSupporterPage === 1}
-                      >
-                        <i className="fa-solid fa-chevron-left"></i>
-                      </button>
-                      <span className="donate-page-info">
-                        Page {currentSupporterPage}/{supporterPageCount}
-                      </span>
-                      <button 
-                        type="button"
-                        className="donate-page-btn"
-                        onClick={() => setSupporterPage(p => Math.min(supporterPageCount, p + 1))}
-                        disabled={currentSupporterPage === supporterPageCount}
-                      >
-                        <i className="fa-solid fa-chevron-right"></i>
-                      </button>
-                    </div>
-                  )}
-                </div>
-
-                {/* Right Column: Donation Form */}
-                <div className="donate-form-col">
-                  <form onSubmit={handleDonateSubmit} className="donate-form">
-                    <h2 className="donate-form-title">
-                      {isVi ? "Cổng Quyên Góp" : "Donation Portal"}
-                    </h2>
+                  {supporterPageCount > 1 && (() => {
+                    // Build page numbers with ellipsis
+                    const pages = [];
+                    const total = supporterPageCount;
+                    const current = currentSupporterPage;
                     
-                    {/* Minecraft character name */}
-                    <div className="donate-field">
-                      <label htmlFor="donate-name" className="donate-label">
-                        {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
-                      </label>
-                      <input 
-                        id="donate-name"
-                        type="text" 
-                        value={donateName}
-                        onChange={(e) => setDonateName(e.target.value)}
-                        placeholder={dict.donate.name_placeholder}
-                        required
-                        className="donate-input"
-                      />
-                    </div>
+                    if (total <= 7) {
+                      for (let i = 1; i <= total; i++) pages.push(i);
+                    } else {
+                      pages.push(1);
+                      if (current > 3) pages.push('...');
+                      const start = Math.max(2, current - 1);
+                      const end = Math.min(total - 1, current + 1);
+                      for (let i = start; i <= end; i++) pages.push(i);
+                      if (current < total - 2) pages.push('...');
+                      pages.push(total);
+                    }
 
-                    {/* Support amount */}
-                    <div className="donate-field">
-                      <label htmlFor="donate-amount" className="donate-label">
-                        {isVi ? "Số tiền ủng hộ" : "Support amount"}
-                      </label>
-                      
-                      <div className="donate-presets">
-                        {DONATION_PRESETS.map((preset) => {
-                          const isSelected = Number(donateAmount) === preset;
-                          return (
-                            <button
-                              key={preset}
-                              type="button"
-                              onClick={() => setDonateAmount(preset.toString())}
-                              className={`donate-preset-btn ${isSelected ? 'donate-preset-btn--active' : ''}`}
-                            >
-                              {new Intl.NumberFormat('vi-VN').format(preset)} đ
-                            </button>
-                          );
-                        })}
+                    return (
+                      <div className="donate-pagination">
+                        <button 
+                          type="button"
+                          className="donate-page-arrow"
+                          onClick={() => setSupporterPage(p => Math.max(1, p - 1))}
+                          disabled={currentSupporterPage === 1}
+                          aria-label="Previous page"
+                        >
+                          <i className="fa-solid fa-chevron-left"></i>
+                        </button>
+
+                        <div className="donate-page-numbers">
+                          {pages.map((page, i) => {
+                            if (page === '...') {
+                              const isEditing = editingPageInput === i;
+                              return isEditing ? (
+                                <input
+                                  key={`dots-input-${i}`}
+                                  type="number"
+                                  min={1}
+                                  max={supporterPageCount}
+                                  className="donate-page-input-inline"
+                                  placeholder="..."
+                                  autoFocus
+                                  onKeyDown={(e) => {
+                                    if (e.key === 'Enter') {
+                                      const val = parseInt(e.target.value, 10);
+                                      if (val >= 1 && val <= supporterPageCount) {
+                                        setSupporterPage(val);
+                                      }
+                                      setEditingPageInput(null);
+                                    } else if (e.key === 'Escape') {
+                                      setEditingPageInput(null);
+                                    }
+                                  }}
+                                  onBlur={(e) => {
+                                    const val = parseInt(e.target.value, 10);
+                                    if (val >= 1 && val <= supporterPageCount) {
+                                      setSupporterPage(val);
+                                    }
+                                    setEditingPageInput(null);
+                                  }}
+                                />
+                              ) : (
+                                <button
+                                  key={`dots-btn-${i}`}
+                                  type="button"
+                                  className="donate-page-dots-btn"
+                                  onClick={() => setEditingPageInput(i)}
+                                  title={isVi ? "Nhập số trang..." : "Go to page..."}
+                                  aria-label="Go to page"
+                                >
+                                  ···
+                                </button>
+                              );
+                            }
+                            return (
+                              <button
+                                key={page}
+                                type="button"
+                                className={`donate-page-num ${page === currentSupporterPage ? 'donate-page-num--active' : ''}`}
+                                onClick={() => setSupporterPage(page)}
+                              >
+                                {page}
+                              </button>
+                            );
+                          })}
+                        </div>
+
+                        <button 
+                          type="button"
+                          className="donate-page-arrow"
+                          onClick={() => setSupporterPage(p => Math.min(supporterPageCount, p + 1))}
+                          disabled={currentSupporterPage === supporterPageCount}
+                          aria-label="Next page"
+                        >
+                          <i className="fa-solid fa-chevron-right"></i>
+                        </button>
                       </div>
-
-                      <input 
-                        id="donate-amount"
-                        type="number" 
-                        min="1000"
-                        step="1000"
-                        value={donateAmount}
-                        onChange={(e) => setDonateAmount(e.target.value)}
-                        placeholder={isVi ? "Nhập số tiền..." : "Enter amount..."}
-                        required
-                        className="donate-input"
-                      />
-                    </div>
-
-                    <button type="submit" disabled={donateLoading} className="donate-submit-btn">
-                      {donateLoading ? (isVi ? "Đang tạo..." : "Creating...") : (isVi ? "Ủng hộ chúng tôi" : "Support us")}
-                    </button>
-
-                    <div className="donate-disclaimer">
-                      <p>{isVi 
-                        ? "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán."
-                        : "*Your character name is used for support verification after payment."}</p>
-                      <p>{isVi 
-                        ? "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau."
-                        : "You will be redirected to PayOS to complete the secure checkout."}</p>
-                    </div>
-
-                    {donateResult && (
-                      <div className="donate-result-msg">
-                        {donateResult}
-                      </div>
-                    )}
-                    
-                    <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
-                      {isVi 
-                        ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
-                        : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
-                    </p>
-                  </form>
-                  </div>
+                    );
+                  })()}
                 </div>
-
               </div>
-            </section>
+            </div>
+          </section>
         )}
         {activeTab === "profile" && isLoggedIn && user && (
           <section className="section reveal visible profile-section" id="profile">

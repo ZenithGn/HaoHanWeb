@@ -5958,40 +5958,139 @@ details:hover {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-top: 4px;
+  gap: 8px;
+  margin-top: 12px;
+  padding: 8px 0;
 }
 
-.donate-page-btn {
-  width: 36px;
-  height: 36px;
+.donate-page-arrow {
+  width: 34px;
+  height: 34px;
   border-radius: 8px;
   background: rgba(255, 255, 255, 0.04);
   border: 1px solid rgba(255, 255, 255, 0.08);
   color: #aaa9a6;
-  font-size: 0.8rem;
+  font-size: 0.72rem;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   transition: all 0.2s ease;
+  flex-shrink: 0;
 }
 
-.donate-page-btn:hover:not(:disabled) {
+.donate-page-arrow:hover:not(:disabled) {
   background: rgba(255, 149, 46, 0.1);
   border-color: rgba(255, 149, 46, 0.3);
   color: #ff952e;
 }
 
-.donate-page-btn:disabled {
-  opacity: 0.3;
+.donate-page-arrow:disabled {
+  opacity: 0.25;
   cursor: not-allowed;
 }
 
-.donate-page-info {
+.donate-page-numbers {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.donate-page-num {
+  min-width: 34px;
+  height: 34px;
+  border-radius: 8px;
+  background: transparent;
+  border: 1px solid transparent;
   color: #868582;
-  font-size: 0.85rem;
+  font-size: 0.82rem;
   font-weight: 600;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+  font-family: 'Outfit', sans-serif;
+}
+
+.donate-page-num:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-color: rgba(255, 255, 255, 0.1);
+  color: #ddd;
+}
+
+.donate-page-num--active {
+  background: rgba(255, 149, 46, 0.15);
+  border-color: rgba(255, 149, 46, 0.4);
+  color: #ff952e;
+  font-weight: 700;
+  box-shadow: 0 0 12px rgba(255, 149, 46, 0.12);
+}
+
+.donate-page-num--active:hover {
+  background: rgba(255, 149, 46, 0.2);
+  border-color: rgba(255, 149, 46, 0.5);
+  color: #ff952e;
+}
+
+.donate-page-dots {
+  color: #5a5956;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0 2px;
+  user-select: none;
+}
+
+.donate-page-dots-btn {
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: #5a5956;
+  font-size: 0.8rem;
+  letter-spacing: 0.1em;
+  padding: 0 4px;
+  cursor: pointer;
+  user-select: none;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+  min-width: 34px;
+}
+
+.donate-page-dots-btn:hover {
+  background: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.08);
+  color: #ff952e;
+}
+
+.donate-page-input-inline {
+  width: 42px;
+  height: 34px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 149, 46, 0.3);
+  color: #fff;
+  font-size: 0.82rem;
+  font-weight: 600;
+  text-align: center;
+  outline: none;
+  font-family: inherit;
+  -moz-appearance: textfield;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.donate-page-input-inline:focus {
+  border-color: rgba(255, 149, 46, 0.6);
+  box-shadow: 0 0 8px rgba(255, 149, 46, 0.15);
+}
+
+.donate-page-input-inline::-webkit-outer-spin-button,
+.donate-page-input-inline::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }
 
 /* ── Donation Form Column ── */
