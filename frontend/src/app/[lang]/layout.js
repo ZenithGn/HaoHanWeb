@@ -31,6 +31,37 @@ export async function generateMetadata({ params }) {
 
 export default async function RootLayout({ children, params }) {
   const { lang } = await params;
+  const stripExtensionAttributes = `
+    (() => {
+      const strip = (root = document) => {
+        root.querySelectorAll?.('[bis_skin_checked]').forEach((node) => {
+          node.removeAttribute('bis_skin_checked');
+        });
+      };
+
+      strip();
+
+      new MutationObserver((mutations) => {
+        for (const mutation of mutations) {
+          if (mutation.type === 'attributes' && mutation.attributeName === 'bis_skin_checked') {
+            mutation.target.removeAttribute('bis_skin_checked');
+          }
+
+          mutation.addedNodes.forEach((node) => {
+            if (node.nodeType === 1) {
+              node.removeAttribute?.('bis_skin_checked');
+              strip(node);
+            }
+          });
+        }
+      }).observe(document.documentElement, {
+        attributes: true,
+        childList: true,
+        subtree: true,
+        attributeFilter: ['bis_skin_checked'],
+      });
+    })();
+  `;
 
   return (
     <html lang={lang} suppressHydrationWarning>
@@ -46,6 +77,7 @@ export default async function RootLayout({ children, params }) {
           {children}
           <LanguageSwitcher lang={lang} />
         </AuthProvider>
+        <script dangerouslySetInnerHTML={{ __html: stripExtensionAttributes }} />
       </body>
     </html>
   );

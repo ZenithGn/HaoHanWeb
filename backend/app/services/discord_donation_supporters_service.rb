@@ -101,6 +101,7 @@ class DiscordDonationSupportersService
     def fetch_discord_messages
       messages = []
       before = nil
+      user_profiles = {}
 
       while messages.size < MAX_MESSAGES_TO_SCAN
         response = Faraday.get("#{DISCORD_API_BASE}/channels/#{channel_id}/messages") do |req|
@@ -118,9 +119,13 @@ class DiscordDonationSupportersService
           {
             'content' => message['content'].to_s,
             'mentions' => message['mentions'].to_a.map do |mention|
+              profile = user_profiles[mention['id'].to_s] ||= fetch_discord_user_profile(mention['id'].to_s)
               {
                 'id' => mention['id'].to_s,
-                'name' => mention['global_name'].presence || mention['username'].presence || mention['id'].to_s
+                'name' => mention['global_name'].presence || mention['username'].presence || mention['id'].to_s,
+                'avatar_url' => discord_avatar_url(profile.presence || mention),
+                'banner_url' => discord_banner_url(profile),
+                'accent_color' => profile&.dig('accent_color')
               }
             end
           }
@@ -136,7 +141,7 @@ class DiscordDonationSupportersService
 
       messages.each do |message|
         content = message.is_a?(Hash) ? message['content'].to_s : message.to_s
-        mention_names = mention_names_for(message)
+        mention_profiles = mention_profiles_for(message)
         current_page = nil
 
         content.each_line do |line|
@@ -151,7 +156,7 @@ class DiscordDonationSupportersService
 
           next unless current_page
 
-          supporter = parse_supporter_line(stripped, mention_names)
+          supporter = parse_supporter_line(stripped, mention_profiles)
           pages[current_page] << supporter if supporter
         end
       end
@@ -161,7 +166,7 @@ class DiscordDonationSupportersService
         .map { |page_number, supporters| { number: page_number, supporters: supporters } }
     end
 
-    def parse_supporter_line(line, mention_names = {})
+    def parse_supporter_line(line, mention_profiles = {})
       amounts = extract_amounts(line)
       return nil if amounts.empty?
 
@@ -170,14 +175,20 @@ class DiscordDonationSupportersService
       name_part = name_part.gsub(/\A@/, '').gsub(/[-+|,\s]+\z/, '').strip
       return nil if name_part.blank?
 
-      display_name, minecraft_name = split_names(name_part, mention_names)
+      display_name, minecraft_name = split_names(name_part, mention_profiles)
       display_name = display_name.presence || minecraft_name.presence || 'Unknown supporter'
+      avatar_url = avatar_url_from_name_part(name_part, mention_profiles)
+      banner_url = banner_url_from_name_part(name_part, mention_profiles)
+      accent_color = accent_color_from_name_part(name_part, mention_profiles)
 
       {
         display_name: display_name,
         username: minecraft_name.presence || display_name,
         minecraft_name: minecraft_name.presence,
         role: 'Donator',
+        avatar_url: avatar_url,
+        banner_url: banner_url,
+        accent_color: accent_color,
         amount: amounts.sum { |amount| amount[:value] },
         entries: 1
       }
@@ -193,31 +204,88 @@ class DiscordDonationSupportersService
           .strip
     end
 
-    def mention_names_for(message)
+    def mention_profiles_for(message)
       return {} unless message.is_a?(Hash)
 
-      message['mentions'].to_a.each_with_object({}) do |mention, names|
-        names[mention['id'].to_s] = mention['name'].to_s
+      message['mentions'].to_a.each_with_object({}) do |mention, profiles|
+        profiles[mention['id'].to_s] = {
+          name: mention['name'].to_s,
+          avatar_url: mention['avatar_url'].presence,
+          banner_url: mention['banner_url'].presence,
+          accent_color: mention['accent_color']
+        }
       end
     end
 
-    def split_names(name_part, mention_names = {})
+    def split_names(name_part, mention_profiles = {})
       if name_part.include?('|')
         parts = name_part.split('|').map(&:strip)
-        [clean_name(parts.first, mention_names), clean_name(parts[1..].join(' | '), mention_names)]
+        [clean_name(parts.first, mention_profiles), clean_name(parts[1..].join(' | '), mention_profiles)]
       else
-        [clean_name(name_part, mention_names), nil]
+        [clean_name(name_part, mention_profiles), nil]
       end
     end
 
-    def clean_name(value, mention_names = {})
+    def clean_name(value, mention_profiles = {})
       cleaned = value.to_s.gsub(/\A@/, '').gsub(/[-+,\s]+\z/, '').strip
 
       if (match = cleaned.match(/\A<@!?(\d+)>\z/))
-        mention_names[match[1]].presence || cleaned
+        mention_profiles.dig(match[1], :name).presence || cleaned
       else
         cleaned
       end
+    end
+
+    def avatar_url_from_name_part(name_part, mention_profiles = {})
+      mention_id = name_part.to_s.match(/<@!?(\d+)>/)&.[](1)
+      mention_profiles.dig(mention_id, :avatar_url) if mention_id
+    end
+
+    def banner_url_from_name_part(name_part, mention_profiles = {})
+      mention_id = name_part.to_s.match(/<@!?(\d+)>/)&.[](1)
+      mention_profiles.dig(mention_id, :banner_url) if mention_id
+    end
+
+    def accent_color_from_name_part(name_part, mention_profiles = {})
+      mention_id = name_part.to_s.match(/<@!?(\d+)>/)&.[](1)
+      mention_profiles.dig(mention_id, :accent_color) if mention_id
+    end
+
+    def fetch_discord_user_profile(user_id)
+      response = Faraday.get("#{DISCORD_API_BASE}/users/#{user_id}") do |req|
+        req.headers['Authorization'] = "Bot #{ENV.fetch('DISCORD_BOT_TOKEN')}"
+      end
+
+      return nil unless response.success?
+
+      JSON.parse(response.body)
+    rescue => e
+      Rails.logger.warn("Could not fetch Discord user profile #{user_id}: #{e.class} - #{e.message}")
+      nil
+    end
+
+    def discord_avatar_url(mention)
+      id = mention['id'].to_s
+      avatar = mention['avatar'].to_s
+
+      if avatar.present?
+        extension = avatar.start_with?('a_') ? 'gif' : 'png'
+        "https://cdn.discordapp.com/avatars/#{id}/#{avatar}.#{extension}?size=96"
+      else
+        default_index = (id.to_i >> 22) % 6
+        "https://cdn.discordapp.com/embed/avatars/#{default_index}.png"
+      end
+    end
+
+    def discord_banner_url(user)
+      return nil unless user
+
+      id = user['id'].to_s
+      banner = user['banner'].to_s
+      return nil if id.blank? || banner.blank?
+
+      extension = banner.start_with?('a_') ? 'gif' : 'png'
+      "https://cdn.discordapp.com/banners/#{id}/#{banner}.#{extension}?size=512"
     end
 
     def extract_amounts(line)
@@ -256,6 +324,9 @@ class DiscordDonationSupportersService
           merged[key][:minecraft_name] ||= supporter[:minecraft_name]
           merged[key][:username] = merged[key][:minecraft_name].presence || merged[key][:display_name]
           merged[key][:role] ||= 'Donator'
+          merged[key][:avatar_url] ||= supporter[:avatar_url]
+          merged[key][:banner_url] ||= supporter[:banner_url]
+          merged[key][:accent_color] ||= supporter[:accent_color]
         else
           merged[key] = supporter.deep_dup
         end
@@ -264,19 +335,7 @@ class DiscordDonationSupportersService
       merged.values
             .sort_by { |supporter| [-supporter[:amount], supporter[:display_name].downcase] }
             .map do |supporter|
-              # Look up Player to retrieve Discord/Minecraft avatar_url if available
-              player = nil
-              if supporter[:minecraft_name].present?
-                player = Player.find_by('LOWER(username) = ?', supporter[:minecraft_name].to_s.downcase.strip)
-              end
-              if player.nil? && supporter[:display_name].present?
-                player = Player.find_by('LOWER(username) = ?', supporter[:display_name].to_s.downcase.strip)
-              end
-              if player.nil? && supporter[:username].present?
-                player = Player.find_by('LOWER(username) = ?', supporter[:username].to_s.downcase.strip)
-              end
-
-              avatar_url = player&.avatar_url
+              avatar_url = supporter[:avatar_url].presence || player_avatar_for(supporter)
 
               {
                 display_name: supporter[:display_name],
@@ -285,13 +344,30 @@ class DiscordDonationSupportersService
                 role: supporter[:role] || 'Donator',
                 amount: supporter[:amount],
                 entries: supporter[:entries],
-                avatar_url: avatar_url
+                avatar_url: avatar_url,
+                banner_url: supporter[:banner_url],
+                accent_color: supporter[:accent_color]
               }
             end
     end
 
     def generic_display_name?(display_name)
       display_name.to_s.match?(/\A(?:deleted user#0000|unknown supporter)\z/i)
+    end
+
+    def player_avatar_for(supporter)
+      [supporter[:minecraft_name], supporter[:display_name], supporter[:username]]
+        .compact
+        .map { |name| name.to_s.strip }
+        .reject(&:blank?)
+        .each do |name|
+          player = Player.where(username: name).first
+          return player.avatar_url if player&.avatar_url.present?
+        rescue => e
+          Rails.logger.warn("Could not look up player avatar for #{name.inspect}: #{e.class} - #{e.message}")
+        end
+
+      nil
     end
 
     def read_cache

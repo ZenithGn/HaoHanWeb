@@ -4,6 +4,7 @@ import { useAuth } from "../components/AuthContext";
 import Script from "next/script";
 const serverIp = "haohansmp.io.vn";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const DISCORD_DEFAULT_BANNER = "linear-gradient(135deg, #111214, #1e1f22)";
 
 const discordProfiles = {
   "gờ không inn": {
@@ -522,6 +523,8 @@ export default function HomeClient({ dict, lang }) {
             entries: donor.entries,
             role: donor.role || "Donator",
             avatarUrl: donor.avatar_url,
+            bannerUrl: donor.banner_url,
+            accentColor: donor.accent_color,
           }));
 
         if (active && fetchedSupporters.length > 0) {
@@ -2195,6 +2198,12 @@ export default function HomeClient({ dict, lang }) {
                       const displayName = supporter.displayName || supporter.display_name || supporter.username || 'Unknown User';
                       const minecraftName = supporter.minecraftName || supporter.minecraft_name;
                       const username = supporter.username || displayName;
+                      const supporterIdentity = [displayName, minecraftName, username]
+                        .filter(Boolean)
+                        .map((value) => value.toString().toLowerCase());
+                      const useDefaultDiscordBanner = supporterIdentity.some((value) =>
+                        value === 'pico' || value === 'picosvip' || value === 'picoxsvipmax'
+                      );
                       
                       const keyName = displayName.toLowerCase().trim();
                       const fallbackProfile = discordProfiles[keyName] || {
@@ -2218,11 +2227,27 @@ export default function HomeClient({ dict, lang }) {
                                            displayName;
 
                       const discordTag = discordAccount.username ? `@${discordAccount.username}` : fallbackProfile.tag;
+                      const bannerUrl = supporter.bannerUrl || supporter.banner_url ||
+                                        discordAccount.banner_url || discordAccount.bannerUrl ||
+                                        discordAccount.guild_banner_url || discordAccount.guildBannerUrl;
+                      const accentColor = supporter.accentColor || supporter.accent_color;
+                      const rowBackground = useDefaultDiscordBanner
+                        ? DISCORD_DEFAULT_BANNER
+                        : bannerUrl
+                        ? `linear-gradient(90deg, rgba(18, 14, 12, 0.78), rgba(18, 14, 12, 0.58)), url("${bannerUrl}")`
+                        : (accentColor
+                          ? `linear-gradient(90deg, rgba(18, 14, 12, 0.8), rgba(18, 14, 12, 0.55)), linear-gradient(135deg, #${Number(accentColor).toString(16).padStart(6, '0')}, #151515)`
+                          : fallbackProfile.banner);
 
                       return (
                         <div 
                           key={`${username}-${index}`}
-                          className={`donate-donor-row ${isTop1 ? 'donate-donor-row--top1' : ''}`}
+                          className={`donate-donor-row ${isTop1 ? 'donate-donor-row--top1' : ''} ${useDefaultDiscordBanner ? 'donate-donor-row--default-discord' : ''}`}
+                          style={{
+                            backgroundImage: rowBackground,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center'
+                          }}
                         >
                           <div className="donate-donor-rank">
                             <span className="donate-rank-number">{overallIndex + 1}</span>

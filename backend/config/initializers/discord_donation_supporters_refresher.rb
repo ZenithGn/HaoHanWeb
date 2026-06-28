@@ -1,7 +1,8 @@
 if ENV['DISCORD_DONATION_AUTO_REFRESH'].to_s.downcase == 'true'
   Rails.application.config.after_initialize do
     next if defined?(Rails::Console)
-    next if defined?(Rake) && Rake.application.top_level_tasks.any?
+    next if defined?(Rake) && Rake.respond_to?(:application) && Rake.application.top_level_tasks.any?
+    next unless ([File.basename($PROGRAM_NAME)] + ARGV).any? { |arg| arg.to_s.match?(/\A(?:server|puma|thrust)\z/) }
 
     Thread.new do
       Thread.current.name = 'discord-donation-supporters-refresher' if Thread.current.respond_to?(:name=)

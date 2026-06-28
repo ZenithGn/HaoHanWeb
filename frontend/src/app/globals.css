@@ -5877,6 +5877,14 @@ details:hover {
     linear-gradient(135deg, rgba(255, 149, 46, 0.16) 0%, rgba(232, 116, 30, 0.08) 100%);
 }
 
+.donate-donor-row--default-discord::before {
+  display: none;
+}
+
+.donate-donor-row--default-discord:hover {
+  background-image: linear-gradient(135deg, #111214, #1e1f22) !important;
+}
+
 .donate-donor-rank {
   display: flex;
   align-items: center;
