@@ -11,6 +11,7 @@ export default function LoginClient({ dict, lang }) {
   const [showPassword, setShowPassword] = useState(false);
   const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
+  const [discordLoading, setDiscordLoading] = useState(false);
   const { login } = useAuth();
 
   const handleSubmit = async (e) => {
@@ -42,6 +43,25 @@ export default function LoginClient({ dict, lang }) {
       setError(dict.login.error_connection);
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDiscordLogin = async () => {
+    setError('');
+    setDiscordLoading(true);
+    try {
+      const response = await fetch(`${API_BASE}/api/auth/discord/login-url`);
+      const data = await response.json();
+
+      if (response.ok && data.url) {
+        window.location.href = data.url;
+      } else {
+        setError(data.error || dict.login.error_connection);
+        setDiscordLoading(false);
+      }
+    } catch {
+      setError(dict.login.error_connection);
+      setDiscordLoading(false);
     }
   };
 
@@ -121,8 +141,17 @@ export default function LoginClient({ dict, lang }) {
             <span>{dict.login.or}</span>
           </div>
 
-          <button type="button" className="auth-discord-btn">
-            <i className="fab fa-discord" />
+          <button
+            type="button"
+            className="auth-discord-btn"
+            onClick={handleDiscordLogin}
+            disabled={discordLoading}
+          >
+            {discordLoading ? (
+              <i className="fas fa-spinner fa-spin" />
+            ) : (
+              <i className="fab fa-discord" />
+            )}
             <span>{dict.login.discord_login}</span>
           </button>
         </form>
@@ -135,3 +164,4 @@ export default function LoginClient({ dict, lang }) {
     </div>
   );
 }
+

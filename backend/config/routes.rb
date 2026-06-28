@@ -23,6 +23,10 @@ Rails.application.routes.draw do
   post '/api/auth/discord/sync', to: 'api/discord#sync'
   post '/api/discord/role-update', to: 'api/discord#role_update'
 
+  # Discord Login (no auth required)
+  get '/api/auth/discord/login-url', to: 'api/discord#discord_login_url'
+  post '/api/auth/discord/login', to: 'api/discord#discord_login'
+
   # Donation Integration API
   post '/api/donations/payos/create', to: 'api/donations#payos_create'
   post '/api/donations/payos/webhook', to: 'api/donations#payos_webhook'

@@ -204,6 +204,126 @@ class Api::DiscordController < ApplicationController
     }, status: :ok
   end
 
+  # GET /api/auth/discord/login-url
+  # Public endpoint (no auth required) - generates Discord OAuth URL for login flow
+  def discord_login_url
+    response.headers['Cache-Control'] = 'no-store'
+    state = JwtService.encode({ purpose: 'discord_login' }, 10.minutes.from_now)
+    authorize_url = DiscordOauthService.authorize_url(state)
+    render json: { url: authorize_url }, status: :ok
+  end
+
+  # POST /api/auth/discord/login
+  # Public endpoint (no auth required) - handles Discord OAuth login/registration
+  def discord_login
+    code = params[:code]&.strip
+    if code.blank?
+      return render json: { error: 'Không tìm thấy mã xác thực OAuth!' }, status: :bad_request
+    end
+
+    # Verify state contains discord_login purpose
+    state = params[:state]&.strip
+    if state.present?
+      decoded_state = JwtService.decode(state)
+      unless decoded_state && decoded_state[:purpose] == 'discord_login'
+        return render json: { error: 'State không hợp lệ!' }, status: :bad_request
+      end
+    end
+
+    begin
+      # 1. Exchange OAuth code for access token
+      token_data = DiscordOauthService.exchange_code(code)
+      access_token = token_data['access_token']
+
+      # 2. Get Discord user profile
+      discord_profile = DiscordOauthService.fetch_user_profile(access_token)
+      discord_id = discord_profile['id']
+      discord_username = discord_profile['username']
+      avatar_hash = discord_profile['avatar']
+
+      # 3. Check Discord server membership
+      discord_roles = DiscordOauthService.fetch_guild_member_roles(discord_id)
+
+      # 4. Construct avatar URL & upload to Cloudinary
+      discord_avatar_url = if avatar_hash.present?
+                             "https://cdn.discordapp.com/avatars/#{discord_id}/#{avatar_hash}.png"
+                           else
+                             "https://cdn.discordapp.com/embed/avatars/#{(discord_id.to_i >> 22) % 6}.png"
+                           end
+      cloudinary_avatar_url = CloudinaryService.upload_image(discord_avatar_url)
+
+      # 5. Resolve highest role
+      highest_role = DiscordOauthService.determine_highest_role(discord_roles)
+
+      # 6. Find or create player
+      player = Player.find_by(discord_id: discord_id)
+
+      if player
+        # Existing player with this discord_id — log them in and sync role/avatar
+        player.update!(role: highest_role, avatar_url: cloudinary_avatar_url)
+      else
+        # No existing player with this discord_id — check for ghost profile or create new
+        ActiveRecord::Base.transaction do
+          # Check if there's an unregistered ghost with matching Discord username
+          ghost = Player.find_by(username: discord_username, password_hash: 'UNREGISTERED_GHOST')
+
+          if ghost
+            # Claim the ghost profile
+            ghost.update!(
+              password_hash: 'DISCORD_AUTH',
+              discord_id: discord_id,
+              avatar_url: cloudinary_avatar_url,
+              role: highest_role,
+              is_linked: ghost.uuid.present?
+            )
+            player = ghost
+          else
+            # Generate a unique username based on Discord username
+            base_username = discord_username.truncate(16, omission: '')
+            final_username = base_username
+
+            # If username is taken, add random suffix
+            if Player.exists?(username: final_username)
+              loop do
+                suffix = SecureRandom.hex(2) # 4 char hex
+                final_username = "#{base_username.truncate(11, omission: '')}#{suffix}"
+                break unless Player.exists?(username: final_username)
+              end
+            end
+
+            player = Player.create!(
+              username: final_username,
+              password_hash: 'DISCORD_AUTH',
+              discord_id: discord_id,
+              avatar_url: cloudinary_avatar_url,
+              role: highest_role,
+              is_linked: false
+            )
+
+            DiscordService.notify_new_user(player) rescue nil
+          end
+        end
+      end
+
+      # Broadcast update via Action Cable
+      broadcast_player_update(player)
+
+      token = JwtService.encode(user_id: player.id)
+      render json: {
+        message: 'Đăng nhập bằng Discord thành công!',
+        token: token,
+        user: serialize_user(player)
+      }, status: :ok
+
+    rescue => e
+      if e.message == "NOT_IN_SERVER"
+        render json: { error: 'Bạn phải tham gia server Discord của Hảo Hán SMP trước khi đăng nhập!' }, status: :forbidden
+      else
+        render json: { error: "Lỗi đăng nhập Discord: #{e.message}" }, status: :unprocessable_entity
+      end
+    end
+  end
+
   private
 
   def serialize_user(player)

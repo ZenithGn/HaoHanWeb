@@ -571,7 +571,12 @@
     "redirect_text": "Redirecting back to home in {count} seconds...",
     "error_title": "Linking Failed!",
     "join_discord_btn": "Join Discord Server",
-    "back_to_home_btn": "Back to Home"
+    "back_to_home_btn": "Back to Home",
+    "login_verifying_title": "Verifying login...",
+    "login_verifying_desc": "The system is authenticating your Discord account.",
+    "login_success_title": "Login Successful!",
+    "login_success_message": "Discord login successful!",
+    "login_error_title": "Login Failed!"
   },
   "alerts": {
     "discord_url_error": "Could not load Discord link URL.",

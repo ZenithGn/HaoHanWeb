@@ -21,6 +21,10 @@ class Player < ApplicationRecord
     password_hash != 'UNREGISTERED_GHOST'
   end
 
+  def discord_only_account?
+    password_hash == 'DISCORD_AUTH'
+  end
+
   before_validation :set_offline_uuid, on: :create
 
   # Helper to generate AuthMe SHA256 compatible hash
@@ -34,6 +38,7 @@ class Player < ApplicationRecord
   # Verify password against stored AuthMe SHA256 hash
   def valid_password?(password)
     return false if password_hash == 'UNREGISTERED_GHOST'
+    return false if password_hash == 'DISCORD_AUTH'
     return false if password_hash.blank?
 
     parts = password_hash.split('$')

@@ -571,7 +571,12 @@
     "redirect_text": "Quay lại trang chủ sau {count} giây...",
     "error_title": "Liên Kết Thất Bại!",
     "join_discord_btn": "Tham Gia Discord Server",
-    "back_to_home_btn": "Quay lại Trang Chủ"
+    "back_to_home_btn": "Quay lại Trang Chủ",
+    "login_verifying_title": "Đang xác thực đăng nhập...",
+    "login_verifying_desc": "Hệ thống đang xác thực tài khoản Discord của bạn.",
+    "login_success_title": "Đăng Nhập Thành Công!",
+    "login_success_message": "Đăng nhập bằng Discord thành công!",
+    "login_error_title": "Đăng Nhập Thất Bại!"
   },
   "alerts": {
     "discord_url_error": "Không thể tải URL liên kết Discord.",
