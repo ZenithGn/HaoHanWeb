@@ -1383,14 +1383,7 @@ export default function HomeClient({ dict, lang }) {
                 </div>
               ) : (
                 /* Seasons and Topic Cards view */
-                <div className="gallery-albums-container" style={{
-                  background: 'rgba(20, 18, 16, 0.15)',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 149, 46, 0.15)',
-                  borderRadius: '12px',
-                  padding: '30px',
-                  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35)'
-                }}>
+                <div className="gallery-albums" style={{ background: 'transparent', border: 'none', boxShadow: 'none', padding: 0 }}>
                   {galleryAlbums.map((album) => (
                     <section className="gallery-year" key={album.season} style={{ marginBottom: '50px' }}>
                       <div style={{
