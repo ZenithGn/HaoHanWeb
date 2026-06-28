@@ -400,7 +400,7 @@
   },
   "footer": {
     "disclaimer": "HaoHan SMP is not affiliated with Mojang Studios or Microsoft. NOT AN OFFICIAL MINECRAFT PRODUCT. NOT APPROVED BY OR ASSOCIATED WITH MOJANG OR MICROSOFT.",
-    "rights": "© 2026 HaoHan SMP. All rights reserved. Created by Ginn."
+    "rights": "© 2026 HaoHan SMP. All rights reserved. Created by Ginn & KuroHere."
   },
   "rules": {
     "title": "HaoHan SMP Rules",
@@ -724,13 +724,41 @@
           "desc": "Simple bases and buildings of the first members.",
           "coverIndex": 0,
           "images": [
-            { "index": 0, "title": "Lakeside Wooden Cabin", "desc": "A simple cozy wooden base built early on." },
-            { "index": 1, "title": "Stone Watchtower", "desc": "A stone tower looking over the spawn area." },
-            { "index": 2, "title": "Early Redstone Base", "desc": "Early simple Redstone farm experimentations." },
-            { "index": 3, "title": "Nether Portal Arch", "desc": "A nicely decorated portal leading to the Nether." },
-            { "index": 4, "title": "Cozy Warehouse", "desc": "A small resource storage point shared by friends." },
-            { "index": 5, "title": "Wheat Plantation", "desc": "Small agricultural wheat farm for basic foods." },
-            { "index": 6, "title": "Mining Quarry", "desc": "Raw material mining site near base." }
+            {
+              "index": 0,
+              "title": "Lakeside Wooden Cabin",
+              "desc": "A simple cozy wooden base built early on."
+            },
+            {
+              "index": 1,
+              "title": "Stone Watchtower",
+              "desc": "A stone tower looking over the spawn area."
+            },
+            {
+              "index": 2,
+              "title": "Early Redstone Base",
+              "desc": "Early simple Redstone farm experimentations."
+            },
+            {
+              "index": 3,
+              "title": "Nether Portal Arch",
+              "desc": "A nicely decorated portal leading to the Nether."
+            },
+            {
+              "index": 4,
+              "title": "Cozy Warehouse",
+              "desc": "A small resource storage point shared by friends."
+            },
+            {
+              "index": 5,
+              "title": "Wheat Plantation",
+              "desc": "Small agricultural wheat farm for basic foods."
+            },
+            {
+              "index": 6,
+              "title": "Mining Quarry",
+              "desc": "Raw material mining site near base."
+            }
           ]
         }
       ]
@@ -746,10 +774,26 @@
           "desc": "Explore wonderlands and creative survival bases.",
           "coverIndex": 7,
           "images": [
-            { "index": 7, "title": "Main Base (Overview)", "desc": "Panoramic view of a large base constructed by members in Season 2." },
-            { "index": 8, "title": "Base Grounds", "desc": "Close up base view featuring stone and glass architecture." },
-            { "index": 9, "title": "Lakeside Garden", "desc": "A serene lakeside garden corner." },
-            { "index": 10, "title": "Grand Headquarters", "desc": "Fully functional survival grand base." }
+            {
+              "index": 7,
+              "title": "Main Base (Overview)",
+              "desc": "Panoramic view of a large base constructed by members in Season 2."
+            },
+            {
+              "index": 8,
+              "title": "Base Grounds",
+              "desc": "Close up base view featuring stone and glass architecture."
+            },
+            {
+              "index": 9,
+              "title": "Lakeside Garden",
+              "desc": "A serene lakeside garden corner."
+            },
+            {
+              "index": 10,
+              "title": "Grand Headquarters",
+              "desc": "Fully functional survival grand base."
+            }
           ]
         },
         {
@@ -757,11 +801,31 @@
           "desc": "Shared moments and collective activities.",
           "coverIndex": 11,
           "images": [
-            { "index": 11, "title": "Server Meeting", "desc": "Members gather to discuss and take photos." },
-            { "index": 12, "title": "Boat Port Gathering", "desc": "Relaxing boating and trading activities." },
-            { "index": 13, "title": "Close Friends", "desc": "A fun moment standing together with friends." },
-            { "index": 14, "title": "Campfire Gathering", "desc": "A cozy chat around the glowing campfire." },
-            { "index": 15, "title": "Exploring the World", "desc": "Travelling companions exploring new biomes." }
+            {
+              "index": 11,
+              "title": "Server Meeting",
+              "desc": "Members gather to discuss and take photos."
+            },
+            {
+              "index": 12,
+              "title": "Boat Port Gathering",
+              "desc": "Relaxing boating and trading activities."
+            },
+            {
+              "index": 13,
+              "title": "Close Friends",
+              "desc": "A fun moment standing together with friends."
+            },
+            {
+              "index": 14,
+              "title": "Campfire Gathering",
+              "desc": "A cozy chat around the glowing campfire."
+            },
+            {
+              "index": 15,
+              "title": "Exploring the World",
+              "desc": "Travelling companions exploring new biomes."
+            }
           ]
         },
         {
@@ -769,8 +833,16 @@
           "desc": "Intense battles and survival skills.",
           "coverIndex": 16,
           "images": [
-            { "index": 16, "title": "Friendly PvP Fight", "desc": "An exciting friendly combat between early members." },
-            { "index": 17, "title": "Shield Wall Defense", "desc": "Cooperating to defend using shields." }
+            {
+              "index": 16,
+              "title": "Friendly PvP Fight",
+              "desc": "An exciting friendly combat between early members."
+            },
+            {
+              "index": 17,
+              "title": "Shield Wall Defense",
+              "desc": "Cooperating to defend using shields."
+            }
           ]
         },
         {
@@ -778,7 +850,11 @@
           "desc": "Obsessive building and grinding sessions.",
           "coverIndex": 18,
           "images": [
-            { "index": 18, "title": "Active Member Grind", "desc": "Active members grinding in the server at 21:18 on July 4, 2022." }
+            {
+              "index": 18,
+              "title": "Active Member Grind",
+              "desc": "Active members grinding in the server at 21:18 on July 4, 2022."
+            }
           ]
         }
       ]
@@ -794,12 +870,36 @@
           "desc": "Overview of spawn and central base for Season 3.",
           "coverIndex": 19,
           "images": [
-            { "index": 19, "title": "S3 Spawn Overview", "desc": "A view over the central spawn hub showing main pathways and houses." },
-            { "index": 20, "title": "Communal House Area", "desc": "A community pavilion built entirely from dark spruce wood." },
-            { "index": 21, "title": "Modern Villa Base", "desc": "A sleek luxury glass villa sitting alone on a hill." },
-            { "index": 22, "title": "Transit Station", "desc": "Underground rail station linking player bases." },
-            { "index": 23, "title": "Medieval Castle", "desc": "A fortified stone castle standing tall on a cliffside." },
-            { "index": 24, "title": "Seaside Lighthouse", "desc": "A glowing lighthouse guiding boats back to the port." }
+            {
+              "index": 19,
+              "title": "S3 Spawn Overview",
+              "desc": "A view over the central spawn hub showing main pathways and houses."
+            },
+            {
+              "index": 20,
+              "title": "Communal House Area",
+              "desc": "A community pavilion built entirely from dark spruce wood."
+            },
+            {
+              "index": 21,
+              "title": "Modern Villa Base",
+              "desc": "A sleek luxury glass villa sitting alone on a hill."
+            },
+            {
+              "index": 22,
+              "title": "Transit Station",
+              "desc": "Underground rail station linking player bases."
+            },
+            {
+              "index": 23,
+              "title": "Medieval Castle",
+              "desc": "A fortified stone castle standing tall on a cliffside."
+            },
+            {
+              "index": 24,
+              "title": "Seaside Lighthouse",
+              "desc": "A glowing lighthouse guiding boats back to the port."
+            }
           ]
         },
         {
@@ -807,9 +907,21 @@
           "desc": "Players' creative and detailed interior designs.",
           "coverIndex": 25,
           "images": [
-            { "index": 25, "title": "Cozy Living Room", "desc": "A decorated fireplace and couch setup in the living area." },
-            { "index": 26, "title": "Old Wine Cellar", "desc": "An underground cellar filled with oak barrels." },
-            { "index": 27, "title": "Study & Library", "desc": "A quiet corner layout featuring bookshelves and a study desk." }
+            {
+              "index": 25,
+              "title": "Cozy Living Room",
+              "desc": "A decorated fireplace and couch setup in the living area."
+            },
+            {
+              "index": 26,
+              "title": "Old Wine Cellar",
+              "desc": "An underground cellar filled with oak barrels."
+            },
+            {
+              "index": 27,
+              "title": "Study & Library",
+              "desc": "A quiet corner layout featuring bookshelves and a study desk."
+            }
           ]
         },
         {
@@ -817,8 +929,16 @@
           "desc": "Social interactions and server economic trade.",
           "coverIndex": 28,
           "images": [
-            { "index": 28, "title": "Scenic Date", "desc": "Two players sitting together watching the sunset." },
-            { "index": 29, "title": "Trading Deal", "desc": "Bartering valuable resources at the central market." }
+            {
+              "index": 28,
+              "title": "Scenic Date",
+              "desc": "Two players sitting together watching the sunset."
+            },
+            {
+              "index": 29,
+              "title": "Trading Deal",
+              "desc": "Bartering valuable resources at the central market."
+            }
           ]
         },
         {
@@ -826,9 +946,21 @@
           "desc": "Amusing bugs and playful server moments.",
           "coverIndex": 30,
           "images": [
-            { "index": 30, "title": "Zombie Stacking Bug", "desc": "A funny stacking glitch in the game." },
-            { "index": 31, "title": "Zombie Stacking Bug", "desc": "A funny stacking glitch in the game." },
-            { "index": 32, "title": "Admin Abuse Power", "desc": "A playful moment when the Admin shows off supreme powers." }
+            {
+              "index": 30,
+              "title": "Zombie Stacking Bug",
+              "desc": "A funny stacking glitch in the game."
+            },
+            {
+              "index": 31,
+              "title": "Zombie Stacking Bug",
+              "desc": "A funny stacking glitch in the game."
+            },
+            {
+              "index": 32,
+              "title": "Admin Abuse Power",
+              "desc": "A playful moment when the Admin shows off supreme powers."
+            }
           ]
         }
       ]
