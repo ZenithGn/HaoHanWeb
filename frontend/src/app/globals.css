@@ -5724,3 +5724,16 @@ details:hover {
     border: 1px solid rgba(255, 149, 46, 0.25) !important;
   }
 }
+
+.donate-panel-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 30px;
+}
+
+@media (max-width: 768px) {
+  .donate-panel-grid {
+    grid-template-columns: 1fr !important;
+    gap: 24px !important;
+  }
+}

@@ -276,6 +276,8 @@ export default function HomeClient({ dict, lang }) {
   const [wikiMenuOpen, setWikiMenuOpen] = useState(false);
   const [rulesMenuOpen, setRulesMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [donateName, setDonateName] = useState('');
+  const [donateResult, setDonateResult] = useState('');
 
   const [profileSubTab, setProfileSubTab] = useState("overview");
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -790,6 +792,31 @@ export default function HomeClient({ dict, lang }) {
       console.warn("Could not copy server IP.", error);
     }
   };
+  const handleDonateSubmit = async (e) => {
+    e.preventDefault();
+    setDonateResult(dict.donate.sending + donateName + '...');
+    
+    try {
+      const response = await fetch('http://localhost:8080/api/donate', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ name: donateName }),
+      });
+      
+      if (response.ok) {
+        const data = await response.json();
+        setDonateResult(dict.donate.success.replace('{name}', data.name));
+      } else {
+        setDonateResult(dict.donate.error1.replace('{name}', donateName));
+      }
+    } catch (error) {
+      console.error("Error submitting donation:", error);
+      setDonateResult(dict.donate.error2.replace('{name}', donateName));
+    }
+  };
+
   const handleLinkDiscord = async () => {
     try {
       const response = await fetch(`${API_BASE}/api/auth/discord/url`);
@@ -1971,48 +1998,173 @@ export default function HomeClient({ dict, lang }) {
           </section>
         )}
         {activeTab === "donate" && (
-          <section className="section reveal visible" id="donate" style={{ minHeight: 'calc(100vh - 400px)', padding: '40px 20px' }}>
-            <SectionStars count={20} />
-            <div className="wrap" style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
-              <div style={{
-                maxWidth: '850px',
-                width: '100%',
-                backgroundColor: '#161922',
-                border: '1px solid rgba(255, 255, 255, 0.08)',
-                borderRadius: '16px',
-                padding: '40px',
-                boxShadow: '0 12px 48px rgba(0, 0, 0, 0.5)',
-                position: 'relative',
-                overflow: 'hidden',
-                textAlign: 'left'
-              }}>
-                <div style={{
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                  right: 0,
-                  height: '4px',
-                  background: 'linear-gradient(90deg, #ff952e, #f37b18)'
-                }}></div>
-                <h2 style={{
-                  fontSize: '2.5rem',
-                  fontWeight: '800',
-                  textAlign: 'center',
-                  color: '#ff952e',
-                  marginBottom: '40px',
-                  textTransform: 'uppercase',
-                  letterSpacing: '1.5px',
-                  background: 'linear-gradient(to right, #ff952e, #fff)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  border: 'none',
-                  padding: 0
-                }}>
-                  {labels.donate}
-                </h2>
-                <div style={{ color: '#d7d8dc', fontSize: '1.05rem', lineHeight: '1.6', textAlign: 'center', padding: '40px 0', fontFamily: "'Outfit', 'Inter', sans-serif" }}>
-                  {dict.donate?.updating_message}
+          <section className="reveal visible" id="donate" style={{ minHeight: 'calc(100vh - 400px)' }}>
+            <SectionStars count={25} />
+            <div className="wrap" style={{ padding: '0 20px' }}>
+              <div className="rules-layout">
+                {/* Left Column / Sidebar */}
+                <aside className="rules-sidebar">
+                  <header className="rules-card__header">
+                    <span className="rules-card__eyebrow">
+                      <i className="fa-solid fa-heart" style={{ color: '#ff4d4d' }}></i>
+                      {isVi ? "Cảm ơn bạn" : "Thank you"}
+                    </span>
+                    <h2>{isVi ? "SUPPORT US" : "DONATION"}</h2>
+                    <p>
+                      {isVi 
+                        ? "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền."
+                        : "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features."}
+                    </p>
+                  </header>
+
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '24px', fontFamily: "'Outfit', sans-serif" }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 149, 46, 0.1)' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255, 149, 46, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <i className="fa-solid fa-bolt" style={{ color: '#ff952e', fontSize: '1.1rem' }}></i>
+                      </div>
+                      <div>
+                        <strong style={{ color: '#fff', fontSize: '0.9rem', display: 'block' }}>{isVi ? "Xử lý tự động" : "Instant sync"}</strong>
+                        <span style={{ color: '#868582', fontSize: '0.78rem' }}>{isVi ? "Nhận rank ngay lập tức" : "Receive roles instantly"}</span>
+                      </div>
+                    </div>
+
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 149, 46, 0.1)' }}>
+                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255, 149, 46, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                        <i className="fa-solid fa-shield-halved" style={{ color: '#ff952e', fontSize: '1.1rem' }}></i>
+                      </div>
+                      <div>
+                        <strong style={{ color: '#fff', fontSize: '0.9rem', display: 'block' }}>{isVi ? "Bảo mật & an toàn" : "Safe & Secure"}</strong>
+                        <span style={{ color: '#868582', fontSize: '0.78rem' }}>{isVi ? "Giao dịch mã hóa an toàn" : "Encrypted payment transfer"}</span>
+                      </div>
+                    </div>
+                  </div>
+                </aside>
+
+                {/* Right Column / Content Panel */}
+                <div className="rules-content">
+                  <div style={{
+                    background: 'rgba(20, 18, 16, 0.15)',
+                    backdropFilter: 'blur(10px)',
+                    border: '1px solid rgba(255, 149, 46, 0.15)',
+                    borderRadius: '12px',
+                    padding: '30px',
+                    boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35)',
+                    display: 'grid',
+                    gridTemplateColumns: '1fr 1fr',
+                    gap: '30px',
+                    fontFamily: "'Outfit', sans-serif"
+                  }} className="donate-panel-grid">
+                    
+                    {/* QR Code and Scan Info */}
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
+                      <div style={{
+                        background: 'rgba(0, 0, 0, 0.4)',
+                        padding: '16px',
+                        borderRadius: '12px',
+                        border: '1px solid rgba(255, 149, 46, 0.2)',
+                        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
+                        width: '240px',
+                        height: '240px',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        overflow: 'hidden'
+                      }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img 
+                          src="/assets/img/give_me_money.jpg" 
+                          alt="Donation QR Code" 
+                          style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '6px' }}
+                        />
+                      </div>
+                      <div>
+                        <strong style={{ color: '#ff952e', fontSize: '1rem', display: 'block', marginBottom: '4px' }}>
+                          {isVi ? "QUÉT MÃ QR ĐỂ DONATE" : "SCAN QR CODE TO DONATE"}
+                        </strong>
+                        <span style={{ color: '#aaa9a6', fontSize: '0.85rem', lineHeight: '1.4', display: 'block' }}>
+                          {dict.donate.desc}
+                        </span>
+                      </div>
+                    </div>
+
+                    {/* Form Input / Guide */}
+                    <form onSubmit={handleDonateSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px' }}>
+                      <h3 style={{ margin: 0, color: '#fff', fontSize: '1.4rem', fontWeight: '800', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
+                        {dict.donate.heading}
+                      </h3>
+                      
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
+                        <label htmlFor="donate-name" style={{ color: '#aaa9a6', fontSize: '0.9rem', fontWeight: '600' }}>
+                          {dict.donate.name_label}
+                        </label>
+                        <input 
+                          id="donate-name"
+                          type="text" 
+                          value={donateName}
+                          onChange={(e) => setDonateName(e.target.value)}
+                          placeholder={dict.donate.name_placeholder}
+                          required
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            padding: '12px 16px',
+                            color: '#fff',
+                            fontSize: '0.95rem',
+                            outline: 'none',
+                            fontFamily: 'inherit',
+                            transition: 'border-color 0.25s'
+                          }}
+                          onFocus={(e) => e.target.style.borderColor = 'rgba(255, 149, 46, 0.5)'}
+                          onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                        />
+                      </div>
+
+                      <button 
+                        type="submit"
+                        style={{
+                          background: 'linear-gradient(135deg, #e8741e, #f37b18)',
+                          border: 'none',
+                          color: '#fff',
+                          padding: '12px 24px',
+                          borderRadius: '8px',
+                          fontWeight: '800',
+                          fontSize: '0.95rem',
+                          cursor: 'pointer',
+                          fontFamily: 'inherit',
+                          transition: 'transform 0.2s, box-shadow 0.2s',
+                          boxShadow: '0 4px 12px rgba(232, 116, 30, 0.3)'
+                        }}
+                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                        onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
+                      >
+                        {dict.donate.submit}
+                      </button>
+
+                      {donateResult && (
+                        <div style={{ 
+                          marginTop: '10px', 
+                          padding: '12px 16px', 
+                          backgroundColor: 'rgba(255, 149, 46, 0.08)', 
+                          border: '1px solid rgba(255, 149, 46, 0.25)', 
+                          borderRadius: '8px',
+                          color: '#fff',
+                          fontSize: '0.9rem',
+                          lineHeight: '1.4'
+                        }}>
+                          {donateResult}
+                        </div>
+                      )}
+
+                      <p style={{ margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                        {isVi 
+                          ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
+                          : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
+                      </p>
+                    </form>
+                  </div>
                 </div>
+
               </div>
             </div>
           </section>
