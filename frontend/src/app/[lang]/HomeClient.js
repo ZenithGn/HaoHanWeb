@@ -1040,10 +1040,15 @@ export default function HomeClient({ dict, lang }) {
   const handleLinkDiscord = async () => {
     try {
       const token = getToken();
+      if (!token) {
+        alert(isVi ? "Bạn cần đăng nhập lại trước khi liên kết Discord." : "Please log in again before linking Discord.");
+        return;
+      }
+
       const response = await fetch(`${API_BASE}/api/auth/discord/url`, {
         cache: "no-store",
         headers: {
-          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+          Authorization: `Bearer ${token}`,
         },
       });
       const data = await response.json();

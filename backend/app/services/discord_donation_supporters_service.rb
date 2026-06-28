@@ -76,6 +76,21 @@ class DiscordDonationSupportersService
       fallback
     end
 
+    def list_cached(refresh_async: true)
+      cached = read_cache
+      payload = cached.presence || build_payload(MANUAL_MESSAGES, source: 'manual')
+
+      if refresh_async && (!cache_fresh?(cached) || (discord_configured? && cached&.dig('source') == 'manual'))
+        Thread.new do
+          refresh
+        rescue => e
+          Rails.logger.error("Discord donation supporters async refresh error: #{e.class} - #{e.message}")
+        end
+      end
+
+      payload.merge('cache' => cached.present? ? 'hit' : 'fallback')
+    end
+
     def build_payload(messages, source:)
       pages = extract_pages(messages)
       supporters = merge_supporters(pages.flat_map { |page| page[:supporters] })

@@ -5,7 +5,10 @@ class Api::DiscordController < ApplicationController
   # GET /api/auth/discord/url
   def url
     response.headers['Cache-Control'] = 'no-store'
-    authorize_url = DiscordOauthService.authorize_url(discord_link_state_from_auth_header)
+    state = discord_link_state_from_auth_header
+    return render json: { error: 'Unauthorized' }, status: :unauthorized if state.blank?
+
+    authorize_url = DiscordOauthService.authorize_url(state)
     render json: { url: authorize_url }, status: :ok
   end
 
