@@ -4005,6 +4005,18 @@ button.inline-nav__link {
   transform: none !important;
 }
 
+.profile-role-badge {
+  font-family: 'Outfit', sans-serif;
+  white-space: nowrap;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+  text-shadow: 0 0 12px currentColor;
+}
+
+.profile-role-badge:hover {
+  filter: brightness(1.15);
+  transform: scale(1.04);
+}
+
 .btn-profile-logout {
   background: rgba(240, 71, 71, 0.1);
   color: #f04747;

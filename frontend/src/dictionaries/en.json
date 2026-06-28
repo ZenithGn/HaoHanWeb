@@ -476,6 +476,7 @@
     "nav_connections": "Connections",
     "welcome_message": "Welcome to HaoHan SMP! Complete your profile and start your adventure.",
     "default_role": "Member",
+    "role_display": "Role: {role}",
     "settings_title": "Account Settings",
     "settings_desc": "Update your email address and change your password.",
     "settings_current_password": "Current Password",

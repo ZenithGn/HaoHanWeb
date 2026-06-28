@@ -298,6 +298,28 @@ export default function HomeClient({ dict, lang }) {
   const profileNavRef = useRef(null);
   const profileNavIndicatorRef = useRef(null);
 
+  // Discord role → color mapping (matches server role colors)
+  const ROLE_COLORS = {
+    'Owner':          { color: '#f1c40f', bg: 'rgba(241, 196, 15, 0.12)', border: 'rgba(241, 196, 15, 0.25)' },
+    'Administrator':  { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
+    'Cán Bộ':         { color: '#2ecc71', bg: 'rgba(46, 204, 113, 0.12)', border: 'rgba(46, 204, 113, 0.25)' },
+    'Hảo Hán Bot':    { color: '#3498db', bg: 'rgba(52, 152, 219, 0.12)', border: 'rgba(52, 152, 219, 0.25)' },
+    'Helper':         { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
+    'HaoHan Support': { color: '#2ecc71', bg: 'rgba(46, 204, 113, 0.12)', border: 'rgba(46, 204, 113, 0.25)' },
+    'Donator':        { color: '#f39c12', bg: 'rgba(243, 156, 18, 0.12)', border: 'rgba(243, 156, 18, 0.25)' },
+    'Animator':       { color: '#9b59b6', bg: 'rgba(155, 89, 182, 0.12)', border: 'rgba(155, 89, 182, 0.25)' },
+    'Booster':        { color: '#f47fff', bg: 'rgba(244, 127, 255, 0.12)', border: 'rgba(244, 127, 255, 0.25)' },
+    'Dev':            { color: '#3498db', bg: 'rgba(52, 152, 219, 0.12)', border: 'rgba(52, 152, 219, 0.25)' },
+    'Youtuber':       { color: '#e74c3c', bg: 'rgba(231, 76, 60, 0.12)', border: 'rgba(231, 76, 60, 0.25)' },
+    'Emoji Man':      { color: '#1abc9c', bg: 'rgba(26, 188, 156, 0.12)', border: 'rgba(26, 188, 156, 0.25)' },
+    'Members':        { color: '#95a5a6', bg: 'rgba(149, 165, 166, 0.12)', border: 'rgba(149, 165, 166, 0.25)' },
+    'default':        { color: '#95a5a6', bg: 'rgba(149, 165, 166, 0.12)', border: 'rgba(149, 165, 166, 0.25)' },
+  };
+
+  const getRoleStyle = (roleName) => {
+    return ROLE_COLORS[roleName] || ROLE_COLORS['default'];
+  };
+
   useEffect(() => {
     if (user && user.email) {
       setNewEmail(user.email);
@@ -1762,7 +1784,30 @@ export default function HomeClient({ dict, lang }) {
                           <div className="profile-field-item">
                             <i className="profile-field-icon fa-solid fa-shield-halved"></i>
                             <span className="profile-field-label">{dict.profile.role_label}</span>
-                            <span className="profile-field-value">{user.role || dict.profile.default_role}</span>
+                            <span className="profile-field-value">
+                              {(() => {
+                                const roleName = user.role || 'default';
+                                const roleStyle = getRoleStyle(roleName);
+                                return (
+                                  <span className="profile-role-badge" style={{
+                                    color: roleStyle.color,
+                                    background: roleStyle.bg,
+                                    border: `1px solid ${roleStyle.border}`,
+                                    padding: '4px 12px',
+                                    borderRadius: '20px',
+                                    fontSize: '0.85rem',
+                                    fontWeight: '600',
+                                    display: 'inline-flex',
+                                    alignItems: 'center',
+                                    gap: '6px',
+                                    letterSpacing: '0.3px'
+                                  }}>
+                                    <i className="fa-solid fa-circle" style={{ fontSize: '0.45rem', color: roleStyle.color }}></i>
+                                    {roleName === 'default' ? dict.profile.default_role : roleName}
+                                  </span>
+                                );
+                              })()}
+                            </span>
                           </div>
                           <div className="profile-field-item">
                             <i className="profile-field-icon fa-solid fa-fingerprint"></i>
@@ -2079,6 +2124,32 @@ export default function HomeClient({ dict, lang }) {
                                     {/* eslint-disable-next-line @next/next/no-img-element */}
                                     <img src={user.avatar_url} alt="Discord avatar" style={{ width: '28px', height: '28px', borderRadius: '50%' }} />
                                     <span style={{ fontSize: '0.85rem', color: '#aaa9a6' }}>Discord Account Connected</span>
+                                  </div>
+                                )}
+                                {user.role && user.role !== 'default' && (
+                                  <div style={{ display: 'flex', alignItems: 'center', gap: '8px', marginTop: '6px' }}>
+                                    <span style={{ fontSize: '0.8rem', color: '#868582' }}>{dict.profile.role_label}:</span>
+                                    {(() => {
+                                      const roleStyle = getRoleStyle(user.role);
+                                      return (
+                                        <span className="profile-role-badge" style={{
+                                          color: roleStyle.color,
+                                          background: roleStyle.bg,
+                                          border: `1px solid ${roleStyle.border}`,
+                                          padding: '3px 10px',
+                                          borderRadius: '20px',
+                                          fontSize: '0.78rem',
+                                          fontWeight: '600',
+                                          display: 'inline-flex',
+                                          alignItems: 'center',
+                                          gap: '5px',
+                                          letterSpacing: '0.3px'
+                                        }}>
+                                          <i className="fa-solid fa-circle" style={{ fontSize: '0.4rem', color: roleStyle.color }}></i>
+                                          {user.role}
+                                        </span>
+                                      );
+                                    })()}
                                   </div>
                                 )}
                                 <div style={{ marginTop: '4px' }}>

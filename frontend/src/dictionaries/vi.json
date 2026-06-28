@@ -476,6 +476,7 @@
     "nav_connections": "Kết nối",
     "welcome_message": "Chào mừng đến với Hào Hán SMP! Hoàn thiện hồ sơ và bắt đầu cuộc phiêu lưu của bạn.",
     "default_role": "Thành viên",
+    "role_display": "Chức vụ: {role}",
     "settings_title": "Cấu hình tài khoản",
     "settings_desc": "Cập nhật địa chỉ email và đổi mật khẩu của bạn.",
     "settings_current_password": "Mật khẩu hiện tại",
