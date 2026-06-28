@@ -1,10 +1,11 @@
 class Api::DiscordController < ApplicationController
-  before_action :authenticate_user!, only: [:callback, :sync]
+  before_action :authenticate_user!, only: [:sync]
   before_action :authenticate_bot_or_server!, only: [:role_update]
 
   # GET /api/auth/discord/url
   def url
-    authorize_url = DiscordOauthService.authorize_url
+    response.headers['Cache-Control'] = 'no-store'
+    authorize_url = DiscordOauthService.authorize_url(discord_link_state_from_auth_header)
     render json: { url: authorize_url }, status: :ok
   end
 
@@ -14,6 +15,11 @@ class Api::DiscordController < ApplicationController
     code = params[:code]&.strip
     if code.blank?
       return render json: { error: 'Không tìm thấy mã xác thực OAuth!' }, status: :bad_request
+    end
+
+    @current_user = user_from_auth_header || user_from_discord_state
+    unless current_user
+      return render json: { error: 'Unauthorized' }, status: :unauthorized
     end
 
     begin
@@ -98,6 +104,7 @@ class Api::DiscordController < ApplicationController
 
       render json: {
         message: 'Liên kết Discord thành công!',
+        token: JwtService.encode(user_id: current_user.id),
         user: serialize_user(current_user)
       }, status: :ok
 
@@ -222,5 +229,26 @@ class Api::DiscordController < ApplicationController
     if token.blank? || !ActiveSupport::SecurityUtils.secure_compare(token, server_token)
       render json: { error: 'Unauthorized Bot/Server' }, status: :unauthorized
     end
+  end
+
+  def discord_link_state_from_auth_header
+    user = user_from_auth_header
+    return nil unless user
+
+    JwtService.encode({ user_id: user.id, purpose: 'discord_link' }, 10.minutes.from_now)
+  end
+
+  def user_from_auth_header
+    header = request.headers['Authorization']
+    token = header.split(' ').last if header.present?
+    decoded = JwtService.decode(token) if token.present?
+    Player.find_by(id: decoded[:user_id]) if decoded
+  end
+
+  def user_from_discord_state
+    decoded = JwtService.decode(params[:state].to_s)
+    return nil unless decoded && decoded[:purpose] == 'discord_link'
+
+    Player.find_by(id: decoded[:user_id])
   end
 end

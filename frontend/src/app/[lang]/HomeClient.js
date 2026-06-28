@@ -1039,7 +1039,13 @@ export default function HomeClient({ dict, lang }) {
 
   const handleLinkDiscord = async () => {
     try {
-      const response = await fetch(`${API_BASE}/api/auth/discord/url`);
+      const token = getToken();
+      const response = await fetch(`${API_BASE}/api/auth/discord/url`, {
+        cache: "no-store",
+        headers: {
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
+        },
+      });
       const data = await response.json();
       if (response.ok && data.url) {
         window.location.href = data.url;

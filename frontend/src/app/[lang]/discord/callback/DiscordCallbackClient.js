@@ -6,7 +6,7 @@ import { useAuth } from '../../../components/AuthContext';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 
-export default function DiscordCallbackClient({ dict, lang, code }) {
+export default function DiscordCallbackClient({ dict, lang, code, state }) {
   const router = useRouter();
   const { login, getToken } = useAuth();
   
@@ -29,7 +29,7 @@ export default function DiscordCallbackClient({ dict, lang, code }) {
 
     const linkDiscord = async () => {
       const token = getToken();
-      if (!token) {
+      if (!token && !state) {
         setStatus('error');
         setMessage(t.auth_required || 'Bạn cần đăng nhập trước khi thực hiện liên kết Discord.');
         return;
@@ -40,16 +40,16 @@ export default function DiscordCallbackClient({ dict, lang, code }) {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
-            'Authorization': `Bearer ${token}`
+            ...(token ? { Authorization: `Bearer ${token}` } : {})
           },
-          body: JSON.stringify({ code })
+          body: JSON.stringify({ code, state })
         });
 
         const data = await response.json();
 
         if (response.ok) {
           // Update user session locally
-          login(token, data.user);
+          login(data.token || token, data.user);
           setStatus('success');
           setMessage(data.message || t.success_message || 'Liên kết tài khoản Discord thành công!');
           
@@ -75,7 +75,7 @@ export default function DiscordCallbackClient({ dict, lang, code }) {
     };
 
     linkDiscord();
-  }, [code, dict, lang, getToken, login, router, t]);
+  }, [code, state, dict, lang, getToken, login, router, t]);
 
   return (
     <div className="auth-page">
