@@ -264,13 +264,28 @@ class DiscordDonationSupportersService
       merged.values
             .sort_by { |supporter| [-supporter[:amount], supporter[:display_name].downcase] }
             .map do |supporter|
+              # Look up Player to retrieve Discord/Minecraft avatar_url if available
+              player = nil
+              if supporter[:minecraft_name].present?
+                player = Player.find_by('LOWER(username) = ?', supporter[:minecraft_name].to_s.downcase.strip)
+              end
+              if player.nil? && supporter[:display_name].present?
+                player = Player.find_by('LOWER(username) = ?', supporter[:display_name].to_s.downcase.strip)
+              end
+              if player.nil? && supporter[:username].present?
+                player = Player.find_by('LOWER(username) = ?', supporter[:username].to_s.downcase.strip)
+              end
+
+              avatar_url = player&.avatar_url
+
               {
                 display_name: supporter[:display_name],
                 username: supporter[:username],
                 minecraft_name: supporter[:minecraft_name],
                 role: supporter[:role] || 'Donator',
                 amount: supporter[:amount],
-                entries: supporter[:entries]
+                entries: supporter[:entries],
+                avatar_url: avatar_url
               }
             end
     end

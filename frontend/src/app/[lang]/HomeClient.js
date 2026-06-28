@@ -4,8 +4,51 @@ import { useAuth } from "../components/AuthContext";
 import Script from "next/script";
 const serverIp = "haohansmp.io.vn";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+
+const discordProfiles = {
+  "gờ không inn": {
+    avatar: "https://api.dicebear.com/7.x/thumbs/svg?seed=ginn&backgroundColor=ffb6c1",
+    status: "dnd",
+    customStatus: "Automemories",
+    banner: "linear-gradient(135deg, #2c1a4d, #140b2b)",
+    decoration: "cat-ears",
+    tag: "@ginkei"
+  },
+  "ramon": {
+    avatar: "https://api.dicebear.com/7.x/thumbs/svg?seed=ramon&backgroundColor=c0a0c0",
+    status: "online",
+    customStatus: "unbound",
+    banner: "linear-gradient(135deg, #4d1a2c, #2b0b14)",
+    decoration: "cat-ears",
+    tag: "@0ramen"
+  },
+  "duc": {
+    avatar: "https://api.dicebear.com/7.x/thumbs/svg?seed=duc&backgroundColor=a0c0e0",
+    status: "dnd",
+    customStatus: "🍪",
+    banner: "linear-gradient(135deg, #1a2c4d, #0b142b)",
+    decoration: "cat-ears",
+    tag: "@duc_sei"
+  },
+  "wat": {
+    avatar: "https://api.dicebear.com/7.x/thumbs/svg?seed=wat&backgroundColor=a0e0c0",
+    status: "dnd",
+    customStatus: "wat2301 sẽ mua G63",
+    banner: "linear-gradient(135deg, #1a4d3c, #0b2b1a)",
+    decoration: "none",
+    tag: "@wat_sei"
+  },
+  "pico": {
+    avatar: "https://api.dicebear.com/7.x/thumbs/svg?seed=pico&backgroundColor=e0c0a0",
+    status: "dnd",
+    customStatus: "PicoXSVipMax",
+    banner: "linear-gradient(135deg, #4d3c1a, #2b1a0b)",
+    decoration: "cat-ears",
+    tag: "@pico"
+  }
+};
 const DONATION_PRESETS = [20000, 50000, 100000, 200000, 500000];
-const DONORS_PER_PAGE = 10;
+const DONORS_PER_PAGE = 5;
 const MANUAL_SUPPORTERS = [
   { username: "PicoXSvipMax", displayName: "Pico", amount: 3550000, note: "TYSM" },
   { username: "Ginkei", displayName: "Gỡ không inn", amount: 50000 },
@@ -2125,317 +2168,205 @@ export default function HomeClient({ dict, lang }) {
         {activeTab === "donate" && (
           <section className="reveal visible" id="donate" style={{ minHeight: 'calc(100vh - 400px)' }}>
             <SectionStars count={25} />
-            <div className="wrap" style={{ padding: '0 20px' }}>
-              <div className="rules-layout">
-                {/* Left Column / Supporter List */}
-                <aside className="rules-sidebar">
-                  <header className="rules-card__header">
-                    <span className="rules-card__eyebrow">
+            <div className="wrap donate-page-wrap">
+              <div className="donate-page-layout">
+                {/* Left Column: Supporters */}
+                <div className="donate-supporters-col">
+                  <div className="donate-supporters-header">
+                    <span className="donate-eyebrow">
                       <i className="fa-solid fa-heart" style={{ color: '#ff4d4d' }}></i>
-                      {isVi ? "Cảm ơn bạn" : "Thank you"}
+                      {isVi ? "CẢM ƠN BẠN" : "THANK YOU"}
                     </span>
-                    <h2>{isVi ? "Người đã ủng hộ" : "Supporters"}</h2>
-                    <p>
+                    <h2 className="donate-supporters-title">
+                      {isVi ? "Supporters" : "Supporters"}
+                    </h2>
+                    <p className="donate-supporters-desc">
                       {isVi 
                         ? "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền."
                         : "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features."}
                     </p>
-                  </header>
+                  </div>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '22px', fontFamily: "'Outfit', sans-serif" }}>
-                    {visibleSupporters.map((supporter, index) => (
-                      <div key={`${supporter.username}-${index}`} style={{
-                        display: 'grid',
-                        gridTemplateColumns: '34px minmax(0, 1fr)',
-                        gap: '10px',
-                        alignItems: 'center',
-                        background: 'rgba(255, 255, 255, 0.03)',
-                        padding: '10px',
-                        borderRadius: '8px',
-                        border: '1px solid rgba(255, 149, 46, 0.12)'
-                      }}>
-                        <div style={{
-                          width: '34px',
-                          height: '34px',
-                          borderRadius: '8px',
-                          background: 'rgba(255, 149, 46, 0.12)',
-                          color: '#ffb25f',
-                          display: 'flex',
-                          alignItems: 'center',
-                          justifyContent: 'center',
-                          fontWeight: '800',
-                          fontSize: '0.8rem'
-                        }}>
-                          {(currentSupporterPage - 1) * DONORS_PER_PAGE + index + 1}
-                        </div>
-                        <div style={{ minWidth: 0 }}>
-                          <strong style={{ color: '#fff', fontSize: '0.92rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {supporter.displayName || supporter.username}
-                          </strong>
-                          <span style={{ color: '#aaa9a6', fontSize: '0.78rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
-                            {supporter.username} · {formatVnd(supporter.amount || supporter.total_donated)}
-                            {supporter.note ? ` (${supporter.note})` : ''}
-                          </span>
-                        </div>
-                      </div>
-                    ))}
+                  <div className="donate-leaderboard">
+                    {visibleSupporters.map((supporter, index) => {
+                      const overallIndex = (currentSupporterPage - 1) * DONORS_PER_PAGE + index;
+                      const isTop1 = overallIndex === 0;
+                      
+                      const displayName = supporter.displayName || supporter.display_name || supporter.username || 'Unknown User';
+                      const minecraftName = supporter.minecraftName || supporter.minecraft_name;
+                      const username = supporter.username || displayName;
+                      
+                      const keyName = displayName.toLowerCase().trim();
+                      const fallbackProfile = discordProfiles[keyName] || {
+                        status: overallIndex % 3 === 0 ? "dnd" : (overallIndex % 3 === 1 ? "online" : "idle"),
+                        customStatus: supporter.note || "",
+                        banner: "linear-gradient(135deg, #1e1e24, #121214)",
+                        tag: `@${displayName.toLowerCase().replace(/\s+/g, '')}`
+                      };
 
-                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginTop: '8px' }}>
-                      <button
+                      const discordAccount = supporter.discordAccount || supporter.discord_account || {};
+                      
+                      // Resolve Discord avatar if synced, else fallback to Discord default avatar
+                      const avatar = supporter.avatarUrl || supporter.avatar_url || 
+                                     discordAccount.guild_avatar_url || discordAccount.guildAvatarUrl || 
+                                     discordAccount.avatar_url || discordAccount.avatarUrl || 
+                                     fallbackProfile.avatar ||
+                                     `https://cdn.discordapp.com/embed/avatars/${(username.charCodeAt(0) || 0) % 6}.png`;
+
+                      const displayTitle = discordAccount.guild_nickname || discordAccount.guildNickname || 
+                                           discordAccount.global_name || discordAccount.globalName || 
+                                           displayName;
+
+                      const discordTag = discordAccount.username ? `@${discordAccount.username}` : fallbackProfile.tag;
+
+                      return (
+                        <div 
+                          key={`${username}-${index}`}
+                          className={`donate-donor-row ${isTop1 ? 'donate-donor-row--top1' : ''}`}
+                        >
+                          <div className="donate-donor-rank">
+                            <span className="donate-rank-number">{overallIndex + 1}</span>
+                          </div>
+                          
+                          <div className="donate-donor-avatar" style={{ position: 'relative', width: '38px', height: '38px', borderRadius: '50%', overflow: 'hidden' }}>
+                            {/* eslint-disable-next-line @next/next/no-img-element */}
+                            <img 
+                              src={avatar} 
+                              alt={displayTitle}
+                              style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                              onError={(e) => {
+                                e.target.src = `https://minotar.net/avatar/char/40`;
+                              }}
+                            />
+                          </div>
+
+                          <div className="donate-donor-info">
+                            <strong className="donate-donor-name">{displayTitle}</strong>
+                            <span className="donate-donor-handle">{discordTag}</span>
+                          </div>
+
+                          <div className="donate-donor-amount">
+                            {formatVnd(supporter.amount || supporter.total_donated)}
+                          </div>
+                        </div>
+                      );
+                    })}
+                  </div>
+
+                  {/* Pagination */}
+                  {supporterPageCount > 1 && (
+                    <div className="donate-pagination">
+                      <button 
                         type="button"
-                        onClick={() => setSupporterPage((page) => Math.max(1, page - 1))}
+                        className="donate-page-btn"
+                        onClick={() => setSupporterPage(p => Math.max(1, p - 1))}
                         disabled={currentSupporterPage === 1}
-                        style={{
-                          width: '38px',
-                          height: '38px',
-                          borderRadius: '8px',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          background: currentSupporterPage === 1 ? 'rgba(255,255,255,0.03)' : 'rgba(255, 149, 46, 0.14)',
-                          color: currentSupporterPage === 1 ? '#666' : '#fff',
-                          cursor: currentSupporterPage === 1 ? 'not-allowed' : 'pointer'
-                        }}
-                        aria-label={isVi ? "Trang trước" : "Previous page"}
                       >
                         <i className="fa-solid fa-chevron-left"></i>
                       </button>
-                      <span style={{ color: '#aaa9a6', fontSize: '0.85rem', fontWeight: '700' }}>
-                        {isVi ? "Trang" : "Page"} {currentSupporterPage}/{supporterPageCount}
+                      <span className="donate-page-info">
+                        Page {currentSupporterPage}/{supporterPageCount}
                       </span>
-                      <button
+                      <button 
                         type="button"
-                        onClick={() => setSupporterPage((page) => Math.min(supporterPageCount, page + 1))}
+                        className="donate-page-btn"
+                        onClick={() => setSupporterPage(p => Math.min(supporterPageCount, p + 1))}
                         disabled={currentSupporterPage === supporterPageCount}
-                        style={{
-                          width: '38px',
-                          height: '38px',
-                          borderRadius: '8px',
-                          border: '1px solid rgba(255, 255, 255, 0.12)',
-                          background: currentSupporterPage === supporterPageCount ? 'rgba(255,255,255,0.03)' : 'rgba(255, 149, 46, 0.14)',
-                          color: currentSupporterPage === supporterPageCount ? '#666' : '#fff',
-                          cursor: currentSupporterPage === supporterPageCount ? 'not-allowed' : 'pointer'
-                        }}
-                        aria-label={isVi ? "Trang sau" : "Next page"}
                       >
                         <i className="fa-solid fa-chevron-right"></i>
                       </button>
                     </div>
-                  </div>
+                  )}
+                </div>
 
-                  <div style={{ display: 'none', flexDirection: 'column', gap: '16px', marginTop: '24px', fontFamily: "'Outfit', sans-serif" }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 149, 46, 0.1)' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255, 149, 46, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <i className="fa-solid fa-bolt" style={{ color: '#ff952e', fontSize: '1.1rem' }}></i>
-                      </div>
-                      <div>
-                        <strong style={{ color: '#fff', fontSize: '0.9rem', display: 'block' }}>{isVi ? "Xử lý tự động" : "Instant sync"}</strong>
-                        <span style={{ color: '#868582', fontSize: '0.78rem' }}>{isVi ? "Nhận rank ngay lập tức" : "Receive roles instantly"}</span>
-                      </div>
-                    </div>
-
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 149, 46, 0.1)' }}>
-                      <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255, 149, 46, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        <i className="fa-solid fa-shield-halved" style={{ color: '#ff952e', fontSize: '1.1rem' }}></i>
-                      </div>
-                      <div>
-                        <strong style={{ color: '#fff', fontSize: '0.9rem', display: 'block' }}>{isVi ? "Bảo mật & an toàn" : "Safe & Secure"}</strong>
-                        <span style={{ color: '#868582', fontSize: '0.78rem' }}>{isVi ? "Giao dịch mã hóa an toàn" : "Encrypted payment transfer"}</span>
-                      </div>
-                    </div>
-                  </div>
-                </aside>
-
-                {/* Right Column / Content Panel */}
-                <div className="rules-content">
-                  <div style={{
-                    background: 'rgba(20, 18, 16, 0.15)',
-                    backdropFilter: 'blur(10px)',
-                    border: '1px solid rgba(255, 149, 46, 0.15)',
-                    borderRadius: '12px',
-                    padding: '30px',
-                    boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35)',
-                    display: 'grid',
-                    gridTemplateColumns: '1fr',
-                    gap: '30px',
-                    fontFamily: "'Outfit', sans-serif"
-                  }} className="donate-panel-grid">
+                {/* Right Column: Donation Form */}
+                <div className="donate-form-col">
+                  <form onSubmit={handleDonateSubmit} className="donate-form">
+                    <h2 className="donate-form-title">
+                      {isVi ? "Cổng Quyên Góp" : "Donation Portal"}
+                    </h2>
                     
-                    {/* QR Code and Scan Info */}
-                    <div style={{ display: 'none', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
-                      <div style={{
-                        background: 'rgba(0, 0, 0, 0.4)',
-                        padding: '16px',
-                        borderRadius: '12px',
-                        border: '1px solid rgba(255, 149, 46, 0.2)',
-                        boxShadow: '0 8px 24px rgba(0,0,0,0.3)',
-                        width: '240px',
-                        height: '240px',
-                        display: 'flex',
-                        alignItems: 'center',
-                        justifyContent: 'center',
-                        overflow: 'hidden'
-                      }}>
-                        {/* eslint-disable-next-line @next/next/no-img-element */}
-                        <img 
-                          src="/assets/img/give_me_money.jpg" 
-                          alt="Donation QR Code" 
-                          style={{ width: '100%', height: '100%', objectFit: 'contain', borderRadius: '6px' }}
-                        />
-                      </div>
-                      <div>
-                        <strong style={{ color: '#ff952e', fontSize: '1rem', display: 'block', marginBottom: '4px' }}>
-                          {isVi ? "QUÉT MÃ QR ĐỂ DONATE" : "SCAN QR CODE TO DONATE"}
-                        </strong>
-                        <span style={{ color: '#aaa9a6', fontSize: '0.85rem', lineHeight: '1.4', display: 'block' }}>
-                          {dict.donate.desc}
-                        </span>
-                      </div>
+                    {/* Minecraft character name */}
+                    <div className="donate-field">
+                      <label htmlFor="donate-name" className="donate-label">
+                        {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
+                      </label>
+                      <input 
+                        id="donate-name"
+                        type="text" 
+                        value={donateName}
+                        onChange={(e) => setDonateName(e.target.value)}
+                        placeholder={dict.donate.name_placeholder}
+                        required
+                        className="donate-input"
+                      />
                     </div>
 
-                    {/* Form Input / Guide */}
-                    <form onSubmit={handleDonateSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '18px' }}>
-                      <h3 style={{ margin: 0, color: '#fff', fontSize: '1.4rem', fontWeight: '800', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
-                        {isVi ? "Ủng hộ bằng PayOS" : "Support with PayOS"}
-                      </h3>
+                    {/* Support amount */}
+                    <div className="donate-field">
+                      <label htmlFor="donate-amount" className="donate-label">
+                        {isVi ? "Số tiền ủng hộ" : "Support amount"}
+                      </label>
                       
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-                        <label htmlFor="donate-name" style={{ color: '#aaa9a6', fontSize: '0.9rem', fontWeight: '600' }}>
-                          {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
-                        </label>
-                        <input 
-                          id="donate-name"
-                          type="text" 
-                          value={donateName}
-                          onChange={(e) => setDonateName(e.target.value)}
-                          placeholder={dict.donate.name_placeholder}
-                          required
-                          style={{
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
-                            padding: '12px 16px',
-                            color: '#fff',
-                            fontSize: '0.95rem',
-                            outline: 'none',
-                            fontFamily: 'inherit',
-                            transition: 'border-color 0.25s'
-                          }}
-                          onFocus={(e) => e.target.style.borderColor = 'rgba(255, 149, 46, 0.5)'}
-                          onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
-                        />
+                      <div className="donate-presets">
+                        {DONATION_PRESETS.map((preset) => {
+                          const isSelected = Number(donateAmount) === preset;
+                          return (
+                            <button
+                              key={preset}
+                              type="button"
+                              onClick={() => setDonateAmount(preset.toString())}
+                              className={`donate-preset-btn ${isSelected ? 'donate-preset-btn--active' : ''}`}
+                            >
+                              {new Intl.NumberFormat('vi-VN').format(preset)} đ
+                            </button>
+                          );
+                        })}
                       </div>
 
-                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
-                        <label htmlFor="donate-amount" style={{ color: '#aaa9a6', fontSize: '0.9rem', fontWeight: '600' }}>
-                          {isVi ? "Số tiền ủng hộ" : "Support amount"}
-                        </label>
-                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '8px' }}>
-                          {DONATION_PRESETS.map((preset) => {
-                            const isSelected = Number(donateAmount) === preset;
-                            return (
-                              <button
-                                key={preset}
-                                type="button"
-                                onClick={() => setDonateAmount(preset.toString())}
-                                style={{
-                                  border: `1px solid ${isSelected ? 'rgba(255, 149, 46, 0.65)' : 'rgba(255, 255, 255, 0.1)'}`,
-                                  background: isSelected ? 'rgba(255, 149, 46, 0.16)' : 'rgba(255, 255, 255, 0.03)',
-                                  color: isSelected ? '#ffb25f' : '#ddd',
-                                  borderRadius: '8px',
-                                  padding: '10px 8px',
-                                  cursor: 'pointer',
-                                  fontWeight: '800',
-                                  fontSize: '0.82rem',
-                                  fontFamily: 'inherit'
-                                }}
-                              >
-                                {formatVnd(preset)}
-                              </button>
-                            );
-                          })}
-                        </div>
-                        <input
-                          id="donate-amount"
-                          type="number"
-                          min="1000"
-                          step="1000"
-                          value={donateAmount}
-                          onChange={(e) => setDonateAmount(e.target.value)}
-                          placeholder={isVi ? "Nhập số tiền khác" : "Enter another amount"}
-                          required
-                          style={{
-                            background: 'rgba(255, 255, 255, 0.03)',
-                            border: '1px solid rgba(255, 255, 255, 0.1)',
-                            borderRadius: '8px',
-                            padding: '12px 16px',
-                            color: '#fff',
-                            fontSize: '0.95rem',
-                            outline: 'none',
-                            fontFamily: 'inherit',
-                            transition: 'border-color 0.25s'
-                          }}
-                          onFocus={(e) => e.target.style.borderColor = 'rgba(255, 149, 46, 0.5)'}
-                          onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
-                        />
+                      <input 
+                        id="donate-amount"
+                        type="number" 
+                        min="1000"
+                        step="1000"
+                        value={donateAmount}
+                        onChange={(e) => setDonateAmount(e.target.value)}
+                        placeholder={isVi ? "Nhập số tiền..." : "Enter amount..."}
+                        required
+                        className="donate-input"
+                      />
+                    </div>
+
+                    <button type="submit" disabled={donateLoading} className="donate-submit-btn">
+                      {donateLoading ? (isVi ? "Đang tạo..." : "Creating...") : (isVi ? "Ủng hộ chúng tôi" : "Support us")}
+                    </button>
+
+                    <div className="donate-disclaimer">
+                      <p>{isVi 
+                        ? "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán."
+                        : "*Your character name is used for support verification after payment."}</p>
+                      <p>{isVi 
+                        ? "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau."
+                        : "You will be redirected to PayOS to complete the secure checkout."}</p>
+                    </div>
+
+                    {donateResult && (
+                      <div className="donate-result-msg">
+                        {donateResult}
                       </div>
-
-                      <button 
-                        type="submit"
-                        disabled={donateLoading}
-                        style={{
-                          background: 'linear-gradient(135deg, #e8741e, #f37b18)',
-                          border: 'none',
-                          color: '#fff',
-                          padding: '12px 24px',
-                          borderRadius: '8px',
-                          fontWeight: '800',
-                          fontSize: '0.95rem',
-                          cursor: donateLoading ? 'wait' : 'pointer',
-                          fontFamily: 'inherit',
-                          opacity: donateLoading ? 0.72 : 1,
-                          transition: 'transform 0.2s, box-shadow 0.2s',
-                          boxShadow: '0 4px 12px rgba(232, 116, 30, 0.3)'
-                        }}
-                        onMouseOver={(e) => {
-                          if (!donateLoading) e.currentTarget.style.transform = 'translateY(-1px)';
-                        }}
-                        onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
-                      >
-                        {donateLoading ? (isVi ? "Đang tạo..." : "Creating...") : (isVi ? "Ủng hộ chúng tôi" : "Support us")}
-                      </button>
-
-                      {donateResult && (
-                        <div style={{ 
-                          marginTop: '10px', 
-                          padding: '12px 16px', 
-                          backgroundColor: 'rgba(255, 149, 46, 0.08)', 
-                          border: '1px solid rgba(255, 149, 46, 0.25)', 
-                          borderRadius: '8px',
-                          color: '#fff',
-                          fontSize: '0.9rem',
-                          lineHeight: '1.4'
-                        }}>
-                          {donateResult}
-                        </div>
-                      )}
-
-                      <p style={{ margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
-                        {isVi
-                          ? "*Tên nhân vật dùng để admin đối chiếu/support sau thanh toán. Bạn sẽ được chuyển sang PayOS để hoàn tất giao dịch an toàn."
-                          : "*Your character name is used for support verification after payment. You will be redirected to PayOS to complete the secure checkout."}
-                      </p>
-
-                      <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
-                        {isVi 
-                          ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
-                          : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
-                      </p>
-                    </form>
+                    )}
+                    
+                    <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                      {isVi 
+                        ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
+                        : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}
+                    </p>
+                  </form>
                   </div>
                 </div>
 
               </div>
-            </div>
-          </section>
+            </section>
         )}
         {activeTab === "profile" && isLoggedIn && user && (
           <section className="section reveal visible profile-section" id="profile">
@@ -3076,7 +3007,7 @@ export default function HomeClient({ dict, lang }) {
               <a href={`/${currentLang}/rules`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fa-solid fa-scroll" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navRules}
               </a>
-              <a href={`/${currentLang}/donate`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+              <a href="#donate" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fa-solid fa-heart" style={{ width: '16px', color: '#ff952e' }}></i> {labels.donate}
               </a>
             </div>

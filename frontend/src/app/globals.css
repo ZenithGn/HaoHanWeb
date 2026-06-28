@@ -3720,6 +3720,7 @@ button.inline-nav__link {
     opacity: 0;
     transform: translateY(14px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
@@ -4116,8 +4117,8 @@ button.inline-nav__link {
   z-index: 0;
   opacity: 0;
   transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
-              height 0.28s cubic-bezier(0.25, 1, 0.5, 1),
-              opacity 0.2s ease;
+    height 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.2s ease;
   box-shadow: -4px 0 12px rgba(255, 118, 36, 0.12);
 }
 
@@ -4126,6 +4127,7 @@ button.inline-nav__link {
     transform: scaleY(0);
     opacity: 0;
   }
+
   to {
     transform: scaleY(1);
     opacity: 1;
@@ -4817,8 +4819,8 @@ button.inline-nav__link {
   z-index: 0;
   opacity: 0;
   transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
-              height 0.28s cubic-bezier(0.25, 1, 0.5, 1),
-              opacity 0.2s ease;
+    height 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.2s ease;
   box-shadow: -4px 0 12px rgba(255, 118, 36, 0.12);
 }
 
@@ -5265,8 +5267,8 @@ details:hover {
   z-index: 0;
   opacity: 0;
   transition: transform 0.28s cubic-bezier(0.25, 1, 0.5, 1),
-              height 0.28s cubic-bezier(0.25, 1, 0.5, 1),
-              opacity 0.2s ease;
+    height 0.28s cubic-bezier(0.25, 1, 0.5, 1),
+    opacity 0.2s ease;
   box-shadow: -4px 0 12px rgba(255, 118, 36, 0.12);
 }
 
@@ -5484,16 +5486,20 @@ details:hover {
 
 /* ── Wiki & Rules Responsive styles ── */
 @media (max-width: 920px) {
-  .wiki-page-wrap, .rules-page-wrap {
+
+  .wiki-page-wrap,
+  .rules-page-wrap {
     width: min(100% - 32px, 860px);
   }
 
-  .wiki-sidebar, .rules-sidebar {
+  .wiki-sidebar,
+  .rules-sidebar {
     display: contents;
     border-right: 0 !important;
   }
 
-  .wiki-layout, .rules-layout {
+  .wiki-layout,
+  .rules-layout {
     display: grid;
     grid-template-areas:
       "header header"
@@ -5543,11 +5549,14 @@ details:hover {
 }
 
 @media (max-width: 640px) {
-  .wiki-page-wrap, .rules-page-wrap {
+
+  .wiki-page-wrap,
+  .rules-page-wrap {
     width: min(100% - 24px, 560px);
   }
 
-  .wiki-layout, .rules-layout {
+  .wiki-layout,
+  .rules-layout {
     display: grid;
     grid-template-areas:
       "header"
@@ -5735,5 +5744,483 @@ details:hover {
   .donate-panel-grid {
     grid-template-columns: 1fr !important;
     gap: 24px !important;
+  }
+}
+
+/* ── Donate Page Redesign ── */
+.donate-page-wrap {
+  width: min(100% - 48px, 1200px);
+  margin: 0 auto;
+}
+
+.donate-page-layout {
+  display: grid;
+  grid-template-columns: 1.25fr 1fr;
+  gap: 52px;
+  align-items: start;
+  font-family: 'Outfit', sans-serif;
+  padding-bottom: 100px;
+}
+
+/* ── Supporters Column ── */
+.donate-supporters-col {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.donate-supporters-header {
+  margin-bottom: 4px;
+}
+
+.donate-eyebrow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #ff4d4d;
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  margin-bottom: 6px;
+}
+
+.donate-supporters-title {
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.02em;
+}
+
+.donate-supporters-desc {
+  color: #92918e;
+  font-size: 0.88rem;
+  line-height: 1.6;
+  margin: 0;
+  max-width: 420px;
+}
+
+.donate-top-label {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  color: #ff952e;
+  font-size: 0.78rem;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.06em;
+}
+
+/* ── Leaderboard ── */
+.donate-leaderboard {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.donate-loading {
+  color: #868582;
+  font-size: 0.9rem;
+  text-align: center;
+  padding: 40px 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.donate-donor-row {
+  display: grid;
+  grid-template-columns: 32px 42px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  padding: 12px 16px;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  transition: transform 0.2s ease, border-color 0.25s ease, background 0.25s ease;
+}
+
+.donate-donor-row:hover {
+  transform: translateX(3px);
+  border-color: rgba(255, 149, 46, 0.25);
+  background: rgba(255, 149, 46, 0.04);
+}
+
+.donate-donor-row--top1 {
+  position: relative;
+  background:
+    linear-gradient(135deg, rgba(255, 149, 46, 0.12) 0%, rgba(232, 116, 30, 0.06) 100%);
+  border: 1px solid rgba(255, 149, 46, 0.25);
+  padding: 14px 16px;
+  overflow: hidden;
+}
+
+.donate-donor-row--top1::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(135deg, rgba(255, 140, 40, 0.08), transparent 60%),
+    url("/assets/img/bg1.png");
+  background-size: cover;
+  background-position: center;
+  opacity: 0.2;
+  pointer-events: none;
+  border-radius: inherit;
+}
+
+.donate-donor-row--top1:hover {
+  border-color: rgba(255, 149, 46, 0.45);
+  background:
+    linear-gradient(135deg, rgba(255, 149, 46, 0.16) 0%, rgba(232, 116, 30, 0.08) 100%);
+}
+
+.donate-donor-rank {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  z-index: 1;
+}
+
+.donate-rank-icon {
+  font-size: 1.1rem;
+}
+
+.donate-rank-number {
+  color: #868582;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.donate-donor-avatar {
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  overflow: hidden;
+  background: rgba(0, 0, 0, 0.3);
+  position: relative;
+  z-index: 1;
+}
+
+.donate-donor-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.donate-donor-info {
+  display: flex;
+  flex-direction: column;
+  gap: 1px;
+  min-width: 0;
+  position: relative;
+  z-index: 1;
+}
+
+.donate-donor-name {
+  color: #fff;
+  font-size: 0.92rem;
+  font-weight: 700;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.donate-donor-handle {
+  color: #6b6a67;
+  font-size: 0.75rem;
+}
+
+.donate-donor-amount {
+  color: #ff952e;
+  font-weight: 800;
+  font-size: 0.95rem;
+  white-space: nowrap;
+  text-align: right;
+  position: relative;
+  z-index: 1;
+}
+
+/* ── Pagination ── */
+.donate-pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 4px;
+}
+
+.donate-page-btn {
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #aaa9a6;
+  font-size: 0.8rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.donate-page-btn:hover:not(:disabled) {
+  background: rgba(255, 149, 46, 0.1);
+  border-color: rgba(255, 149, 46, 0.3);
+  color: #ff952e;
+}
+
+.donate-page-btn:disabled {
+  opacity: 0.3;
+  cursor: not-allowed;
+}
+
+.donate-page-info {
+  color: #868582;
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+/* ── Donation Form Column ── */
+.donate-form-col {
+  position: sticky;
+  top: 120px;
+}
+
+.donate-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.donate-form-title {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0 0 4px 0;
+}
+
+.donate-field {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.donate-label {
+  color: #aaa9a6;
+  font-size: 0.88rem;
+  font-weight: 600;
+}
+
+.donate-input {
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  padding: 13px 16px;
+  color: #fff;
+  font-size: 0.95rem;
+  outline: none;
+  font-family: inherit;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.donate-input:focus {
+  border-color: rgba(255, 149, 46, 0.5);
+  box-shadow: 0 0 0 3px rgba(255, 149, 46, 0.08);
+}
+
+.donate-input::placeholder {
+  color: #5a5956;
+}
+
+/* ── Presets ── */
+.donate-presets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.donate-preset-btn {
+  flex: 1;
+  min-width: 70px;
+  padding: 10px 8px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  color: #aaa9a6;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  text-align: center;
+  white-space: nowrap;
+}
+
+.donate-preset-btn:hover {
+  border-color: rgba(255, 149, 46, 0.35);
+  color: #ff952e;
+  background: rgba(255, 149, 46, 0.06);
+}
+
+.donate-preset-btn--active {
+  background: linear-gradient(135deg, #e8741e, #f37b18) !important;
+  border: 1px solid transparent !important;
+  color: #fff !important;
+  box-shadow: 0 4px 14px rgba(232, 116, 30, 0.3);
+}
+
+/* ── Submit Button ── */
+.donate-submit-btn {
+  width: 100%;
+  background: linear-gradient(135deg, #e8741e, #f37b18);
+  border: none;
+  color: #fff;
+  padding: 14px 24px;
+  border-radius: 10px;
+  font-weight: 800;
+  font-size: 0.95rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  box-shadow: 0 4px 16px rgba(232, 116, 30, 0.3);
+}
+
+.donate-submit-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 20px rgba(232, 116, 30, 0.4);
+}
+
+.donate-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* ── Back Button ── */
+.donate-back-btn {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  color: #fff;
+  padding: 12px 16px;
+  border-radius: 8px;
+  font-weight: 800;
+  font-size: 0.85rem;
+  cursor: pointer;
+  font-family: inherit;
+  transition: background 0.2s ease;
+}
+
+.donate-back-btn:hover {
+  background: rgba(255, 255, 255, 0.1);
+}
+
+/* ── Disclaimer ── */
+.donate-disclaimer {
+  color: #6b6a67;
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+.donate-disclaimer p {
+  margin: 2px 0;
+}
+
+/* ── Result Message ── */
+.donate-result-msg {
+  padding: 12px 16px;
+  background: rgba(255, 149, 46, 0.08);
+  border: 1px solid rgba(255, 149, 46, 0.25);
+  border-radius: 8px;
+  color: #fff;
+  font-size: 0.9rem;
+  line-height: 1.4;
+}
+
+/* ── Payment Section ── */
+.donate-payment-wrap {
+  display: flex;
+  gap: 20px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 149, 46, 0.12);
+  border-radius: 10px;
+  padding: 16px;
+}
+
+.donate-qr-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+}
+
+.donate-qr-box {
+  background: #fff;
+  padding: 8px;
+  border-radius: 8px;
+  width: 150px;
+  height: 150px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+}
+
+.donate-payment-details {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex: 1;
+  font-size: 0.85rem;
+  color: #aaa9a6;
+}
+
+/* ── Donate Page Responsive ── */
+@media (max-width: 860px) {
+  .donate-page-layout {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
+
+  .donate-form-col {
+    position: static;
+  }
+
+  .donate-page-wrap {
+    width: min(100% - 32px, 600px);
+  }
+}
+
+@media (max-width: 480px) {
+  .donate-page-wrap {
+    width: min(100% - 24px, 480px);
+  }
+
+  .donate-page-layout {
+    gap: 32px;
+  }
+
+  .donate-presets {
+    flex-wrap: wrap;
+  }
+
+  .donate-preset-btn {
+    min-width: calc(33% - 6px);
+    flex: unset;
+  }
+
+  .donate-donor-row {
+    grid-template-columns: 28px 36px 1fr auto;
+    gap: 8px;
+    padding: 10px 12px;
+  }
+
+  .donate-payment-wrap {
+    flex-direction: column;
+    align-items: center;
   }
 }
