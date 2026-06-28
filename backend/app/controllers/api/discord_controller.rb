@@ -244,6 +244,7 @@ class Api::DiscordController < ApplicationController
   def user_from_auth_header
     header = request.headers['Authorization']
     token = header.split(' ').last if header.present?
+    token = params[:token].to_s if token.blank? && params[:token].present?
     decoded = JwtService.decode(token) if token.present?
     Player.find_by(id: decoded[:user_id]) if decoded
   end

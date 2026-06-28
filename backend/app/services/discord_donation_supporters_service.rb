@@ -80,7 +80,7 @@ class DiscordDonationSupportersService
       cached = read_cache
       payload = cached.presence || build_payload(MANUAL_MESSAGES, source: 'manual')
 
-      if refresh_async && (!cache_fresh?(cached) || (discord_configured? && cached&.dig('source') == 'manual'))
+      if refresh_async && (!cache_fresh?(cached) || stale_supporter_cache?(cached))
         Thread.new do
           refresh
         rescue => e
@@ -399,6 +399,14 @@ class DiscordDonationSupportersService
       Time.zone.parse(payload['updated_at']) > CACHE_TTL.ago
     rescue ArgumentError, TypeError
       false
+    end
+
+    def stale_supporter_cache?(payload)
+      return true if payload.blank?
+      return true if discord_configured? && payload['source'] == 'manual'
+
+      supporters = payload['supporters'].to_a
+      supporters.any? && supporters.none? { |supporter| supporter['avatar_url'].present? || supporter[:avatar_url].present? }
     end
 
     def write_cache(payload)

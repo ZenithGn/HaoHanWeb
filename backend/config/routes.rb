@@ -18,6 +18,7 @@ Rails.application.routes.draw do
 
   # Discord Authentication & Linking API
   get '/api/auth/discord/url', to: 'api/discord#url'
+  post '/api/auth/discord/url', to: 'api/discord#url'
   post '/api/auth/discord/callback', to: 'api/discord#callback'
   post '/api/auth/discord/sync', to: 'api/discord#sync'
   post '/api/discord/role-update', to: 'api/discord#role_update'

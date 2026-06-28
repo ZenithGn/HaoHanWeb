@@ -563,7 +563,15 @@ export default function HomeClient({ dict, lang }) {
         const response = await fetch(`${API_BASE}/api/supporters/donations`);
         if (!response.ok) return;
         const data = await response.json();
-        const fetchedSupporters = (data.supporters || [])
+        let sourceData = data;
+        if ((sourceData.supporters || []).length > 0 && !(sourceData.supporters || []).some((donor) => donor.avatar_url)) {
+          const refreshedResponse = await fetch(`${API_BASE}/api/supporters/donations?refresh=true`);
+          if (refreshedResponse.ok) {
+            sourceData = await refreshedResponse.json();
+          }
+        }
+
+        const fetchedSupporters = (sourceData.supporters || [])
           .filter((donor) => Number(donor.amount) > 0)
           .map((donor) => ({
             username: donor.username,
@@ -1046,10 +1054,13 @@ export default function HomeClient({ dict, lang }) {
       }
 
       const response = await fetch(`${API_BASE}/api/auth/discord/url`, {
+        method: "POST",
         cache: "no-store",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
+        body: JSON.stringify({ token }),
       });
       const data = await response.json();
       if (response.ok && data.url) {
