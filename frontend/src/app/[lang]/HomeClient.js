@@ -4,6 +4,48 @@ import { useAuth } from "../components/AuthContext";
 import Script from "next/script";
 const serverIp = "haohansmp.io.vn";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
+const DONATION_PRESETS = [20000, 50000, 100000, 200000, 500000];
+const DONORS_PER_PAGE = 10;
+const MANUAL_SUPPORTERS = [
+  { username: "PicoXSvipMax", displayName: "Pico", amount: 3550000, note: "TYSM" },
+  { username: "Ginkei", displayName: "Gỡ không inn", amount: 50000 },
+  { username: "mica_san", displayName: "miCa", amount: 150000 },
+  { username: "Tuckii", displayName: "a", amount: 250000 },
+  { username: "CS02", displayName: "kyon5668", amount: 190000 },
+  { username: "ILoveLinh", displayName: "H", amount: 170000 },
+  { username: "hoanghydro", displayName: "imsosad", amount: 150000 },
+  { username: "Miophilk", displayName: "Miophilk", amount: 140000 },
+  { username: "dadadio", displayName: "᲼᲼᲼᲼᲼#3566", amount: 100000 },
+  { username: "0Ramen", displayName: "Ramon", amount: 100000 },
+  { username: "0Clone", displayName: "sicubidu", amount: 100000 },
+  { username: "WAT", displayName: "WAT", amount: 100000 },
+  { username: "!  DuckAnh", displayName: "!  DuckAnh", amount: 100000 },
+  { username: "NgMinhDuckAnh", displayName: "Deleted User#0000", amount: 70000 },
+  { username: "D3MON_VN", displayName: "mệt", amount: 70000 },
+  { username: "Deleted User#0000", displayName: "Deleted User#0000", amount: 70000 },
+  { username: "Kuangg_VN", displayName: "Deleted User#0000", amount: 60000 },
+  { username: "Cowsep2021", displayName: "Cowsep", amount: 50000 },
+  { username: "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", displayName: "\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\", amount: 50000 },
+  { username: "minerwoftkk", displayName: "minerwoftkk", amount: 50000 },
+  { username: "Thỏ", displayName: "Thỏ", amount: 50000 },
+  { username: "Ender_Dragonn", displayName: "Ender_Dragon", amount: 50000 },
+  { username: "Mai_Linh", displayName: "Mai Linh#4429", amount: 50000 },
+  { username: "ohtanisvibrator", displayName: "ohtanisvibrator", amount: 50000 },
+  { username: "satmamama", displayName: "Hảo Thật Đấy(REHAB)", amount: 40000 },
+  { username: "FishSeller", displayName: "Mizu#9504", amount: 30000 },
+  { username: "NotLynnZ", displayName: "Deleted User#0000", amount: 30000 },
+  { username: "paindestroyleaf", displayName: "Eum ba pe", amount: 20000 },
+  { username: "hamjang", displayName: "hamjang#4710", amount: 20000 },
+  { username: "HLinh_2k4", displayName: "Chào Con Cặc Gì Mà Chào", amount: 20000 },
+  { username: "song#5482", displayName: "song#5482", amount: 20000 },
+  { username: "Jh7xn", displayName: "Bé Cá Bú Đá", amount: 20000 },
+  { username: "Zz_South_zZ", displayName: "vuphuongnam_#0", amount: 10000 },
+  { username: "shon", displayName: "shon", amount: 10000 },
+  { username: "em cy cay", displayName: "em cy cay", amount: 10000 },
+  { username: "Duc", displayName: "Duc", amount: 10000 },
+  { username: "JUnLI", displayName: "unknown-user", amount: 400000 },
+  { username: "dan choi nam dinh™", displayName: "dan choi nam dinh™", amount: 110000 },
+].map((supporter) => ({ ...supporter, role: 'Donator' }));
 
 function SectionStars({ count = 25 }) {
   const canvasRef = useRef(null);
@@ -277,7 +319,11 @@ export default function HomeClient({ dict, lang }) {
   const [rulesMenuOpen, setRulesMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
   const [donateName, setDonateName] = useState('');
+  const [donateAmount, setDonateAmount] = useState(DONATION_PRESETS[1].toString());
   const [donateResult, setDonateResult] = useState('');
+  const [donateLoading, setDonateLoading] = useState(false);
+  const [supporters, setSupporters] = useState([]);
+  const [supporterPage, setSupporterPage] = useState(1);
 
   const [profileSubTab, setProfileSubTab] = useState("overview");
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -400,6 +446,57 @@ export default function HomeClient({ dict, lang }) {
       rulesTicketDesc: hl.rules_ticket_desc,
     };
   }, [dict, isVi]);
+  const supporterList = [...(supporters.length > 0 ? supporters : MANUAL_SUPPORTERS)]
+    .sort((a, b) => Number(b.amount || 0) - Number(a.amount || 0));
+  const supporterPageCount = Math.max(1, Math.ceil(supporterList.length / DONORS_PER_PAGE));
+  const currentSupporterPage = Math.min(supporterPage, supporterPageCount);
+  const visibleSupporters = supporterList.slice(
+    (currentSupporterPage - 1) * DONORS_PER_PAGE,
+    currentSupporterPage * DONORS_PER_PAGE
+  );
+  const formatVnd = (amount) => {
+    const numericAmount = Number(amount) || 0;
+    return new Intl.NumberFormat('vi-VN', {
+      style: 'currency',
+      currency: 'VND',
+      maximumFractionDigits: 0,
+    }).format(numericAmount);
+  };
+  useEffect(() => {
+    let active = true;
+
+    const loadSupporters = async () => {
+      try {
+        const response = await fetch(`${API_BASE}/api/supporters/donations`);
+        if (!response.ok) return;
+        const data = await response.json();
+        const fetchedSupporters = (data.supporters || [])
+          .filter((donor) => Number(donor.amount) > 0)
+          .map((donor) => ({
+            username: donor.username,
+            displayName: donor.display_name || donor.username,
+            amount: donor.amount,
+            entries: donor.entries,
+            role: donor.role || "Donator",
+            avatarUrl: donor.avatar_url,
+          }));
+
+        if (active && fetchedSupporters.length > 0) {
+          setSupporters(fetchedSupporters);
+          setSupporterPage(1);
+        }
+      } catch (error) {
+        console.warn("Could not load donor leaderboard.", error);
+      }
+    };
+
+    loadSupporters();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
   const serverCardsTranslated = useMemo(() => [
     {
       title: dict.servers.survival_title || "Survival",
@@ -794,26 +891,54 @@ export default function HomeClient({ dict, lang }) {
   };
   const handleDonateSubmit = async (e) => {
     e.preventDefault();
-    setDonateResult(dict.donate.sending + donateName + '...');
+    const trimmedName = donateName.trim();
+    const amount = Number(donateAmount);
+
+    if (!trimmedName) {
+      setDonateResult(isVi ? "Vui lòng nhập tên nhân vật Minecraft." : "Please enter your Minecraft character name.");
+      return;
+    }
+
+    if (!Number.isFinite(amount) || amount < 1000) {
+      setDonateResult(isVi ? "Số tiền ủng hộ tối thiểu là 1.000 VND." : "Minimum support amount is 1,000 VND.");
+      return;
+    }
+
+    if (!isLoggedIn) {
+      setDonateResult(isVi ? "Bạn cần đăng nhập trước khi tạo thanh toán PayOS." : "Please log in before creating a PayOS payment.");
+      return;
+    }
+
+    setDonateLoading(true);
+    setDonateResult(isVi ? "Đang tạo liên kết thanh toán PayOS..." : "Creating PayOS checkout link...");
     
     try {
-      const response = await fetch('http://localhost:8080/api/donate', {
+      const token = getToken();
+      const response = await fetch(`${API_BASE}/api/donations/payos/create`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          ...(token ? { Authorization: `Bearer ${token}` } : {}),
         },
-        body: JSON.stringify({ name: donateName }),
+        body: JSON.stringify({
+          amount,
+          message: `Minecraft name: ${trimmedName}`,
+          minecraft_name: trimmedName,
+        }),
       });
+      const data = await response.json().catch(() => ({}));
       
-      if (response.ok) {
-        const data = await response.json();
-        setDonateResult(dict.donate.success.replace('{name}', data.name));
+      if (response.ok && data.checkoutUrl) {
+        setDonateResult(isVi ? "Đã tạo thanh toán, đang chuyển sang PayOS..." : "Checkout created, redirecting to PayOS...");
+        window.location.href = data.checkoutUrl;
       } else {
-        setDonateResult(dict.donate.error1.replace('{name}', donateName));
+        setDonateResult(data.error || (isVi ? "Không thể tạo thanh toán PayOS. Vui lòng thử lại." : "Could not create PayOS checkout. Please try again."));
       }
     } catch (error) {
       console.error("Error submitting donation:", error);
-      setDonateResult(dict.donate.error2.replace('{name}', donateName));
+      setDonateResult(isVi ? "Lỗi kết nối PayOS. Vui lòng thử lại sau." : "PayOS connection error. Please try again later.");
+    } finally {
+      setDonateLoading(false);
     }
   };
 
@@ -2002,14 +2127,14 @@ export default function HomeClient({ dict, lang }) {
             <SectionStars count={25} />
             <div className="wrap" style={{ padding: '0 20px' }}>
               <div className="rules-layout">
-                {/* Left Column / Sidebar */}
+                {/* Left Column / Supporter List */}
                 <aside className="rules-sidebar">
                   <header className="rules-card__header">
                     <span className="rules-card__eyebrow">
                       <i className="fa-solid fa-heart" style={{ color: '#ff4d4d' }}></i>
                       {isVi ? "Cảm ơn bạn" : "Thank you"}
                     </span>
-                    <h2>{isVi ? "SUPPORT US" : "DONATION"}</h2>
+                    <h2>{isVi ? "Người đã ủng hộ" : "Supporters"}</h2>
                     <p>
                       {isVi 
                         ? "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền."
@@ -2017,7 +2142,86 @@ export default function HomeClient({ dict, lang }) {
                     </p>
                   </header>
 
-                  <div style={{ display: 'flex', flexDirection: 'column', gap: '16px', marginTop: '24px', fontFamily: "'Outfit', sans-serif" }}>
+                  <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', marginTop: '22px', fontFamily: "'Outfit', sans-serif" }}>
+                    {visibleSupporters.map((supporter, index) => (
+                      <div key={`${supporter.username}-${index}`} style={{
+                        display: 'grid',
+                        gridTemplateColumns: '34px minmax(0, 1fr)',
+                        gap: '10px',
+                        alignItems: 'center',
+                        background: 'rgba(255, 255, 255, 0.03)',
+                        padding: '10px',
+                        borderRadius: '8px',
+                        border: '1px solid rgba(255, 149, 46, 0.12)'
+                      }}>
+                        <div style={{
+                          width: '34px',
+                          height: '34px',
+                          borderRadius: '8px',
+                          background: 'rgba(255, 149, 46, 0.12)',
+                          color: '#ffb25f',
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'center',
+                          fontWeight: '800',
+                          fontSize: '0.8rem'
+                        }}>
+                          {(currentSupporterPage - 1) * DONORS_PER_PAGE + index + 1}
+                        </div>
+                        <div style={{ minWidth: 0 }}>
+                          <strong style={{ color: '#fff', fontSize: '0.92rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {supporter.displayName || supporter.username}
+                          </strong>
+                          <span style={{ color: '#aaa9a6', fontSize: '0.78rem', display: 'block', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+                            {supporter.username} · {formatVnd(supporter.amount || supporter.total_donated)}
+                            {supporter.note ? ` (${supporter.note})` : ''}
+                          </span>
+                        </div>
+                      </div>
+                    ))}
+
+                    <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', gap: '10px', marginTop: '8px' }}>
+                      <button
+                        type="button"
+                        onClick={() => setSupporterPage((page) => Math.max(1, page - 1))}
+                        disabled={currentSupporterPage === 1}
+                        style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          background: currentSupporterPage === 1 ? 'rgba(255,255,255,0.03)' : 'rgba(255, 149, 46, 0.14)',
+                          color: currentSupporterPage === 1 ? '#666' : '#fff',
+                          cursor: currentSupporterPage === 1 ? 'not-allowed' : 'pointer'
+                        }}
+                        aria-label={isVi ? "Trang trước" : "Previous page"}
+                      >
+                        <i className="fa-solid fa-chevron-left"></i>
+                      </button>
+                      <span style={{ color: '#aaa9a6', fontSize: '0.85rem', fontWeight: '700' }}>
+                        {isVi ? "Trang" : "Page"} {currentSupporterPage}/{supporterPageCount}
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => setSupporterPage((page) => Math.min(supporterPageCount, page + 1))}
+                        disabled={currentSupporterPage === supporterPageCount}
+                        style={{
+                          width: '38px',
+                          height: '38px',
+                          borderRadius: '8px',
+                          border: '1px solid rgba(255, 255, 255, 0.12)',
+                          background: currentSupporterPage === supporterPageCount ? 'rgba(255,255,255,0.03)' : 'rgba(255, 149, 46, 0.14)',
+                          color: currentSupporterPage === supporterPageCount ? '#666' : '#fff',
+                          cursor: currentSupporterPage === supporterPageCount ? 'not-allowed' : 'pointer'
+                        }}
+                        aria-label={isVi ? "Trang sau" : "Next page"}
+                      >
+                        <i className="fa-solid fa-chevron-right"></i>
+                      </button>
+                    </div>
+                  </div>
+
+                  <div style={{ display: 'none', flexDirection: 'column', gap: '16px', marginTop: '24px', fontFamily: "'Outfit', sans-serif" }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', padding: '12px', borderRadius: '8px', border: '1px solid rgba(255, 149, 46, 0.1)' }}>
                       <div style={{ width: '40px', height: '40px', borderRadius: '50%', background: 'rgba(255, 149, 46, 0.1)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
                         <i className="fa-solid fa-bolt" style={{ color: '#ff952e', fontSize: '1.1rem' }}></i>
@@ -2050,13 +2254,13 @@ export default function HomeClient({ dict, lang }) {
                     padding: '30px',
                     boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35)',
                     display: 'grid',
-                    gridTemplateColumns: '1fr 1fr',
+                    gridTemplateColumns: '1fr',
                     gap: '30px',
                     fontFamily: "'Outfit', sans-serif"
                   }} className="donate-panel-grid">
                     
                     {/* QR Code and Scan Info */}
-                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
+                    <div style={{ display: 'none', flexDirection: 'column', alignItems: 'center', gap: '16px', textAlign: 'center' }}>
                       <div style={{
                         background: 'rgba(0, 0, 0, 0.4)',
                         padding: '16px',
@@ -2088,14 +2292,14 @@ export default function HomeClient({ dict, lang }) {
                     </div>
 
                     {/* Form Input / Guide */}
-                    <form onSubmit={handleDonateSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '20px' }}>
+                    <form onSubmit={handleDonateSubmit} style={{ display: 'flex', flexDirection: 'column', justifyContent: 'center', gap: '18px' }}>
                       <h3 style={{ margin: 0, color: '#fff', fontSize: '1.4rem', fontWeight: '800', borderBottom: '1px solid rgba(255, 255, 255, 0.08)', paddingBottom: '12px' }}>
-                        {dict.donate.heading}
+                        {isVi ? "Ủng hộ bằng PayOS" : "Support with PayOS"}
                       </h3>
                       
                       <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
                         <label htmlFor="donate-name" style={{ color: '#aaa9a6', fontSize: '0.9rem', fontWeight: '600' }}>
-                          {dict.donate.name_label}
+                          {isVi ? "Tên nhân vật Minecraft" : "Minecraft character name"}
                         </label>
                         <input 
                           id="donate-name"
@@ -2120,8 +2324,63 @@ export default function HomeClient({ dict, lang }) {
                         />
                       </div>
 
+                      <div style={{ display: 'flex', flexDirection: 'column', gap: '10px' }}>
+                        <label htmlFor="donate-amount" style={{ color: '#aaa9a6', fontSize: '0.9rem', fontWeight: '600' }}>
+                          {isVi ? "Số tiền ủng hộ" : "Support amount"}
+                        </label>
+                        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(110px, 1fr))', gap: '8px' }}>
+                          {DONATION_PRESETS.map((preset) => {
+                            const isSelected = Number(donateAmount) === preset;
+                            return (
+                              <button
+                                key={preset}
+                                type="button"
+                                onClick={() => setDonateAmount(preset.toString())}
+                                style={{
+                                  border: `1px solid ${isSelected ? 'rgba(255, 149, 46, 0.65)' : 'rgba(255, 255, 255, 0.1)'}`,
+                                  background: isSelected ? 'rgba(255, 149, 46, 0.16)' : 'rgba(255, 255, 255, 0.03)',
+                                  color: isSelected ? '#ffb25f' : '#ddd',
+                                  borderRadius: '8px',
+                                  padding: '10px 8px',
+                                  cursor: 'pointer',
+                                  fontWeight: '800',
+                                  fontSize: '0.82rem',
+                                  fontFamily: 'inherit'
+                                }}
+                              >
+                                {formatVnd(preset)}
+                              </button>
+                            );
+                          })}
+                        </div>
+                        <input
+                          id="donate-amount"
+                          type="number"
+                          min="1000"
+                          step="1000"
+                          value={donateAmount}
+                          onChange={(e) => setDonateAmount(e.target.value)}
+                          placeholder={isVi ? "Nhập số tiền khác" : "Enter another amount"}
+                          required
+                          style={{
+                            background: 'rgba(255, 255, 255, 0.03)',
+                            border: '1px solid rgba(255, 255, 255, 0.1)',
+                            borderRadius: '8px',
+                            padding: '12px 16px',
+                            color: '#fff',
+                            fontSize: '0.95rem',
+                            outline: 'none',
+                            fontFamily: 'inherit',
+                            transition: 'border-color 0.25s'
+                          }}
+                          onFocus={(e) => e.target.style.borderColor = 'rgba(255, 149, 46, 0.5)'}
+                          onBlur={(e) => e.target.style.borderColor = 'rgba(255, 255, 255, 0.1)'}
+                        />
+                      </div>
+
                       <button 
                         type="submit"
+                        disabled={donateLoading}
                         style={{
                           background: 'linear-gradient(135deg, #e8741e, #f37b18)',
                           border: 'none',
@@ -2130,15 +2389,18 @@ export default function HomeClient({ dict, lang }) {
                           borderRadius: '8px',
                           fontWeight: '800',
                           fontSize: '0.95rem',
-                          cursor: 'pointer',
+                          cursor: donateLoading ? 'wait' : 'pointer',
                           fontFamily: 'inherit',
+                          opacity: donateLoading ? 0.72 : 1,
                           transition: 'transform 0.2s, box-shadow 0.2s',
                           boxShadow: '0 4px 12px rgba(232, 116, 30, 0.3)'
                         }}
-                        onMouseOver={(e) => e.currentTarget.style.transform = 'translateY(-1px)'}
+                        onMouseOver={(e) => {
+                          if (!donateLoading) e.currentTarget.style.transform = 'translateY(-1px)';
+                        }}
                         onMouseOut={(e) => e.currentTarget.style.transform = 'none'}
                       >
-                        {dict.donate.submit}
+                        {donateLoading ? (isVi ? "Đang tạo..." : "Creating...") : (isVi ? "Ủng hộ chúng tôi" : "Support us")}
                       </button>
 
                       {donateResult && (
@@ -2157,6 +2419,12 @@ export default function HomeClient({ dict, lang }) {
                       )}
 
                       <p style={{ margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
+                        {isVi
+                          ? "*Tên nhân vật dùng để admin đối chiếu/support sau thanh toán. Bạn sẽ được chuyển sang PayOS để hoàn tất giao dịch an toàn."
+                          : "*Your character name is used for support verification after payment. You will be redirected to PayOS to complete the secure checkout."}
+                      </p>
+
+                      <p style={{ display: 'none', margin: 0, color: '#868582', fontSize: '0.8rem', lineHeight: '1.4' }}>
                         {isVi 
                           ? "*Sau khi chuyển khoản thành công, hãy nhấn nút Xác nhận trên để admin đối chiếu tên nhân vật và tiến hành trao thưởng sớm nhất."
                           : "*After completing the payment transfer, click Confirm button above so the admin can verify your player name and issue the rewards."}

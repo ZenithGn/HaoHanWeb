@@ -34,6 +34,7 @@ Rails.application.routes.draw do
 
   # Leaderboards API
   get '/api/leaderboards', to: 'api/leaderboards#index'
+  get '/api/supporters/donations', to: 'api/supporters#donations'
 
   # Test Helpers (Only for local development/Postman testing)
   post '/api/test/payos-signature', to: 'api/donations#payos_signature'
