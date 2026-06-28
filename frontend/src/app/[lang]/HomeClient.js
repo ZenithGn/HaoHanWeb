@@ -274,6 +274,7 @@ export default function HomeClient({ dict, lang }) {
   const [openFaq, setOpenFaq] = useState(null);
   const [activeWikiTab, setActiveWikiTab] = useState("intro");
   const [wikiMenuOpen, setWikiMenuOpen] = useState(false);
+  const [rulesMenuOpen, setRulesMenuOpen] = useState(false);
   const [profileMenuOpen, setProfileMenuOpen] = useState(false);
 
   const [profileSubTab, setProfileSubTab] = useState("overview");
@@ -295,8 +296,13 @@ export default function HomeClient({ dict, lang }) {
   const [linkingGame, setLinkingGame] = useState(false);
   const [linkMsg, setLinkMsg] = useState("");
   const [linkSuccess, setLinkSuccess] = useState(true);
+  const [rulesSubTab, setRulesSubTab] = useState("smp");
   const profileNavRef = useRef(null);
   const profileNavIndicatorRef = useRef(null);
+  const rulesNavRef = useRef(null);
+  const rulesNavIndicatorRef = useRef(null);
+  const wikiNavRef = useRef(null);
+  const wikiNavIndicatorRef = useRef(null);
 
   // Discord role → color mapping (matches server role colors)
   const ROLE_COLORS = {
@@ -704,6 +710,72 @@ export default function HomeClient({ dict, lang }) {
       window.removeEventListener("resize", updateIndicator);
     };
   }, [profileSubTab, activeTab, isLoggedIn]);
+
+  useEffect(() => {
+    const updateIndicator = () => {
+      const nav = rulesNavRef.current;
+      const indicator = rulesNavIndicatorRef.current;
+      if (!nav || !indicator || activeTab !== "rules") return;
+
+      const activeBtn = nav.querySelector(".rules-sidebar-link--active");
+      if (!activeBtn) {
+        indicator.style.opacity = "0";
+        return;
+      }
+
+      const navRect = nav.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      const top = btnRect.top - navRect.top;
+      const height = btnRect.height;
+
+      indicator.style.opacity = "1";
+      indicator.style.transform = `translateY(${top}px)`;
+      indicator.style.height = `${height}px`;
+    };
+
+    updateIndicator();
+    const timeout = setTimeout(updateIndicator, 50);
+
+    window.addEventListener("resize", updateIndicator);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [rulesSubTab, activeTab]);
+
+  useEffect(() => {
+    const updateIndicator = () => {
+      const nav = wikiNavRef.current;
+      const indicator = wikiNavIndicatorRef.current;
+      if (!nav || !indicator || activeTab !== "wiki") return;
+
+      const activeBtn = nav.querySelector(".wiki-sidebar-link--active");
+      if (!activeBtn) {
+        indicator.style.opacity = "0";
+        return;
+      }
+
+      const navRect = nav.getBoundingClientRect();
+      const btnRect = activeBtn.getBoundingClientRect();
+
+      const top = btnRect.top - navRect.top;
+      const height = btnRect.height;
+
+      indicator.style.opacity = "1";
+      indicator.style.transform = `translateY(${top}px)`;
+      indicator.style.height = `${height}px`;
+    };
+
+    updateIndicator();
+    const timeout = setTimeout(updateIndicator, 50);
+
+    window.addEventListener("resize", updateIndicator);
+    return () => {
+      clearTimeout(timeout);
+      window.removeEventListener("resize", updateIndicator);
+    };
+  }, [activeWikiTab, activeTab]);
 
   const toggleLang = () => {
     const next = currentLang === "vi" ? "en" : "vi";
@@ -1142,17 +1214,43 @@ export default function HomeClient({ dict, lang }) {
         {activeTab === "gallery" && (
           <section className="gallery-page reveal visible" id="gallery">
             <SectionStars count={35} />
-            <header className="page-hero gallery-hero">
-              <div className="wrap page-hero__inner">
-                <div className="page-hero__art">
-                  <i className="fa-solid fa-images"></i>
-                </div>
-                <div className="page-hero__copy">
-                  <span><i className="fa-solid fa-camera"></i> {labels.galleryHeroEyebrow}</span>
-                  <h1>HAOHAN <strong>GALLERY</strong></h1>
-                  <p>{dict.gallery?.intro || (isVi ? "Nơi lưu giữ những khoảnh khắc đáng nhớ và các công trình tuyệt đẹp từ các thành viên." : "Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP. Click any image to view a full size version.")}</p>
-                </div>
-                <div className="page-hero__cube" style={{ background: 'linear-gradient(#facc15 0 30%, transparent 31%), repeating-linear-gradient(45deg, #8a6233 0 7px, #654826 7px 14px)' }} aria-hidden="true"></div>
+            <header className="gallery-header" style={{
+              borderBottom: '1px solid rgba(255, 149, 46, 0.15)',
+              paddingBottom: '24px',
+              marginBottom: '30px'
+            }}>
+              <div className="wrap" style={{ display: 'flex', flexDirection: 'column', gap: '8px', padding: '0 20px' }}>
+                <span style={{
+                  color: '#ff952e',
+                  textTransform: 'uppercase',
+                  letterSpacing: '2px',
+                  fontSize: '0.85rem',
+                  fontWeight: '800',
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: '8px'
+                }}>
+                  <i className="fa-solid fa-camera"></i> {labels.galleryHeroEyebrow}
+                </span>
+                <h1 style={{
+                  color: '#fff',
+                  fontSize: '2.5rem',
+                  fontWeight: '900',
+                  margin: 0,
+                  fontFamily: "'Be Vietnam Pro', 'Outfit', sans-serif"
+                }}>
+                  HAOHAN <span style={{ color: '#ff952e' }}>GALLERY</span>
+                </h1>
+                <p style={{
+                  color: '#aaa9a6',
+                  fontSize: '1rem',
+                  margin: 0,
+                  maxWidth: '700px',
+                  lineHeight: '1.6',
+                  fontFamily: "'Outfit', sans-serif"
+                }}>
+                  {dict.gallery?.intro || (isVi ? "Nơi lưu giữ những khoảnh khắc đáng nhớ và các công trình tuyệt đẹp từ các thành viên." : "Welcome to our gallery! This page contains albums and memorable images from HaoHan SMP. Click any image to view a full size version.")}
+                </p>
               </div>
             </header>
             
@@ -1285,21 +1383,60 @@ export default function HomeClient({ dict, lang }) {
                 </div>
               ) : (
                 /* Seasons and Topic Cards view */
-                <div className="gallery-albums">
+                <div className="gallery-albums-container" style={{
+                  background: 'rgba(20, 18, 16, 0.15)',
+                  backdropFilter: 'blur(10px)',
+                  border: '1px solid rgba(255, 149, 46, 0.15)',
+                  borderRadius: '12px',
+                  padding: '30px',
+                  boxShadow: '0 12px 32px rgba(0, 0, 0, 0.35)'
+                }}>
                   {galleryAlbums.map((album) => (
-                    <section className="gallery-year" key={album.season} style={{ marginBottom: '40px' }}>
-                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'baseline', borderBottom: '1px solid rgba(255, 255, 255, 0.14)', paddingBottom: '10px', marginBottom: '8px' }}>
-                        <h3 style={{ margin: 0, color: '#ffffff', fontFamily: "'Be Vietnam Pro', 'Outfit', sans-serif", fontSize: '26px', fontWeight: '900' }}>
+                    <section className="gallery-year" key={album.season} style={{ marginBottom: '50px' }}>
+                      <div style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
+                        alignItems: 'center',
+                        borderLeft: '4px solid #ff952e',
+                        paddingLeft: '16px',
+                        marginBottom: '16px',
+                        flexWrap: 'wrap',
+                        gap: '12px'
+                      }}>
+                        <h3 style={{
+                          margin: 0,
+                          color: '#ffffff',
+                          fontFamily: "'Be Vietnam Pro', 'Outfit', sans-serif",
+                          fontSize: '1.5rem',
+                          fontWeight: '800',
+                          letterSpacing: '0.5px'
+                        }}>
                           Season {album.season}: {album.name}
                         </h3>
-                        <span style={{ color: '#ff952e', fontSize: '14px', fontWeight: '700', fontFamily: "'Outfit', sans-serif" }}>
+                        <span style={{
+                          background: 'rgba(255, 149, 46, 0.1)',
+                          border: '1px solid rgba(255, 149, 46, 0.25)',
+                          color: '#ff982f',
+                          borderRadius: '20px',
+                          padding: '4px 14px',
+                          fontSize: '0.8rem',
+                          fontWeight: '800',
+                          fontFamily: "'Outfit', sans-serif",
+                          letterSpacing: '0.5px'
+                        }}>
                           {album.duration}
                         </span>
                       </div>
-                      <p style={{ margin: '0 0 20px 0', color: '#aaa9a6', fontSize: '0.95rem', lineHeight: '1.5', fontFamily: "'Outfit', sans-serif" }}>
+                      <p style={{
+                        margin: '0 0 24px 16px',
+                        color: '#aaa9a6',
+                        fontSize: '0.95rem',
+                        lineHeight: '1.6',
+                        fontFamily: "'Outfit', sans-serif"
+                      }}>
                         {album.desc}
                       </p>
-                      <div className="gallery-album-grid">
+                      <div className="gallery-album-grid" style={{ paddingLeft: '16px' }}>
                         {album.topics.map((topic, topicIdx) => (
                           <a
                             key={topicIdx}
@@ -1328,310 +1465,514 @@ export default function HomeClient({ dict, lang }) {
           </section>
         )}
         {activeTab === "rules" && (
-          <section className="rules-page reveal visible" id="rules">
+          <section className="rules-page reveal visible" id="rules" style={{ minHeight: 'calc(100vh - 400px)' }}>
             <SectionStars count={35} />
-            <header className="page-hero rules-hero">
-              <div className="wrap page-hero__inner">
-                <div className="page-hero__art">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img src="/assets/img/Fox_with_emerald.webp" alt="" aria-hidden="true" />
+            <div className="wrap rules-page-wrap">
+              <div className="rules-layout">
+                <aside className="rules-sidebar">
+                  <header className="rules-card__header">
+                    <span className="rules-card__eyebrow">
+                      <i className="fa-solid fa-clover"></i>
+                      {labels.rulesHeroEyebrow}
+                    </span>
+                    <h2>HAOHAN SMP</h2>
+                    <p>{labels.rulesHeroDesc}</p>
+                  </header>
+                  <nav className="rules-sidebar-nav" ref={rulesNavRef}>
+                    <div className="rules-sidebar-indicator" ref={rulesNavIndicatorRef}></div>
+                    <button
+                      type="button"
+                      className={`rules-sidebar-link ${rulesSubTab === "smp" ? "rules-sidebar-link--active" : ""}`}
+                      onClick={() => setRulesSubTab("smp")}
+                    >
+                      <i className="fa-solid fa-gamepad"></i>
+                      <span>{dict.rules.smp.title.replace("I. ", "")}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`rules-sidebar-link ${rulesSubTab === "discord" ? "rules-sidebar-link--active" : ""}`}
+                      onClick={() => setRulesSubTab("discord")}
+                    >
+                      <i className="fa-brands fa-discord"></i>
+                      <span>{dict.rules.discord.title.replace("II. ", "")}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`rules-sidebar-link ${rulesSubTab === "penalty" ? "rules-sidebar-link--active" : ""}`}
+                      onClick={() => setRulesSubTab("penalty")}
+                    >
+                      <i className="fa-solid fa-gavel"></i>
+                      <span>{dict.rules.penalty.title.replace("III. ", "")}</span>
+                    </button>
+                    <button
+                      type="button"
+                      className={`rules-sidebar-link ${rulesSubTab === "footer" ? "rules-sidebar-link--active" : ""}`}
+                      onClick={() => setRulesSubTab("footer")}
+                    >
+                      <i className="fa-solid fa-info-circle"></i>
+                      <span>{dict.rules.footer_msg.title.replace("IV. ", "")}</span>
+                    </button>
+                  </nav>
+                </aside>
+
+                <div className="rules-content">
+                  {rulesSubTab === "smp" && (
+                    <div className="rules-article">
+                      <h2>
+                        <i className="fa-solid fa-gamepad"></i>
+                        {dict.rules.smp.title.replace("I. ", "")}
+                      </h2>
+                      {dict.rules.smp.rules_list.map((group, idx) => (
+                        <div className="rules-rule-group" key={idx} style={{ marginBottom: "20px" }}>
+                          <h3>{group.num}</h3>
+                          <ul className="rules-list">
+                            {group.sub_rules.map((rule, sIdx) => (
+                              <li key={sIdx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
+                            ))}
+                          </ul>
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                  {rulesSubTab === "discord" && (
+                    <div className="rules-article">
+                      <h2>
+                        <i className="fa-brands fa-discord"></i>
+                        {dict.rules.discord.title.replace("II. ", "")}
+                      </h2>
+                      <ul className="rules-list">
+                        {dict.rules.discord.rules_list.map((rule, idx) => (
+                          <li key={idx}>{formatText(rule)}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+
+                  {rulesSubTab === "penalty" && (
+                    <div className="rules-article">
+                      <h2>
+                        <i className="fa-solid fa-gavel"></i>
+                        {dict.rules.penalty.title.replace("III. ", "")}
+                      </h2>
+                      <div className="rules-rule-group" style={{ marginBottom: "20px" }}>
+                        <h3>{dict.rules.penalty.smp_title}</h3>
+                        <ul className="rules-list">
+                          {dict.rules.penalty.smp_rules.map((rule, idx) => (
+                            <li key={idx}>{formatText(rule)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                      <div className="rules-rule-group">
+                        <h3>{dict.rules.penalty.discord_title}</h3>
+                        <ul className="rules-list">
+                          {dict.rules.penalty.discord_rules.map((rule, idx) => (
+                            <li key={idx}>{formatText(rule)}</li>
+                          ))}
+                        </ul>
+                      </div>
+                    </div>
+                  )}
+
+                  {rulesSubTab === "footer" && (
+                    <div className="rules-article">
+                      <h2>
+                        <i className="fa-solid fa-info-circle"></i>
+                        {dict.rules.footer_msg.title.replace("IV. ", "")}
+                      </h2>
+                      <ul className="rules-list">
+                        {dict.rules.footer_msg.msgs.map((msg, idx) => (
+                          <li key={idx}>{formatText(msg)}</li>
+                        ))}
+                      </ul>
+
+                      <div className="rules-ticket" style={{ marginTop: "30px" }}>
+                        {/* eslint-disable-next-line @next/next/no-img-element */}
+                        <img src="/assets/img/logo.png" alt="" />
+                        <p>{labels.rulesTicketDesc}</p>
+                      </div>
+                    </div>
+                  )}
                 </div>
-                <div className="page-hero__copy">
-                  <span><i className="fa-solid fa-clover"></i> {labels.rulesHeroEyebrow}</span>
-                  <h1>HAOHAN <strong>SMP</strong></h1>
-                  <p>{labels.rulesHeroDesc}</p>
-                </div>
-                <div className="page-hero__cube" style={{ background: 'linear-gradient(#66bf49 0 30%, transparent 31%), repeating-linear-gradient(45deg, #8a6233 0 7px, #654826 7px 14px)' }} aria-hidden="true"></div>
               </div>
-            </header>
-
-            <div className="wrap rules-page__body">
-              <section className="rules-line-section">
-                <div className="rules-line-section__header">
-                  <span className="rules-line-section__num">1</span>
-                  <h2><i className="fa-solid fa-clover"></i> {dict.rules.smp.title.replace('I. ', '')}</h2>
-                </div>
-                <div className="rules-line-section__content">
-                  <ul>
-                    {dict.rules.smp.rules_list[0]?.sub_rules.map((rule, idx) => (
-                      <li key={idx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-
-              <section className="rules-line-section">
-                <div className="rules-line-section__header">
-                  <span className="rules-line-section__num">2</span>
-                  <h2><i className="fa-solid fa-clover"></i> Client/Mod</h2>
-                </div>
-                <div className="rules-line-section__content">
-                  <ul>
-                    {dict.rules.smp.rules_list[1]?.sub_rules.map((rule, idx) => (
-                      <li key={idx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-
-              <section className="rules-line-section">
-                <div className="rules-line-section__header">
-                  <span className="rules-line-section__num">3</span>
-                  <h2><i className="fa-solid fa-clover"></i> {dict.rules.discord.title.replace('II. ', '')}</h2>
-                </div>
-                <div className="rules-line-section__content">
-                  <ul>
-                    {dict.rules.discord.rules_list.map((rule, idx) => (
-                      <li key={idx}>{formatText(rule)}</li>
-                    ))}
-                  </ul>
-                </div>
-              </section>
-
-              <section className="rules-line-section">
-                <div className="rules-line-section__header">
-                  <span className="rules-line-section__num">4</span>
-                  <h2><i className="fa-solid fa-clover"></i> {labels.rulesSection4Title}</h2>
-                </div>
-                <div className="rules-line-section__content">
-                  <ul>
-                    {dict.rules.smp.rules_list[2]?.sub_rules.map((rule, idx) => (
-                      <li key={idx}>{formatText(rule)}</li>
-                    ))}
-                  </ul>
-                  <div className="rules-ticket">
-                    {/* eslint-disable-next-line @next/next/no-img-element */}
-                    <img src="/assets/img/logo.png" alt="" />
-                    <p>{labels.rulesTicketDesc}</p>
-                  </div>
-                  <div className="rules-note">
-                    <i className="fa-solid fa-clover"></i>
-                    <span>{dict.rules.footer_msg.msgs[0]} {dict.rules.footer_msg.msgs[1]}</span>
-                  </div>
-                </div>
-              </section>
             </div>
           </section>
         )}
         {activeTab === "wiki" && (
           <section className="wiki-section reveal visible" id="wiki">
             <SectionStars count={35} />
-            <header className="page-hero wiki-hero">
-              <div className="wrap page-hero__inner">
-                <div className="page-hero__art">
-                  <i className="fa-solid fa-book-open"></i>
-                </div>
-                <div className="page-hero__copy">
-                  <span><i className="fa-solid fa-circle-info"></i> {dict.wiki_content?.hero_eyebrow}</span>
-                  <h1>HAOHAN <strong>WIKI</strong></h1>
-                  <p>{dict.wiki_content?.hero_desc}</p>
-                </div>
-                <div className="page-hero__cube" style={{ background: 'linear-gradient(#38bdf8 0 30%, transparent 31%), repeating-linear-gradient(45deg, #8a6233 0 7px, #654826 7px 14px)' }} aria-hidden="true"></div>
-              </div>
-            </header>
-            <div className="wrap wiki-wrap" style={{ marginTop: '40px' }}>
-              <div className="wiki-sidebar">
-                <h3 className="wiki-sidebar-title">{dict.wiki_content?.sidebar_title}</h3>
-                <nav className="wiki-sidebar-nav">
-                  <button className={`wiki-nav-btn ${activeWikiTab === "intro" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("intro")}>
-                    <i className="fa-solid fa-circle-info"></i>
-                    <span>{dict.wiki_content?.nav_intro}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "recipes" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("recipes")}>
-                    <i className="fa-solid fa-receipt"></i>
-                    <span>{dict.wiki_content?.nav_recipes}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "mobs" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("mobs")}>
-                    <i className="fa-solid fa-skull"></i>
-                    <span>{dict.wiki_content?.nav_mobs}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "villagers" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("villagers")}>
-                    <i className="fa-solid fa-people-arrows"></i>
-                    <span>{dict.wiki_content?.nav_villagers}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "fishing" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("fishing")}>
-                    <i className="fa-solid fa-fish"></i>
-                    <span>{dict.wiki_content?.nav_fishing}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "items" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("items")}>
-                    <i className="fa-solid fa-gem"></i>
-                    <span>{dict.wiki_content?.nav_items}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "guilds" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("guilds")}>
-                    <i className="fa-solid fa-shield-halved"></i>
-                    <span>{dict.wiki_content?.nav_guilds}</span>
-                  </button>
-                  <button className={`wiki-nav-btn ${activeWikiTab === "guide" ? "active" : ""}`} type="button" onClick={() => setActiveWikiTab("guide")}>
-                    <i className="fa-solid fa-book-open"></i>
-                    <span>{dict.wiki_content?.nav_guide}</span>
-                  </button>
-                </nav>
-              </div>
-
-              <div className="wiki-content">
-                {activeWikiTab === "intro" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-circle-info text-accent"></i> {dict.wiki_content?.intro_title}</h2>
-                    <p className="wiki-intro-text" dangerouslySetInnerHTML={{ __html: dict.wiki_content?.intro_desc }} />
-
-                    <h3 className="wiki-subtitle"><i className="fa-solid fa-circle-play text-accent-green"></i> {dict.wiki_content?.intro_servers_title}</h3>
-                    <ul className="wiki-list">
-                      <li>
-                        <strong>{dict.wiki_content?.intro_survival_label}</strong> <code>haohansmp.io.vn</code>
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.intro_build_label}</strong> <code>None</code>
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.intro_archive_label}</strong> <code>None</code>
-                      </li>
-                    </ul>
-
-                    <p className="wiki-intro-text" style={{ marginTop: '16px', fontSize: '13.5px', fontStyle: 'italic' }}>
-                      {dict.wiki_content?.intro_rules_note
-                        ?.replace('{rules_link}', '').replace('{discord_link}', '')
-                        ?.split(dict.wiki_content?.intro_rules_link_text)[0]}
-                      <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{ color: '#84ca32', fontWeight: 'bold' }}>{dict.wiki_content?.intro_rules_link_text}</a>
-                      {dict.wiki_content?.intro_rules_note
-                        ?.replace('{rules_link}', dict.wiki_content?.intro_rules_link_text)
-                        ?.replace('{discord_link}', dict.wiki_content?.intro_discord_link_text)
-                        ?.split(dict.wiki_content?.intro_rules_link_text)[1]
-                        ?.split(dict.wiki_content?.intro_discord_link_text)[0]}
-                      <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ color: '#84ca32', fontWeight: 'bold' }}>{dict.wiki_content?.intro_discord_link_text}</a>
-                      {dict.wiki_content?.intro_rules_note
-                        ?.replace('{rules_link}', dict.wiki_content?.intro_rules_link_text)
-                        ?.replace('{discord_link}', dict.wiki_content?.intro_discord_link_text)
-                        ?.split(dict.wiki_content?.intro_discord_link_text)[1]}
-                    </p>
-
-                    <h3 className="wiki-subtitle" style={{ marginTop: '30px' }}><i className="fa-solid fa-compass text-accent-green"></i> {dict.wiki_content?.intro_guide_title}</h3>
-                    <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(240px, 1fr))', gap: '14px', marginTop: '14px' }}>
-                      <a href="#wiki" onClick={(e) => { e.preventDefault(); setActiveWikiTab("guide"); }} className="wiki-guide-card">
-                        <i className="fa-solid fa-graduation-cap"></i>
-                        <div>
-                          <h4>{dict.wiki_content?.intro_quickstart_title}</h4>
-                          <p>{dict.wiki_content?.intro_quickstart_desc}</p>
-                        </div>
-                      </a>
-                      <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" className="wiki-guide-card">
-                        <i className="fa-solid fa-cubes"></i>
-                        <div>
-                          <h4>{dict.wiki_content?.intro_modpack_title}</h4>
-                          <p>{dict.wiki_content?.intro_modpack_desc}</p>
-                        </div>
-                      </a>
-                    </div>
-                  </div>
-                )}
-
-                {activeWikiTab === "recipes" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-receipt text-accent"></i> {dict.wiki_content?.recipes_title}</h2>
-                    <p className="wiki-intro-text">{dict.wiki_content?.recipes_desc}</p>
-                    <ul className="wiki-list">
-                      <li>
-                        <strong>{dict.wiki_content?.recipes_item1_title}</strong> {dict.wiki_content?.recipes_item1_desc}
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.recipes_item2_title}</strong> {dict.wiki_content?.recipes_item2_desc}
-                      </li>
-                    </ul>
-                  </div>
-                )}
-
-                {activeWikiTab === "mobs" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-skull text-accent"></i> {dict.wiki_content?.mobs_title}</h2>
-                    <div className="wiki-alert">
+            <div className="wrap wiki-page-wrap">
+              <div className="wiki-layout">
+                <aside className="wiki-sidebar">
+                  <header className="wiki-card__header">
+                    <span className="wiki-card__eyebrow">
+                      <i className="fa-solid fa-book-open"></i>
+                      {dict.wiki_content?.hero_eyebrow}
+                    </span>
+                    <h2>HAOHAN WIKI</h2>
+                    <p>{dict.wiki_content?.hero_desc}</p>
+                  </header>
+                  <nav className="wiki-sidebar-nav" ref={wikiNavRef}>
+                    <div className="wiki-sidebar-indicator" ref={wikiNavIndicatorRef}></div>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "intro" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("intro")}
+                    >
                       <i className="fa-solid fa-circle-info"></i>
-                      <span>{dict.wiki_content?.mobs_notice}</span>
+                      <span>{dict.wiki_content?.nav_intro}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "recipes" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("recipes")}
+                    >
+                      <i className="fa-solid fa-receipt"></i>
+                      <span>{dict.wiki_content?.nav_recipes}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "mobs" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("mobs")}
+                    >
+                      <i className="fa-solid fa-skull"></i>
+                      <span>{dict.wiki_content?.nav_mobs}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "villagers" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("villagers")}
+                    >
+                      <i className="fa-solid fa-people-arrows"></i>
+                      <span>{dict.wiki_content?.nav_villagers}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "fishing" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("fishing")}
+                    >
+                      <i className="fa-solid fa-fish"></i>
+                      <span>{dict.wiki_content?.nav_fishing}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "items" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("items")}
+                    >
+                      <i className="fa-solid fa-gem"></i>
+                      <span>{dict.wiki_content?.nav_items}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "guilds" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("guilds")}
+                    >
+                      <i className="fa-solid fa-shield-halved"></i>
+                      <span>{dict.wiki_content?.nav_guilds}</span>
+                    </button>
+                    <button
+                      className={`wiki-sidebar-link ${activeWikiTab === "guide" ? "wiki-sidebar-link--active" : ""}`}
+                      type="button"
+                      onClick={() => setActiveWikiTab("guide")}
+                    >
+                      <i className="fa-solid fa-book-open"></i>
+                      <span>{dict.wiki_content?.nav_guide}</span>
+                    </button>
+                  </nav>
+                </aside>
+
+                <div className="wiki-content">
+                  {activeWikiTab === "intro" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-circle-info text-accent"></i>{" "}
+                        {dict.wiki_content?.intro_title}
+                      </h2>
+                      <p
+                        className="wiki-intro-text"
+                        dangerouslySetInnerHTML={{ __html: dict.wiki_content?.intro_desc }}
+                      />
+
+                      <h3 className="wiki-subtitle">
+                        <i className="fa-solid fa-circle-play text-accent-green"></i>{" "}
+                        {dict.wiki_content?.intro_servers_title}
+                      </h3>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.intro_survival_label}</strong>{" "}
+                          <code>haohansmp.io.vn</code>
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.intro_build_label}</strong> <code>None</code>
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.intro_archive_label}</strong> <code>None</code>
+                        </li>
+                      </ul>
+
+                      <p className="wiki-intro-text" style={{ marginTop: "16px", fontSize: "13.5px", fontStyle: "italic" }}>
+                        {dict.wiki_content?.intro_rules_note
+                          ?.replace("{rules_link}", "")
+                          ?.replace("{discord_link}", "")
+                          ?.split(dict.wiki_content?.intro_rules_link_text)[0]}
+                        <a
+                          href="#rules"
+                          onClick={(e) => {
+                            e.preventDefault();
+                            setActiveTab("rules");
+                            window.scrollTo({ top: 0, behavior: "smooth" });
+                          }}
+                          style={{ color: "#84ca32", fontWeight: "bold" }}
+                        >
+                          {dict.wiki_content?.intro_rules_link_text}
+                        </a>
+                        {dict.wiki_content?.intro_rules_note
+                          ?.replace("{rules_link}", dict.wiki_content?.intro_rules_link_text)
+                          ?.replace("{discord_link}", dict.wiki_content?.intro_discord_link_text)
+                          ?.split(dict.wiki_content?.intro_rules_link_text)[1]
+                          ?.split(dict.wiki_content?.intro_discord_link_text)[0]}
+                        <a
+                          href="https://discord.com/invite/znHfuc6hCR"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          style={{ color: "#84ca32", fontWeight: "bold" }}
+                        >
+                          {dict.wiki_content?.intro_discord_link_text}
+                        </a>
+                        {dict.wiki_content?.intro_rules_note
+                          ?.replace("{rules_link}", dict.wiki_content?.intro_rules_link_text)
+                          ?.replace("{discord_link}", dict.wiki_content?.intro_discord_link_text)
+                          ?.split(dict.wiki_content?.intro_discord_link_text)[1]}
+                      </p>
+
+                      <h3 className="wiki-subtitle" style={{ marginTop: "30px" }}>
+                        <i className="fa-solid fa-compass text-accent-green"></i>{" "}
+                        {dict.wiki_content?.intro_guide_title}
+                      </h3>
+                      <div
+                        style={{
+                          display: "grid",
+                          gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))",
+                          gap: "14px",
+                          marginTop: "14px",
+                        }}
+                      >
+                        <button
+                          onClick={() => setActiveWikiTab("guide")}
+                          className="wiki-guide-card"
+                          style={{
+                            border: "1px solid rgba(255, 255, 255, 0.06)",
+                            background: "rgba(255, 255, 255, 0.02)",
+                            textAlign: "left",
+                            cursor: "pointer",
+                            width: "100%",
+                            fontFamily: "inherit",
+                          }}
+                        >
+                          <i className="fa-solid fa-graduation-cap"></i>
+                          <div>
+                            <h4>{dict.wiki_content?.intro_quickstart_title}</h4>
+                            <p>{dict.wiki_content?.intro_quickstart_desc}</p>
+                          </div>
+                        </button>
+                        <a
+                          href="https://discord.com/invite/znHfuc6hCR"
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="wiki-guide-card"
+                        >
+                          <i className="fa-solid fa-cubes"></i>
+                          <div>
+                            <h4>{dict.wiki_content?.intro_modpack_title}</h4>
+                            <p>{dict.wiki_content?.intro_modpack_desc}</p>
+                          </div>
+                        </a>
+                      </div>
                     </div>
-                  </div>
-                )}
+                  )}
 
-                {activeWikiTab === "villagers" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-people-arrows text-accent"></i> {dict.wiki_content?.villagers_title}</h2>
-                    <p className="wiki-intro-text">{dict.wiki_content?.villagers_desc}</p>
-                    <ul className="wiki-list">
-                      <li><strong>{dict.wiki_content?.villagers_item1_title}</strong> {dict.wiki_content?.villagers_item1_desc}</li>
-                      <li><strong>{dict.wiki_content?.villagers_item2_title}</strong> {dict.wiki_content?.villagers_item2_desc}</li>
-                      <li><strong>{dict.wiki_content?.villagers_item3_title}</strong> {dict.wiki_content?.villagers_item3_desc}</li>
-                    </ul>
-                  </div>
-                )}
+                  {activeWikiTab === "recipes" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-receipt text-accent"></i>{" "}
+                        {dict.wiki_content?.recipes_title}
+                      </h2>
+                      <p className="wiki-intro-text">{dict.wiki_content?.recipes_desc}</p>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.recipes_item1_title}</strong>{" "}
+                          {dict.wiki_content?.recipes_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.recipes_item2_title}</strong>{" "}
+                          {dict.wiki_content?.recipes_item2_desc}
+                        </li>
+                      </ul>
+                    </div>
+                  )}
 
-                {activeWikiTab === "fishing" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-fish text-accent"></i> {dict.wiki_content?.fishing_title}</h2>
-                    <p className="wiki-intro-text">{dict.wiki_content?.fishing_desc}</p>
-                    <ul className="wiki-list">
-                      <li><strong>{dict.wiki_content?.fishing_item1_title}</strong> {dict.wiki_content?.fishing_item1_desc}</li>
-                      <li><strong>{dict.wiki_content?.fishing_item2_title}</strong> {dict.wiki_content?.fishing_item2_desc}</li>
-                      <li><strong>{dict.wiki_content?.fishing_item3_title}</strong> {dict.wiki_content?.fishing_item3_desc}</li>
-                    </ul>
-                  </div>
-                )}
+                  {activeWikiTab === "mobs" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-skull text-accent"></i> {dict.wiki_content?.mobs_title}
+                      </h2>
+                      <div className="wiki-alert">
+                        <i className="fa-solid fa-circle-info"></i>
+                        <span>{dict.wiki_content?.mobs_notice}</span>
+                      </div>
+                    </div>
+                  )}
 
-                {activeWikiTab === "items" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-gem text-accent"></i> {dict.wiki_content?.items_title}</h2>
-                    <p className="wiki-intro-text">{dict.wiki_content?.items_desc}</p>
-                    <ul className="wiki-list">
-                      <li><strong>{dict.wiki_content?.items_item1_title}</strong> {dict.wiki_content?.items_item1_desc}</li>
-                      <li><strong>{dict.wiki_content?.items_item2_title}</strong> {dict.wiki_content?.items_item2_desc}</li>
-                      <li><strong>{dict.wiki_content?.items_item3_title}</strong> {dict.wiki_content?.items_item3_desc}</li>
-                      <li><strong>{dict.wiki_content?.items_item4_title}</strong> {dict.wiki_content?.items_item4_desc}</li>
-                    </ul>
-                  </div>
-                )}
+                  {activeWikiTab === "villagers" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-people-arrows text-accent"></i>{" "}
+                        {dict.wiki_content?.villagers_title}
+                      </h2>
+                      <p className="wiki-intro-text">{dict.wiki_content?.villagers_desc}</p>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.villagers_item1_title}</strong>{" "}
+                          {dict.wiki_content?.villagers_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.villagers_item2_title}</strong>{" "}
+                          {dict.wiki_content?.villagers_item2_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.villagers_item3_title}</strong>{" "}
+                          {dict.wiki_content?.villagers_item3_desc}
+                        </li>
+                      </ul>
+                    </div>
+                  )}
 
-                {activeWikiTab === "guilds" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-shield-halved text-accent"></i> {dict.wiki_content?.guilds_title}</h2>
-                    <p className="wiki-intro-text">{dict.wiki_content?.guilds_desc}</p>
-                    <ul className="wiki-list">
-                      <li><strong>{dict.wiki_content?.guilds_item1_title}</strong> {dict.wiki_content?.guilds_item1_desc}</li>
-                      <li><strong>{dict.wiki_content?.guilds_item2_title}</strong> {dict.wiki_content?.guilds_item2_desc}</li>
-                      <li><strong>{dict.wiki_content?.guilds_item3_title}</strong> {dict.wiki_content?.guilds_item3_desc}</li>
-                    </ul>
-                  </div>
-                )}
+                  {activeWikiTab === "fishing" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-fish text-accent"></i>{" "}
+                        {dict.wiki_content?.fishing_title}
+                      </h2>
+                      <p className="wiki-intro-text">{dict.wiki_content?.fishing_desc}</p>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.fishing_item1_title}</strong>{" "}
+                          {dict.wiki_content?.fishing_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.fishing_item2_title}</strong>{" "}
+                          {dict.wiki_content?.fishing_item2_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.fishing_item3_title}</strong>{" "}
+                          {dict.wiki_content?.fishing_item3_desc}
+                        </li>
+                      </ul>
+                    </div>
+                  )}
 
-                {activeWikiTab === "guide" && (
-                  <div className="wiki-article">
-                    <h2><i className="fa-solid fa-book-open text-accent"></i> {dict.wiki_content?.guide_title}</h2>
+                  {activeWikiTab === "items" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-gem text-accent"></i> {dict.wiki_content?.items_title}
+                      </h2>
+                      <p className="wiki-intro-text">{dict.wiki_content?.items_desc}</p>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.items_item1_title}</strong>{" "}
+                          {dict.wiki_content?.items_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.items_item2_title}</strong>{" "}
+                          {dict.wiki_content?.items_item2_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.items_item3_title}</strong>{" "}
+                          {dict.wiki_content?.items_item3_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.items_item4_title}</strong>{" "}
+                          {dict.wiki_content?.items_item4_desc}
+                        </li>
+                      </ul>
+                    </div>
+                  )}
 
-                    <h3 className="wiki-subtitle"><i className="fa-solid fa-earth-americas text-accent-green"></i> {dict.wiki_content?.guide_world_title}</h3>
-                    <ul className="wiki-list">
-                      <li>
-                        <strong>{dict.wiki_content?.guide_world_item1_title}</strong> {dict.wiki_content?.guide_world_item1_desc}
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.guide_world_item2_title}</strong> {dict.wiki_content?.guide_world_item2_desc}
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.guide_world_item3_title}</strong> {dict.wiki_content?.guide_world_item3_desc}
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.guide_world_item4_title}</strong> {dict.wiki_content?.guide_world_item4_desc}
-                      </li>
-                    </ul>
+                  {activeWikiTab === "guilds" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-shield-halved text-accent"></i>{" "}
+                        {dict.wiki_content?.guilds_title}
+                      </h2>
+                      <p className="wiki-intro-text">{dict.wiki_content?.guilds_desc}</p>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.guilds_item1_title}</strong>{" "}
+                          {dict.wiki_content?.guilds_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guilds_item2_title}</strong>{" "}
+                          {dict.wiki_content?.guilds_item2_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guilds_item3_title}</strong>{" "}
+                          {dict.wiki_content?.guilds_item3_desc}
+                        </li>
+                      </ul>
+                    </div>
+                  )}
 
-                    <h3 className="wiki-subtitle" style={{ marginTop: '24px' }}><i className="fa-solid fa-circle-check text-accent-green"></i> {dict.wiki_content?.guide_qol_title}</h3>
-                    <ul className="wiki-list">
-                      <li>
-                        <strong>{dict.wiki_content?.guide_qol_item1_title}</strong> {dict.wiki_content?.guide_qol_item1_desc}
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.guide_qol_item2_title}</strong> {dict.wiki_content?.guide_qol_item2_desc}
-                      </li>
-                      <li>
-                        <strong>{dict.wiki_content?.guide_qol_item3_title}</strong> {dict.wiki_content?.guide_qol_item3_desc}
-                      </li>
-                    </ul>
-                  </div>
-                )}
+                  {activeWikiTab === "guide" && (
+                    <div className="wiki-article">
+                      <h2>
+                        <i className="fa-solid fa-book-open text-accent"></i>{" "}
+                        {dict.wiki_content?.guide_title}
+                      </h2>
+
+                      <h3 className="wiki-subtitle">
+                        <i className="fa-solid fa-earth-americas text-accent-green"></i>{" "}
+                        {dict.wiki_content?.guide_world_title}
+                      </h3>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.guide_world_item1_title}</strong>{" "}
+                          {dict.wiki_content?.guide_world_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guide_world_item2_title}</strong>{" "}
+                          {dict.wiki_content?.guide_world_item2_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guide_world_item3_title}</strong>{" "}
+                          {dict.wiki_content?.guide_world_item3_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guide_world_item4_title}</strong>{" "}
+                          {dict.wiki_content?.guide_world_item4_desc}
+                        </li>
+                      </ul>
+
+                      <h3 className="wiki-subtitle" style={{ marginTop: "24px" }}>
+                        <i className="fa-solid fa-circle-check text-accent-green"></i>{" "}
+                        {dict.wiki_content?.guide_qol_title}
+                      </h3>
+                      <ul className="wiki-list">
+                        <li>
+                          <strong>{dict.wiki_content?.guide_qol_item1_title}</strong>{" "}
+                          {dict.wiki_content?.guide_qol_item1_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guide_qol_item2_title}</strong>{" "}
+                          {dict.wiki_content?.guide_qol_item2_desc}
+                        </li>
+                        <li>
+                          <strong>{dict.wiki_content?.guide_qol_item3_title}</strong>{" "}
+                          {dict.wiki_content?.guide_qol_item3_desc}
+                        </li>
+                      </ul>
+                    </div>
+                  )}
+                </div>
               </div>
             </div>
           </section>
@@ -2203,37 +2544,76 @@ export default function HomeClient({ dict, lang }) {
                     </button>
                   </div>
                   <div className="mobile-drawer__nav">
-                    <button className={`wiki-nav-btn ${activeWikiTab === "intro" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("intro"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "intro" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("intro"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-circle-info"></i>
                       <span>{dict.wiki_content?.nav_intro}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "recipes" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("recipes"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "recipes" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("recipes"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-receipt"></i>
                       <span>{dict.wiki_content?.nav_recipes}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "mobs" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("mobs"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "mobs" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("mobs"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-skull"></i>
                       <span>{dict.wiki_content?.nav_mobs}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "villagers" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("villagers"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "villagers" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("villagers"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-people-arrows"></i>
                       <span>{dict.wiki_content?.nav_villagers}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "fishing" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("fishing"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "fishing" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("fishing"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-fish"></i>
                       <span>{dict.wiki_content?.nav_fishing}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "items" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("items"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "items" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("items"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-gem"></i>
                       <span>{dict.wiki_content?.nav_items}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "guilds" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guilds"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "guilds" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guilds"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-shield-halved"></i>
                       <span>{dict.wiki_content?.nav_guilds}</span>
                     </button>
-                    <button className={`wiki-nav-btn ${activeWikiTab === "guide" ? "active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guide"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "guide" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guide"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-book-open"></i>
                       <span>{dict.wiki_content?.nav_guide}</span>
+                    </button>
+                  </div>
+                </div>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Rules Mobile floating action button and modal drawer */}
+        {activeTab === "rules" && (
+          <>
+            <button className="mobile-fab rules-fab" type="button" onClick={() => setRulesMenuOpen(true)}>
+              <i className="fa-solid fa-list-ol"></i>
+            </button>
+            {rulesMenuOpen && (
+              <div className="mobile-overlay" onClick={() => setRulesMenuOpen(false)}>
+                <div className="mobile-drawer" onClick={(e) => e.stopPropagation()}>
+                  <div className="mobile-drawer__header">
+                    <h3>{isVi ? "MỤC LỤC NỘI QUY" : "RULES NAVIGATION"}</h3>
+                    <button className="mobile-drawer__close" type="button" onClick={() => setRulesMenuOpen(false)}>
+                      <i className="fa-solid fa-xmark"></i>
+                    </button>
+                  </div>
+                  <div className="mobile-drawer__nav">
+                    <button className={`rules-sidebar-link ${rulesSubTab === "smp" ? "rules-sidebar-link--active" : ""}`} type="button" onClick={() => { setRulesSubTab("smp"); setRulesMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-gamepad"></i>
+                      <span>{dict.rules.smp.title.replace("I. ", "")}</span>
+                    </button>
+                    <button className={`rules-sidebar-link ${rulesSubTab === "discord" ? "rules-sidebar-link--active" : ""}`} type="button" onClick={() => { setRulesSubTab("discord"); setRulesMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-brands fa-discord"></i>
+                      <span>{dict.rules.discord.title.replace("II. ", "")}</span>
+                    </button>
+                    <button className={`rules-sidebar-link ${rulesSubTab === "penalty" ? "rules-sidebar-link--active" : ""}`} type="button" onClick={() => { setRulesSubTab("penalty"); setRulesMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-gavel"></i>
+                      <span>{dict.rules.penalty.title.replace("III. ", "")}</span>
+                    </button>
+                    <button className={`rules-sidebar-link ${rulesSubTab === "footer" ? "rules-sidebar-link--active" : ""}`} type="button" onClick={() => { setRulesSubTab("footer"); setRulesMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-info-circle"></i>
+                      <span>{dict.rules.footer_msg.title.replace("IV. ", "")}</span>
                     </button>
                   </div>
                 </div>
