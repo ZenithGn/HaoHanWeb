@@ -6,6 +6,7 @@ Rails.application.routes.draw do
   get "up" => "rails/health#show", as: :rails_health_check
 
   post '/api/donate', to: 'api/donations#create'
+  get '/donate', to: 'api/donations#payos_return'
 
   # Authentication API
   post '/api/auth/register', to: 'api/auth#register'

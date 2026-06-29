@@ -24,16 +24,17 @@ class Api::DonationsController < ApplicationController
     # PayOS requires a unique orderCode that fits in standard integer
     order_code = Time.now.to_i + rand(100..999) # Combines timestamp + 3 digit randomizer
 
-    # Target URLs
-    host = request.base_url
-    return_url = "#{host}/donate?status=success&orderCode=#{order_code}"
-    cancel_url = "#{host}/donate?status=cancel&orderCode=#{order_code}"
+    # Return through the API first so PayOS status can be verified before redirecting to HomeClient.js.
+    lang = params[:lang].presence || 'vi'
+    callback_url = "#{request.base_url}/donate?lang=#{lang}&orderCode=#{order_code}"
+    return_url = callback_url
+    cancel_url = "#{callback_url}&cancel=true"
 
     # Call PayOS Service
     res = PayOsService.create_payment_link(
       order_code: order_code,
       amount: amount,
-      description: "Nap game #{current_user.username}",
+      description: payos_transfer_description(order_code, current_user.username),
       return_url: return_url,
       cancel_url: cancel_url,
       buyer_name: current_user.username
@@ -62,6 +63,41 @@ class Api::DonationsController < ApplicationController
     end
   end
 
+  # GET /donate
+  # Compatibility redirect for old PayOS links that pointed at the Rails API host.
+  def payos_return
+    order_code = params[:orderCode].to_s
+    donation = Donation.find_by(tx_ref: order_code)
+    payment = order_code.present? ? PayOsService.get_payment_request(order_code) : {}
+    payment_data = payment['data'].is_a?(Hash) ? payment['data'] : {}
+    payment_status = payment_data['status'].presence || params[:status].to_s
+
+    if donation&.status == 'PENDING' && payment_status.to_s.casecmp?('PAID')
+      complete_payos_donation!(donation, payment_data['amount'].presence || donation.amount)
+    end
+
+    status = params[:status].to_s
+    donate_status = if ActiveModel::Type::Boolean.new.cast(params[:cancel]) || status.casecmp?('CANCELLED')
+                      'cancel'
+                    elsif payment_status.to_s.casecmp?('PAID') || status.casecmp?('PAID') || params[:code].to_s == '00'
+                      'success'
+                    else
+                      status.presence || 'pending'
+                    end
+
+    query = {
+      donate_status: donate_status,
+      status: params[:status],
+      orderCode: params[:orderCode],
+      code: params[:code],
+      id: params[:id],
+      cancel: params[:cancel]
+    }.compact.to_query
+
+    lang = params[:lang].presence || 'vi'
+    redirect_to "#{frontend_base_url}/#{lang}?#{query}#donate", allow_other_host: true
+  end
+
   # POST /api/donations/payos/webhook
   def payos_webhook
     webhook_body = params.as_json
@@ -80,23 +116,7 @@ class Api::DonationsController < ApplicationController
 
     if donation && donation.status == 'PENDING'
       if success
-        ActiveRecord::Base.transaction do
-          # Update donation status
-          donation.update!(status: 'SUCCESS', amount: amount)
-          
-          # Update player balance
-          player = donation.player
-          new_total = player.total_donated.to_f + amount.to_f
-          player.update!(total_donated: new_total)
-
-          # Trigger RCON Service
-          # Promotes role to VIP (LuckPerms) and sends broadcast message in game
-          RconService.execute("lp user #{player.username} parent add vip") rescue nil
-          RconService.execute("say #{player.username} da donate thanh cong #{amount} VND! Cam on ban!") rescue nil
-
-          # Trigger Discord notification
-          DiscordService.notify_donation(donation) rescue nil
-        end
+        complete_payos_donation!(donation, amount)
         Rails.logger.info("PayOS Webhook SUCCESS: Updated Donation #{order_code}")
       else
         donation.update!(status: 'FAILED')
@@ -276,5 +296,33 @@ class Api::DonationsController < ApplicationController
       serial: serial,
       sign: sign
     }, status: :ok
+  end
+
+  private
+
+  def frontend_base_url
+    configured = ENV['FRONTEND_URL'].to_s.strip.sub(%r{/+\z}, '')
+    configured.match?(%r{\Ahttps?://}i) ? configured : request.base_url
+  end
+
+  def payos_transfer_description(order_code, username)
+    compact_code = order_code.to_s.last(6)
+    clean_username = username.to_s.gsub(/[^a-zA-Z0-9]/, '')
+    "GD#{compact_code} UH HHSMP #{clean_username}"[0, 25]
+  end
+
+  def complete_payos_donation!(donation, amount = nil)
+    final_amount = amount.to_f.positive? ? amount.to_f : donation.amount.to_f
+
+    ActiveRecord::Base.transaction do
+      donation.update!(status: 'SUCCESS', amount: final_amount)
+
+      player = donation.player
+      player.update!(total_donated: player.total_donated.to_f + final_amount)
+
+      RconService.execute("lp user #{player.username} parent add vip") rescue nil
+      RconService.execute("say #{player.username} da donate thanh cong #{final_amount.to_i} VND! Cam on ban!") rescue nil
+      DiscordService.notify_donation(donation) rescue nil
+    end
   end
 end

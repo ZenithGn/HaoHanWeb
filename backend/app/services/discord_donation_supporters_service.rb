@@ -55,13 +55,13 @@ class DiscordDonationSupportersService
     def list(force: false)
       cached = read_cache
       if !force && cache_fresh?(cached) && !(discord_configured? && cached['source'] == 'manual')
-        return cached.merge('cache' => 'hit')
+        return with_database_donations(cached).merge('cache' => 'hit')
       end
 
-      refresh
+      with_database_donations(refresh)
     rescue => e
       Rails.logger.error("Discord donation supporters list error: #{e.class} - #{e.message}")
-      cached.presence || safe_manual_payload
+      with_database_donations(cached.presence || safe_manual_payload)
     end
 
     def refresh
@@ -84,10 +84,10 @@ class DiscordDonationSupportersService
         refresh_later
       end
 
-      payload.merge('cache' => cached.present? ? 'hit' : 'fallback')
+      with_database_donations(payload).merge('cache' => cached.present? ? 'hit' : 'fallback')
     rescue => e
       Rails.logger.error("Discord donation supporters cached list error: #{e.class} - #{e.message}")
-      safe_manual_payload.merge('cache' => 'fallback')
+      with_database_donations(safe_manual_payload).merge('cache' => 'fallback')
     end
 
     def start_auto_refresh!
@@ -403,6 +403,45 @@ class DiscordDonationSupportersService
 
     def generic_display_name?(display_name)
       display_name.to_s.match?(/\A(?:deleted user#0000|unknown supporter)\z/i)
+    end
+
+    def with_database_donations(payload)
+      current_supporters = payload['supporters'].to_a.map { |supporter| supporter.deep_symbolize_keys }
+      merged_supporters = merge_supporters(current_supporters + database_donation_supporters)
+
+      payload.merge(
+        'supporters' => merged_supporters,
+        'source' => payload['source'].to_s.include?('database') ? payload['source'] : "#{payload['source']}+database"
+      )
+    rescue => e
+      Rails.logger.warn("Could not merge database donation supporters: #{e.class} - #{e.message}")
+      payload
+    end
+
+    def database_donation_supporters
+      Donation.success.includes(:player).each_with_object({}) do |donation, grouped|
+        player = donation.player
+        next unless player
+
+        key = player.username.to_s.downcase
+        grouped[key] ||= {
+          display_name: player.username,
+          username: player.username,
+          minecraft_name: player.username,
+          role: 'Donator',
+          avatar_url: player.avatar_url,
+          banner_url: nil,
+          accent_color: nil,
+          amount: 0,
+          entries: 0
+        }
+
+        grouped[key][:amount] += donation.amount.to_i
+        grouped[key][:entries] += 1
+      end.values
+    rescue => e
+      Rails.logger.warn("Could not load database donation supporters: #{e.class} - #{e.message}")
+      []
     end
 
     def player_avatar_for(supporter)

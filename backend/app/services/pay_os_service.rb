@@ -51,6 +51,21 @@ class PayOsService
     { "code" => "error", "desc" => e.message }
   end
 
+  def self.get_payment_request(order_code)
+    response = Faraday.get("#{BASE_URL}/#{order_code}") do |req|
+      req.headers['x-client-id'] = client_id
+      req.headers['x-api-key'] = api_key
+      req.headers['Content-Type'] = 'application/json'
+      req.options.open_timeout = 5
+      req.options.timeout = 10
+    end
+
+    JSON.parse(response.body)
+  rescue => e
+    Rails.logger.error("PayOS Get Payment Request Error: #{e.message}")
+    { "code" => "error", "desc" => e.message }
+  end
+
   # Verify PayOS webhook data signature
   def self.verify_webhook(webhook_body)
     return false if webhook_body.nil? || webhook_body['signature'].nil?

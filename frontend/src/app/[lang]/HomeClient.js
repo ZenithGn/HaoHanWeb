@@ -453,6 +453,32 @@ export default function HomeClient({ dict, lang }) {
   }, [activeTab]);
 
   useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const donateStatus = params.get('donate_status') || params.get('status');
+    const orderCode = params.get('orderCode');
+    if (!donateStatus && window.location.hash !== '#donate') return;
+
+    const timer = window.setTimeout(() => {
+      setActiveTab('donate');
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+
+      if (donateStatus) {
+        const normalizedStatus = donateStatus.toLowerCase();
+        const orderText = orderCode ? ` #${orderCode}` : '';
+        if (normalizedStatus === 'success' || normalizedStatus === 'paid') {
+          setDonateResult(`${isVi ? 'Thanh toán PayOS thành công' : 'PayOS payment completed'}${orderText}.`);
+        } else if (normalizedStatus === 'cancel' || normalizedStatus === 'cancelled') {
+          setDonateResult(`${isVi ? 'Bạn đã hủy thanh toán PayOS' : 'PayOS payment was cancelled'}${orderText}.`);
+        } else {
+          setDonateResult(`${isVi ? 'Đã quay lại từ PayOS' : 'Returned from PayOS'}${orderText}.`);
+        }
+      }
+    }, 0);
+
+    return () => window.clearTimeout(timer);
+  }, [isVi]);
+
+  useEffect(() => {
     if (rulesSubTab) {
       sessionStorage.setItem('rulesSubTab', rulesSubTab);
     }
@@ -1011,6 +1037,7 @@ export default function HomeClient({ dict, lang }) {
           amount,
           message: `Minecraft name: ${trimmedName}`,
           minecraft_name: trimmedName,
+          lang: currentLang,
         }),
       });
       const data = await response.json().catch(() => ({}));
