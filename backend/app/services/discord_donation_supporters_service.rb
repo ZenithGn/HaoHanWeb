@@ -61,7 +61,7 @@ class DiscordDonationSupportersService
       refresh
     rescue => e
       Rails.logger.error("Discord donation supporters list error: #{e.class} - #{e.message}")
-      cached.presence || build_payload(MANUAL_MESSAGES, source: 'manual')
+      cached.presence || safe_manual_payload
     end
 
     def refresh
@@ -71,24 +71,43 @@ class DiscordDonationSupportersService
       payload
     rescue => e
       Rails.logger.error("Discord donation supporters refresh error: #{e.class} - #{e.message}")
-      fallback = build_payload(MANUAL_MESSAGES, source: 'manual')
+      fallback = read_cache.presence || safe_manual_payload
       write_cache(fallback)
       fallback
     end
 
     def list_cached(refresh_async: true)
       cached = read_cache
-      payload = cached.presence || build_payload(MANUAL_MESSAGES, source: 'manual')
+      payload = cached.presence || safe_manual_payload
 
       if refresh_async && (!cache_fresh?(cached) || stale_supporter_cache?(cached))
-        Thread.new do
-          refresh
-        rescue => e
-          Rails.logger.error("Discord donation supporters async refresh error: #{e.class} - #{e.message}")
-        end
+        refresh_later
       end
 
       payload.merge('cache' => cached.present? ? 'hit' : 'fallback')
+    rescue => e
+      Rails.logger.error("Discord donation supporters cached list error: #{e.class} - #{e.message}")
+      safe_manual_payload.merge('cache' => 'fallback')
+    end
+
+    def start_auto_refresh!
+      return unless auto_refresh_enabled?
+      return if @auto_refresh_started
+
+      @auto_refresh_started = true
+      Thread.new do
+        loop do
+          begin
+            refresh
+          rescue => e
+            Rails.logger.error("Discord donation supporters scheduled refresh error: #{e.class} - #{e.message}")
+          ensure
+            ActiveRecord::Base.connection_pool.release_connection if defined?(ActiveRecord::Base)
+          end
+
+          sleep refresh_interval_seconds
+        end
+      end
     end
 
     def build_payload(messages, source:)
@@ -109,6 +128,15 @@ class DiscordDonationSupportersService
       ENV['DISCORD_BOT_TOKEN'].present? && channel_id.present?
     end
 
+    def auto_refresh_enabled?
+      ActiveModel::Type::Boolean.new.cast(ENV['DISCORD_DONATION_AUTO_REFRESH'])
+    end
+
+    def refresh_interval_seconds
+      value = ENV['DISCORD_DONATION_REFRESH_INTERVAL_SECONDS'].to_i
+      value.positive? ? value : CACHE_TTL.to_i
+    end
+
     def channel_id
       ENV['DISCORD_DONATION_CHANNEL_ID'].presence || ENV['DISCORD_SUPPORTERS_CHANNEL_ID'].presence
     end
@@ -123,6 +151,8 @@ class DiscordDonationSupportersService
           req.headers['Authorization'] = "Bot #{ENV.fetch('DISCORD_BOT_TOKEN')}"
           req.params['limit'] = [100, MAX_MESSAGES_TO_SCAN - messages.size].min
           req.params['before'] = before if before.present?
+          req.options.open_timeout = 5
+          req.options.timeout = 12
         end
 
         raise "Discord API #{response.status}: #{response.body}" unless response.success?
@@ -269,6 +299,8 @@ class DiscordDonationSupportersService
     def fetch_discord_user_profile(user_id)
       response = Faraday.get("#{DISCORD_API_BASE}/users/#{user_id}") do |req|
         req.headers['Authorization'] = "Bot #{ENV.fetch('DISCORD_BOT_TOKEN')}"
+        req.options.open_timeout = 5
+        req.options.timeout = 10
       end
 
       return nil unless response.success?
@@ -412,6 +444,34 @@ class DiscordDonationSupportersService
     def write_cache(payload)
       FileUtils.mkdir_p(CACHE_PATH.dirname)
       File.write(CACHE_PATH, JSON.pretty_generate(payload))
+    rescue => e
+      Rails.logger.warn("Could not write Discord donation supporters cache: #{e.class} - #{e.message}")
+    end
+
+    def refresh_later
+      return if @refreshing
+
+      @refreshing = true
+      Thread.new do
+        refresh
+      rescue => e
+        Rails.logger.error("Discord donation supporters async refresh error: #{e.class} - #{e.message}")
+      ensure
+        @refreshing = false
+        ActiveRecord::Base.connection_pool.release_connection if defined?(ActiveRecord::Base)
+      end
+    end
+
+    def safe_manual_payload
+      build_payload(MANUAL_MESSAGES, source: 'manual')
+    rescue => e
+      Rails.logger.error("Discord donation supporters manual fallback error: #{e.class} - #{e.message}")
+      {
+        'supporters' => [],
+        'pages' => [],
+        'source' => 'manual',
+        'updated_at' => Time.current.iso8601
+      }
     end
   end
 end

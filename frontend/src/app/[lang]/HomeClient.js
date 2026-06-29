@@ -563,14 +563,7 @@ export default function HomeClient({ dict, lang }) {
       try {
         const response = await fetch(`${API_BASE}/api/supporters/donations`);
         if (!response.ok) return;
-        const data = await response.json();
-        let sourceData = data;
-        if ((sourceData.supporters || []).length > 0 && !(sourceData.supporters || []).some((donor) => donor.avatar_url)) {
-          const refreshedResponse = await fetch(`${API_BASE}/api/supporters/donations?refresh=true`);
-          if (refreshedResponse.ok) {
-            sourceData = await refreshedResponse.json();
-          }
-        }
+        const sourceData = await response.json();
 
         const fetchedSupporters = (sourceData.supporters || [])
           .filter((donor) => Number(donor.amount) > 0)

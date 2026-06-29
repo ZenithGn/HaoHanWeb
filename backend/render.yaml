@@ -42,6 +42,12 @@ services:
         sync: false
       - key: DISCORD_GUILD_ID
         sync: false
+      - key: DISCORD_DONATION_CHANNEL_ID
+        sync: false
+      - key: DISCORD_DONATION_AUTO_REFRESH
+        value: true
+      - key: DISCORD_DONATION_REFRESH_INTERVAL_SECONDS
+        value: 86400
       - key: PAYOS_CLIENT_ID
         sync: false
       - key: PAYOS_API_KEY
