@@ -17,8 +17,8 @@ class Api::DonationsController < ApplicationController
     amount = params[:amount].to_i
     message = params[:message]&.strip
 
-    if amount < 1000
-      return render json: { error: 'Số tiền quyên góp tối thiểu là 1.000 đ!' }, status: :bad_request
+    if amount < 2000
+      return render json: { error: 'Số tiền ủng hộ tối thiểu là 2.000 VND.' }, status: :bad_request
     end
 
     # PayOS requires a unique orderCode that fits in standard integer
@@ -302,7 +302,7 @@ class Api::DonationsController < ApplicationController
 
   def frontend_base_url
     configured = ENV['FRONTEND_URL'].to_s.strip.sub(%r{/+\z}, '')
-    configured.match?(%r{\Ahttps?://}i) ? configured : request.base_url
+    configured.match?(%r{\Ahttps?://}i) ? configured : 'https://web.haohansmp.io.vn'
   end
 
   def payos_transfer_description(order_code, username)

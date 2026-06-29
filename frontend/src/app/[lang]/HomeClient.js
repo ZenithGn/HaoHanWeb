@@ -1012,7 +1012,7 @@ export default function HomeClient({ dict, lang }) {
       return;
     }
 
-    if (!Number.isFinite(amount) || amount < 1000) {
+    if (!Number.isFinite(amount) || amount < 2000) {
       setDonateResult(dict.donate_form_messages?.error_min_amount);
       return;
     }
@@ -2268,7 +2268,7 @@ export default function HomeClient({ dict, lang }) {
                       <input
                         id="donate-amount"
                         type="number"
-                        min="1000"
+                        min="2000"
                         step="1000"
                         value={donateAmount}
                         onChange={(e) => setDonateAmount(e.target.value)}

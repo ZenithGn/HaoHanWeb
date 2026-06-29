@@ -975,7 +975,7 @@
   ],
   "donate_form_messages": {
     "error_empty_name": "Please enter your Minecraft character name.",
-    "error_min_amount": "Minimum support amount is 1,000 VND.",
+    "error_min_amount": "Minimum support amount is 2,000 VND.",
     "error_login_required": "Please log in before creating a PayOS payment.",
     "status_creating_link": "Creating PayOS checkout link...",
     "status_redirecting": "Checkout created, redirecting to PayOS...",

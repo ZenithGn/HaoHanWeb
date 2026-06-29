@@ -843,7 +843,7 @@
   ],
   "donate_form_messages": {
     "error_empty_name": "Vui lòng nhập tên nhân vật Minecraft.",
-    "error_min_amount": "Số tiền ủng hộ tối thiểu là 1.000 VND.",
+    "error_min_amount": "Số tiền ủng hộ tối thiểu là 2.000 VND.",
     "error_login_required": "Bạn cần đăng nhập trước khi tạo thanh toán PayOS.",
     "status_creating_link": "Đang tạo liên kết thanh toán PayOS...",
     "status_redirecting": "Đã tạo thanh toán, đang chuyển sang PayOS...",
