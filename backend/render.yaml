@@ -6,7 +6,6 @@ services:
     dockerContext: .
     plan: free
     healthCheckPath: /up
-    preDeployCommand: bundle exec rails db:prepare
     envVars:
       - key: RAILS_ENV
         value: production
