@@ -343,6 +343,8 @@ class Api::DiscordController < ApplicationController
   def broadcast_player_update(player)
     # Broadcast to RolesChannel for this user
     ActionCable.server.broadcast("roles_channel_#{player.id}", serialize_user(player))
+  rescue => e
+    Rails.logger.warn("Could not broadcast Discord player update #{player.id}: #{e.class} - #{e.message}")
   end
 
   def authenticate_bot_or_server!

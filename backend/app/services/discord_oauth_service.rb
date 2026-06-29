@@ -69,19 +69,22 @@ class DiscordOauthService
   # Check if user is in guild and return their roles
   # Returns array of role names
   def self.fetch_guild_member_roles(discord_user_id)
-    if BOT_TOKEN.blank? || GUILD_ID.blank?
+    token = bot_token
+    if token.blank? || GUILD_ID.blank?
       Rails.logger.warn("Discord BOT_TOKEN or GUILD_ID is not configured. Skipping guild check and returning default Member role.")
       return ["Members"]
     end
 
     # 1. Fetch guild roles to resolve IDs to Names
     roles_resp = Faraday.get("https://discord.com/api/v10/guilds/#{GUILD_ID}/roles") do |req|
-      req.headers['Authorization'] = "Bot #{BOT_TOKEN}"
+      req.headers['Authorization'] = "Bot #{token}"
+      req.options.open_timeout = 5
+      req.options.timeout = 10
     end
 
     unless roles_resp.success?
       Rails.logger.error("Failed to fetch Discord guild roles: #{roles_resp.body}")
-      return []
+      return ["Members"]
     end
 
     guild_roles = JSON.parse(roles_resp.body)
@@ -89,7 +92,9 @@ class DiscordOauthService
 
     # 2. Fetch guild member
     member_resp = Faraday.get("https://discord.com/api/v10/guilds/#{GUILD_ID}/members/#{discord_user_id}") do |req|
-      req.headers['Authorization'] = "Bot #{BOT_TOKEN}"
+      req.headers['Authorization'] = "Bot #{token}"
+      req.options.open_timeout = 5
+      req.options.timeout = 10
     end
 
     if member_resp.status == 404
@@ -115,5 +120,9 @@ class DiscordOauthService
       end
     end
     "default"
+  end
+
+  def self.bot_token
+    ENV['DISCORD_BOT_TOKEN'].to_s.sub(/\ABot\s+/i, '').strip
   end
 end

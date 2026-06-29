@@ -125,7 +125,7 @@ class DiscordDonationSupportersService
     private
 
     def discord_configured?
-      ENV['DISCORD_BOT_TOKEN'].present? && channel_id.present?
+      bot_token.present? && channel_id.present?
     end
 
     def auto_refresh_enabled?
@@ -148,7 +148,7 @@ class DiscordDonationSupportersService
 
       while messages.size < MAX_MESSAGES_TO_SCAN
         response = Faraday.get("#{DISCORD_API_BASE}/channels/#{channel_id}/messages") do |req|
-          req.headers['Authorization'] = "Bot #{ENV.fetch('DISCORD_BOT_TOKEN')}"
+          req.headers['Authorization'] = "Bot #{bot_token}"
           req.params['limit'] = [100, MAX_MESSAGES_TO_SCAN - messages.size].min
           req.params['before'] = before if before.present?
           req.options.open_timeout = 5
@@ -241,6 +241,7 @@ class DiscordDonationSupportersService
 
     def normalize_discord_line(line)
       line.to_s
+          .encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
           .strip
           .gsub(/\A```[a-z]*\s*/i, '')
           .gsub(/```\z/, '')
@@ -272,7 +273,11 @@ class DiscordDonationSupportersService
     end
 
     def clean_name(value, mention_profiles = {})
-      cleaned = value.to_s.gsub(/\A@/, '').gsub(/[-+,\s]+\z/, '').strip
+      cleaned = value.to_s
+                     .encode('UTF-8', invalid: :replace, undef: :replace, replace: '')
+                     .gsub(/\A@/, '')
+                     .gsub(/[-+,\s]+\z/, '')
+                     .strip
 
       if (match = cleaned.match(/\A<@!?(\d+)>\z/))
         mention_profiles.dig(match[1], :name).presence || cleaned
@@ -298,7 +303,7 @@ class DiscordDonationSupportersService
 
     def fetch_discord_user_profile(user_id)
       response = Faraday.get("#{DISCORD_API_BASE}/users/#{user_id}") do |req|
-        req.headers['Authorization'] = "Bot #{ENV.fetch('DISCORD_BOT_TOKEN')}"
+        req.headers['Authorization'] = "Bot #{bot_token}"
         req.options.open_timeout = 5
         req.options.timeout = 10
       end
@@ -382,8 +387,6 @@ class DiscordDonationSupportersService
       merged.values
             .sort_by { |supporter| [-supporter[:amount], supporter[:display_name].downcase] }
             .map do |supporter|
-              avatar_url = supporter[:avatar_url].presence || player_avatar_for(supporter)
-
               {
                 display_name: supporter[:display_name],
                 username: supporter[:username],
@@ -391,7 +394,7 @@ class DiscordDonationSupportersService
                 role: supporter[:role] || 'Donator',
                 amount: supporter[:amount],
                 entries: supporter[:entries],
-                avatar_url: avatar_url,
+                avatar_url: supporter[:avatar_url],
                 banner_url: supporter[:banner_url],
                 accent_color: supporter[:accent_color]
               }
@@ -472,6 +475,10 @@ class DiscordDonationSupportersService
         'source' => 'manual',
         'updated_at' => Time.current.iso8601
       }
+    end
+
+    def bot_token
+      ENV['DISCORD_BOT_TOKEN'].to_s.sub(/\ABot\s+/i, '').strip
     end
   end
 end
