@@ -71,7 +71,7 @@ class Player < ApplicationRecord
   private
 
   def set_offline_uuid
-    if password_hash == 'UNREGISTERED_GHOST' && uuid.blank? && username.present?
+    if uuid.blank? && username.present?
       self.uuid = self.class.offline_uuid(username)
     end
   end
