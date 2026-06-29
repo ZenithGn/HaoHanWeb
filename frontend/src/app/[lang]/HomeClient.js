@@ -1751,11 +1751,37 @@ export default function HomeClient({ dict, lang }) {
                       {dict.rules.smp.rules_list.map((group, idx) => (
                         <div className="rules-rule-group" key={idx} style={{ marginBottom: "20px" }}>
                           <h3>{group.num}</h3>
-                          <ul className="rules-list">
-                            {group.sub_rules.map((rule, sIdx) => (
-                              <li key={sIdx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
-                            ))}
-                          </ul>
+                          {idx === 2 ? (
+                            <div className="rules-issue-resolver">
+                              <div className="resolver-content">
+                                <div className="resolver-icon">
+                                  <i className="fa-solid fa-ticket-simple"></i>
+                                </div>
+                                <div className="resolver-text">
+                                  <p className="resolver-desc">
+                                    {isVi 
+                                      ? "Nếu bạn bị mất đồ không rõ nguyên nhân, vật nuôi bị chết không lý do, hoặc căn cứ bị phá hoại... Hãy báo cáo ngay với đội ngũ Admin để được hỗ trợ giải quyết."
+                                      : "If your items disappear, pets are killed without reason, or your base is griefed... Report it to the admin team immediately to get it resolved."}
+                                  </p>
+                                </div>
+                              </div>
+                              <a 
+                                href="https://discord.gg/CbNXADe7ya"
+                                target="_blank" 
+                                rel="noopener noreferrer" 
+                                className="resolver-btn"
+                              >
+                                <i className="fa-brands fa-discord"></i>
+                                <span>{isVi ? "Mở Ticket Hỗ Trợ trên Discord" : "Open Support Ticket on Discord"}</span>
+                              </a>
+                            </div>
+                          ) : (
+                            <ul className="rules-list">
+                              {group.sub_rules.map((rule, sIdx) => (
+                                <li key={sIdx}>{formatText(rule.replace(/^\d+\.\d+\.\s*/, ""))}</li>
+                              ))}
+                            </ul>
+                          )}
                         </div>
                       ))}
                     </div>
