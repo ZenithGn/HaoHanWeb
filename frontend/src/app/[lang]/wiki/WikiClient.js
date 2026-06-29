@@ -234,20 +234,92 @@ export default function WikiClient({ dict, lang }) {
             {activeWikiTab === "villagers" && (
               <div className="wiki-article">
                 <h2>
-                  <i className="fa-solid fa-people-arrows text-accent"></i> {dict.wiki_content?.villagers_title}
+                  <i className="fa-solid fa-people-arrows text-accent"></i>{" "}
+                  {dict.wiki_content?.villagers_title}
                 </h2>
                 <p className="wiki-intro-text">{dict.wiki_content?.villagers_desc}</p>
+
+                <div className="wiki-alert" style={{ background: 'rgba(239, 68, 68, 0.08)', border: '1px dashed rgba(239, 68, 68, 0.3)', color: '#ffd0d0', margin: '20px 0' }}>
+                  <i className="fa-solid fa-triangle-exclamation" style={{ color: '#ef4444' }}></i>
+                  <span>{dict.wiki_content?.villagers_notice}</span>
+                </div>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-gear text-accent"></i>{" "}
+                  {isVi ? "Cơ chế giao dịch mới" : "New Trading Mechanics"}
+                </h3>
                 <ul className="wiki-list">
                   <li>
-                    <strong>{dict.wiki_content?.villagers_item1_title}</strong> {dict.wiki_content?.villagers_item1_desc}
+                    <strong>{dict.wiki_content?.villagers_novice_title}</strong>{" "}
+                    {dict.wiki_content?.villagers_novice_desc}
                   </li>
                   <li>
-                    <strong>{dict.wiki_content?.villagers_item2_title}</strong> {dict.wiki_content?.villagers_item2_desc}
+                    <strong>{dict.wiki_content?.villagers_mending_title}</strong>{" "}
+                    {dict.wiki_content?.villagers_mending_desc}
                   </li>
                   <li>
-                    <strong>{dict.wiki_content?.villagers_item3_title}</strong> {dict.wiki_content?.villagers_item3_desc}
+                    <strong>{dict.wiki_content?.villagers_rare_loot_title}</strong>{" "}
+                    {dict.wiki_content?.villagers_rare_loot_desc}
+                  </li>
+                  <li>
+                    <strong>{dict.wiki_content?.villagers_lectern_title}</strong>{" "}
+                    {dict.wiki_content?.villagers_lectern_desc}
+                  </li>
+                  <li>
+                    <strong>{dict.wiki_content?.villagers_region_title}</strong>{" "}
+                    {dict.wiki_content?.villagers_region_desc}
                   </li>
                 </ul>
+
+                <h3 className="wiki-subtitle" style={{ marginTop: '28px' }}>
+                  <i className="fa-solid fa-list-check text-accent"></i>{" "}
+                  {dict.wiki_content?.villagers_list_title}
+                </h3>
+                <ul className="wiki-list">
+                  <li>
+                    {dict.wiki_content?.villagers_list_mending}
+                  </li>
+                  <li>
+                    {dict.wiki_content?.villagers_list_tier1}
+                  </li>
+                  <li>
+                    {dict.wiki_content?.villagers_list_tier2}
+                  </li>
+                  <li>
+                    {dict.wiki_content?.villagers_list_tier3}
+                  </li>
+                </ul>
+
+                <div className="wiki-recipe-box" style={{ marginTop: '30px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '16px', background: 'rgba(255, 255, 255, 0.02)', padding: '24px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  <span style={{ fontSize: '14.5px', fontWeight: 'bold', color: '#ffc97a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fa-solid fa-images text-accent"></i> {dict.wiki_content?.villagers_images_caption}
+                  </span>
+                  
+                  <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '16px', width: '100%' }}>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img 
+                        src="/assets/img/wiki/villager%20trade/trade1.png" 
+                        alt="Đặt sách gốc" 
+                        style={{ width: '100%', height: 'auto', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.12)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }} 
+                      />
+                      <span style={{ fontSize: '12px', color: '#8b8070', fontStyle: 'italic' }}>
+                        {isVi ? "Bước 1: Đặt sách gốc cần nhân bản" : "Step 1: Place the source book to duplicate"}
+                      </span>
+                    </div>
+                    <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '8px' }}>
+                      {/* eslint-disable-next-line @next/next/no-img-element */}
+                      <img 
+                        src="/assets/img/wiki/villager%20trade/trade2.png" 
+                        alt="Giao dịch bản sao" 
+                        style={{ width: '100%', height: 'auto', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.12)', boxShadow: '0 4px 12px rgba(0,0,0,0.4)' }} 
+                      />
+                      <span style={{ fontSize: '12px', color: '#8b8070', fontStyle: 'italic' }}>
+                        {isVi ? "Bước 2: Giao dịch để lấy bản sao" : "Step 2: Complete trade to receive duplicate"}
+                      </span>
+                    </div>
+                  </div>
+                </div>
               </div>
             )}
 
@@ -257,17 +329,94 @@ export default function WikiClient({ dict, lang }) {
                   <i className="fa-solid fa-fish text-accent"></i> {dict.wiki_content?.fishing_title}
                 </h2>
                 <p className="wiki-intro-text">{dict.wiki_content?.fishing_desc}</p>
-                <ul className="wiki-list">
-                  <li>
-                    <strong>{dict.wiki_content?.fishing_item1_title}</strong> {dict.wiki_content?.fishing_item1_desc}
-                  </li>
-                  <li>
-                    <strong>{dict.wiki_content?.fishing_item2_title}</strong> {dict.wiki_content?.fishing_item2_desc}
-                  </li>
-                  <li>
-                    <strong>{dict.wiki_content?.fishing_item3_title}</strong> {dict.wiki_content?.fishing_item3_desc}
-                  </li>
-                </ul>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-chart-line text-accent"></i>{" "}
+                  {dict.wiki_content?.fishing_progression_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_progression_desc}
+                </p>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-map-location-dot text-accent"></i>{" "}
+                  {dict.wiki_content?.fishing_biome_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_biome_desc}
+                </p>
+
+                <div className="wiki-comparison-grid" style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(280px, 1fr))', gap: '20px', margin: '24px 0' }}>
+                  <div style={{ background: 'rgba(74, 222, 128, 0.05)', border: '1px solid rgba(74, 222, 128, 0.2)', padding: '20px', borderRadius: '12px' }}>
+                    <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#4ade80', margin: '0 0 10px 0', fontSize: '15.5px', fontWeight: 'bold' }}>
+                      <i className="fa-solid fa-shrimp"></i> {dict.wiki_content?.fishing_live_catch_title}
+                    </h4>
+                    <p style={{ color: '#dfd9ce', fontSize: '13.5px', lineHeight: '1.6', margin: 0, whiteSpace: 'pre-line' }}>
+                      {dict.wiki_content?.fishing_live_catch_desc}
+                    </p>
+                  </div>
+
+                  <div style={{ background: 'rgba(251, 146, 60, 0.05)', border: '1px solid rgba(251, 146, 60, 0.2)', padding: '20px', borderRadius: '12px' }}>
+                    <h4 style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#fb923c', margin: '0 0 10px 0', fontSize: '15.5px', fontWeight: 'bold' }}>
+                      <i className="fa-solid fa-gem"></i> {dict.wiki_content?.fishing_treasure_hunter_title}
+                    </h4>
+                    <p style={{ color: '#dfd9ce', fontSize: '13.5px', lineHeight: '1.6', margin: 0, whiteSpace: 'pre-line' }}>
+                      {dict.wiki_content?.fishing_treasure_hunter_desc}
+                    </p>
+                  </div>
+                </div>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-fire text-accent" style={{ color: '#ef4444' }}></i>{" "}
+                  {dict.wiki_content?.fishing_fireproof_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_fireproof_desc}
+                </p>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-circle-question text-accent"></i>{" "}
+                  {dict.wiki_content?.fishing_hidden_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_hidden_desc}
+                </p>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-seedling text-accent"></i>{" "}
+                  {dict.wiki_content?.fishing_chumming_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_chumming_desc}
+                </p>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-wand-magic-sparkles text-accent"></i>{" "}
+                  {dict.wiki_content?.fishing_rare_rods_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_rare_rods_desc}
+                </p>
+
+                <h3 className="wiki-subtitle">
+                  <i className="fa-solid fa-book-open text-accent"></i>{" "}
+                  {dict.wiki_content?.fishing_guide_title}
+                </h3>
+                <p className="wiki-intro-text" style={{ whiteSpace: 'pre-line' }}>
+                  {dict.wiki_content?.fishing_guide_desc}
+                </p>
+
+                <div className="wiki-recipe-box" style={{ marginTop: '24px', display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px', background: 'rgba(255, 255, 255, 0.02)', padding: '20px', borderRadius: '12px', border: '1px solid rgba(255, 255, 255, 0.08)' }}>
+                  <span style={{ fontSize: '14.5px', fontWeight: 'bold', color: '#ffc97a', display: 'flex', alignItems: 'center', gap: '8px' }}>
+                    <i className="fa-solid fa-hammer text-accent"></i> {dict.wiki_content?.fishing_recipe_caption}
+                  </span>
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img 
+                    src="/assets/img/wiki/fishing/recipe.png" 
+                    alt="Fishing Guide Book Crafting Recipe" 
+                    style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.15)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }} 
+                  />
+                </div>
               </div>
             )}
 
