@@ -1601,7 +1601,8 @@ button {
 .faq__fox {
   position: absolute;
   z-index: 0;
-  bottom: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   width: clamp(88px, 13vw, 142px);
   height: auto;
   image-rendering: pixelated;
@@ -1616,7 +1617,12 @@ button {
 
 .faq__fox--right {
   right: -42px;
-  transform: scaleX(-1);
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.faq__list {
+  position: relative;
+  width: 100%;
 }
 
 .faq-item {
@@ -2039,7 +2045,9 @@ button {
   }
 
   .faq__fox {
+    top: auto;
     bottom: 10px;
+    transform: none;
     width: 74px;
     opacity: 0.3;
   }
@@ -2050,6 +2058,7 @@ button {
 
   .faq__fox--right {
     right: -20px;
+    transform: scaleX(-1);
   }
 }
 

@@ -1447,20 +1447,6 @@ export default function HomeClient({ dict, lang }) {
             <section className="section section--panel faq reveal visible">
               <SectionStars count={20} />
               <div className="wrap faq__wrap">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="faq__fox faq__fox--left"
-                  src="/assets/img/Fox_with_emerald.webp"
-                  alt=""
-                  aria-hidden="true"
-                />
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  className="faq__fox faq__fox--right"
-                  src="/assets/img/Fox_with_emerald.webp"
-                  alt=""
-                  aria-hidden="true"
-                />
                 <div className="faq__content">
                   <div className="section-header">
                     <span className="section-header__eyebrow">
@@ -1471,22 +1457,38 @@ export default function HomeClient({ dict, lang }) {
                       {labels.faqSubtitle}
                     </p>
                   </div>
-                  {[1, 2, 3, 4, 5].map((item, idx) => {
-                    const isOpen = openFaq === idx;
-                    return (
-                      <div key={item} className={`faq-item ${isOpen ? "faq-item--open" : ""}`}>
-                        <button className="faq-question" type="button" onClick={() => setOpenFaq(isOpen ? null : idx)}>
-                          <span>{dict.faq[`q${item}`]}</span>
-                          <span className="faq-icon-arrow"></span>
-                        </button>
-                        <div className="faq-answer-wrapper">
-                          <div className="faq-answer">
-                            <p>{dict.faq[`a${item}`]}</p>
+                  <div className="faq__list">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className="faq__fox faq__fox--left"
+                      src="/assets/img/Fox_with_emerald.webp"
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      className="faq__fox faq__fox--right"
+                      src="/assets/img/Fox_with_emerald.webp"
+                      alt=""
+                      aria-hidden="true"
+                    />
+                    {[1, 2, 3, 4, 5].map((item, idx) => {
+                      const isOpen = openFaq === idx;
+                      return (
+                        <div key={item} className={`faq-item ${isOpen ? "faq-item--open" : ""}`}>
+                          <button className="faq-question" type="button" onClick={() => setOpenFaq(isOpen ? null : idx)}>
+                            <span>{dict.faq[`q${item}`]}</span>
+                            <span className="faq-icon-arrow"></span>
+                          </button>
+                          <div className="faq-answer-wrapper">
+                            <div className="faq-answer">
+                              <p>{dict.faq[`a${item}`]}</p>
+                            </div>
                           </div>
                         </div>
-                      </div>
-                    );
-                  })}
+                      );
+                    })}
+                  </div>
                   <p className="faq-more-questions">
                     {labels.faqMorePrefix}{" "}
                     <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer">
