@@ -3844,26 +3844,6 @@ const RECIPES_DATA = [
       output: "shield"
     }
   },
-  {
-    id: "haohansmp_super_stick",
-    category: "combat",
-    station: "crafting",
-    image: "/assets/img/recipe/haohansmp_super_stick.png",
-    name: { vi: "Gậy Thần Hảo Hán", en: "HaoHanSMP Super Stick" },
-    desc: {
-      vi: "Vũ khí huyền thoại của server HaoHanSMP với khả năng đẩy lùi cực mạnh.",
-      en: "Legendary staff of HaoHanSMP with extreme knockback and special properties."
-    },
-    recipe: {
-      type: "crafting",
-      grid: [
-        null, null, "breeze_rod",
-        null, "stick", null,
-        "blaze_rod", null, null
-      ],
-      output: "haohansmp_super_stick"
-    }
-  },
   // Pickaxes
   {
     id: "wooden_pickaxe",
