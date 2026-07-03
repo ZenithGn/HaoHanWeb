@@ -344,7 +344,7 @@ button {
   height: 64px;
   padding: 0 24px;
   background: transparent;
-  border-bottom: 1px solid transparent;
+  border-bottom: none;
   box-shadow: none;
   backdrop-filter: none;
   -webkit-backdrop-filter: none;
@@ -752,7 +752,7 @@ button {
 .rules-page,
 .wiki-section {
   position: relative;
-  overflow: hidden;
+  overflow: clip;
 }
 
 .section {
@@ -949,6 +949,50 @@ button {
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+.mc-server-row--disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.48;
+}
+
+.mc-server-row--disabled,
+.mc-server-row--disabled:hover {
+  transform: none;
+  background: rgba(18, 18, 18, 0.64);
+  border-color: rgba(180, 180, 180, 0.16);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.32);
+}
+
+.mc-server-row--disabled:hover::after {
+  border-color: transparent;
+}
+
+.mc-server-row--disabled .mc-server-version {
+  color: #a8a8a8;
+  background: rgba(160, 160, 160, 0.1);
+  border-color: rgba(160, 160, 160, 0.18);
+}
+
+.mc-server-row--disabled .mc-server-title,
+.mc-server-row--disabled .mc-server-motd,
+.mc-server-row--disabled .mc-server-ip,
+.mc-server-row--disabled .mc-player-count {
+  color: #9c9c9c;
+}
+
+.mc-server-row--disabled .mc-copy-ip-btn {
+  cursor: not-allowed;
+  color: #8f8f8f;
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.mc-server-row--disabled .mc-copy-ip-btn:hover {
+  color: #8f8f8f;
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
 .mc-server-icon {
   display: flex;
   align-items: center;
@@ -1005,6 +1049,7 @@ button {
   font-size: 13.5px;
   color: #c7bfae;
   line-height: 1.45;
+  white-space: pre-line;
 }
 
 .mc-server-ip-container {
@@ -1601,7 +1646,8 @@ button {
 .faq__fox {
   position: absolute;
   z-index: 0;
-  bottom: 20px;
+  top: 50%;
+  transform: translateY(-50%);
   width: clamp(88px, 13vw, 142px);
   height: auto;
   image-rendering: pixelated;
@@ -1616,7 +1662,12 @@ button {
 
 .faq__fox--right {
   right: -42px;
-  transform: scaleX(-1);
+  transform: translateY(-50%) scaleX(-1);
+}
+
+.faq__list {
+  position: relative;
+  width: 100%;
 }
 
 .faq-item {
@@ -2039,7 +2090,9 @@ button {
   }
 
   .faq__fox {
+    top: auto;
     bottom: 10px;
+    transform: none;
     width: 74px;
     opacity: 0.3;
   }
@@ -2050,6 +2103,7 @@ button {
 
   .faq__fox--right {
     right: -20px;
+    transform: scaleX(-1);
   }
 }
 
@@ -4640,7 +4694,7 @@ button.inline-nav__link {
 .page-hero {
   position: relative;
   overflow: hidden;
-  padding: 120px 0 36px;
+  padding: 80px 0 36px;
   border-bottom: 1px solid rgba(232, 116, 30, 0.14);
   background-size: cover !important;
   background-position: top center !important;
@@ -4761,9 +4815,11 @@ button.inline-nav__link {
 }
 
 .rules-sidebar {
-  padding: 8px 34px 20px 0;
-  border-right: 1px solid rgba(255, 149, 46, 0.13);
+  padding: 20px 34px 20px 16px;
+  border-right: none !important;
   align-self: start;
+  position: sticky !important;
+  top: 64px !important;
 }
 
 .rules-sidebar .rules-card__header {
@@ -4870,7 +4926,7 @@ button.inline-nav__link {
 
 .rules-content {
   width: 100%;
-  padding: 16px 0 0 clamp(34px, 5vw, 72px);
+  padding: 20px 0 0 clamp(34px, 5vw, 72px);
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -5001,6 +5057,97 @@ button.inline-nav__link {
 .rules-note i {
   color: #84ca32;
   font-size: 18px;
+}
+
+.rules-issue-resolver {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: linear-gradient(135deg, rgba(255, 149, 46, 0.05) 0%, rgba(255, 149, 46, 0.02) 100%);
+  border: 1px solid rgba(255, 149, 46, 0.18);
+  border-radius: 12px;
+  padding: 24px;
+  margin-top: 12px;
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.25);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+}
+
+.rules-issue-resolver:hover {
+  border-color: rgba(255, 149, 46, 0.35);
+  box-shadow: 0 12px 40px rgba(255, 149, 46, 0.08), 0 8px 32px rgba(0, 0, 0, 0.25);
+  transform: translateY(-2px);
+}
+
+.resolver-content {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+}
+
+.resolver-icon {
+  background: rgba(255, 149, 46, 0.12);
+  color: #ff952e;
+  width: 48px;
+  height: 48px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 22px;
+  flex-shrink: 0;
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+.resolver-text {
+  flex: 1;
+}
+
+.resolver-desc {
+  margin: 0;
+  color: #cbd5e1;
+  font-size: 14.5px;
+  line-height: 1.6;
+}
+
+.resolver-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  background: #ff952e;
+  color: #101115;
+  font-weight: 700;
+  font-size: 14px;
+  padding: 12px 24px;
+  border-radius: 8px;
+  text-decoration: none;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(255, 149, 46, 0.25);
+  width: fit-content;
+}
+
+.resolver-btn:hover {
+  background: #ffa852;
+  box-shadow: 0 6px 18px rgba(255, 149, 46, 0.4);
+  transform: translateY(-1px);
+}
+
+.resolver-btn:active {
+  transform: translateY(0);
+}
+
+@media (max-width: 600px) {
+  .resolver-content {
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+  }
+
+  .rules-issue-resolver {
+    align-items: center;
+    padding: 20px;
+  }
 }
 
 .rules-back-link {
@@ -5201,8 +5348,8 @@ details:hover {
 }
 
 .wiki-sidebar {
-  padding: 8px 34px 20px 0;
-  border-right: 1px solid rgba(255, 149, 46, 0.13);
+  padding: 20px 34px 20px 16px;
+  border-right: none !important;
   align-self: start;
   background: transparent !important;
   border-top: 0 !important;
@@ -5210,8 +5357,32 @@ details:hover {
   border-bottom: 0 !important;
   box-shadow: none !important;
   border-radius: 0 !important;
-  position: relative !important;
-  top: 0 !important;
+  position: sticky !important;
+  top: 64px !important;
+}
+
+.wiki-sidebar::before,
+.rules-sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 149, 46, 0.3) 25%, rgba(255, 149, 46, 0.3) 75%, transparent 100%);
+  pointer-events: none;
+}
+
+.wiki-sidebar::after,
+.rules-sidebar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 149, 46, 0.3) 25%, rgba(255, 149, 46, 0.3) 75%, transparent 100%);
+  pointer-events: none;
 }
 
 .wiki-sidebar .wiki-card__header {
@@ -5318,7 +5489,7 @@ details:hover {
 
 .wiki-content {
   width: 100%;
-  padding: 16px 0 0 clamp(34px, 5vw, 72px);
+  padding: 20px 0 0 clamp(34px, 5vw, 72px);
   overflow: visible;
   border: 0;
   border-radius: 0;
@@ -5476,12 +5647,11 @@ details:hover {
 }
 
 /* ── Secondary Pages Padding Setup ── */
-#donate,
-#profile,
 #wiki,
 #rules,
-#gallery {
-  padding-top: 120px !important;
+#gallery,
+#donate {
+  padding-top: 88px !important;
 }
 
 /* ── Wiki & Rules Responsive styles ── */
@@ -5494,16 +5664,15 @@ details:hover {
 
   .wiki-sidebar,
   .rules-sidebar {
-    display: contents;
-    border-right: 0 !important;
+    padding: 20px 20px 20px 0;
+    position: sticky !important;
+    top: 64px !important;
+    align-self: start;
   }
 
   .wiki-layout,
   .rules-layout {
     display: grid;
-    grid-template-areas:
-      "header header"
-      "nav content";
     grid-template-columns: 200px minmax(0, 1fr);
     gap: 20px;
     min-height: 500px;
@@ -5512,7 +5681,6 @@ details:hover {
 
   .wiki-sidebar .wiki-card__header,
   .rules-sidebar .rules-card__header {
-    grid-area: header;
     margin-bottom: 12px;
     padding-bottom: 16px;
     border-bottom: 1px solid rgba(255, 149, 46, 0.14);
@@ -5526,7 +5694,6 @@ details:hover {
 
   .wiki-sidebar-nav,
   .rules-sidebar-nav {
-    grid-area: nav;
     display: flex;
     flex-direction: column;
     gap: 8px;
@@ -5543,7 +5710,6 @@ details:hover {
 
   .wiki-content,
   .rules-content {
-    grid-area: content;
     padding: 0;
   }
 }
@@ -6560,13 +6726,25 @@ details:hover {
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
 }
 
 @keyframes scaleUp {
-  from { transform: scale(0.95); opacity: 0; }
-  to { transform: scale(1); opacity: 1; }
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* Responsive Modal styles */
@@ -6574,17 +6752,21 @@ details:hover {
   .feature-modal-card {
     max-height: 95vh;
   }
+
   .feature-modal-grid {
     grid-template-columns: 1fr;
   }
+
   .feature-modal-media {
     border-right: none;
     border-bottom: 1px solid rgba(232, 116, 30, 0.1);
     padding: 24px;
   }
+
   .feature-modal-info {
     padding: 24px;
   }
+
   .feature-modal-title {
     font-size: 1.5rem;
   }
@@ -6596,9 +6778,11 @@ details:hover {
     grid-template-columns: 1fr !important;
     gap: 16px !important;
   }
+
   .gallery-album-card {
     min-height: 200px !important;
   }
+
   .gallery-album-card img {
     min-height: 200px !important;
   }
@@ -6667,7 +6851,7 @@ details:hover {
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 15px 30px rgba(0,0,0,0.5);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.5);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6738,9 +6922,11 @@ details:hover {
 .gallery-timeline-item:not(:last-child)::after {
   content: "";
   position: absolute;
-  left: 20px; /* center of dot */
+  left: 20px;
+  /* center of dot */
   top: 17px;
-  bottom: -38px; /* reaches exactly the center of the next dot */
+  bottom: -38px;
+  /* reaches exactly the center of the next dot */
   width: 2px;
   background: rgba(255, 149, 46, 0.25);
   z-index: 1;
@@ -6828,29 +7014,760 @@ details:hover {
     padding-left: 32px;
     margin-bottom: 40px;
   }
-  
+
   .gallery-timeline-item:not(:last-child)::after {
     left: 12px;
     top: 15px;
     bottom: -28px;
   }
-  
+
   .gallery-timeline-dot {
     left: 3px;
     width: 18px;
     height: 18px;
   }
-  
+
   .gallery-timeline-dot-inner {
     width: 6px;
     height: 6px;
   }
-  
+
   .gallery-timeline-title {
     font-size: 1.25rem;
   }
-  
+
   .gallery-timeline-header {
     gap: 8px;
+  }
+}
+
+/* ── Wiki Recipes Enhancement ── */
+.recipe-section {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  margin-top: 16px;
+  animation: heroFadeInUp 0.5s ease-out both;
+}
+
+.recipe-controls {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 12px;
+  padding: 16px;
+  backdrop-filter: blur(10px);
+}
+
+.recipe-search-box {
+  position: relative;
+  width: 100%;
+}
+
+.recipe-search-box i {
+  position: absolute;
+  left: 16px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: rgba(255, 255, 255, 0.4);
+  font-size: 0.95rem;
+  pointer-events: none;
+  transition: color 0.25s ease;
+}
+
+.recipe-search-input {
+  width: 100%;
+  padding: 12px 16px 12px 46px;
+  background: rgba(0, 0, 0, 0.2);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 0.95rem;
+  outline: none;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.recipe-search-input:focus {
+  border-color: rgba(255, 149, 46, 0.5);
+  box-shadow: 0 0 10px rgba(255, 149, 46, 0.15);
+}
+
+.recipe-search-input:focus+i {
+  color: #ff952e;
+}
+
+.recipe-categories {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.recipe-category-btn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 20px;
+  color: #aaa9a6;
+  font-size: 0.88rem;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.recipe-category-btn:hover {
+  background: rgba(255, 255, 255, 0.07);
+  color: #fff;
+  border-color: rgba(255, 255, 255, 0.15);
+  transform: translateY(-1px);
+}
+
+.recipe-category-btn--active {
+  background: linear-gradient(135deg, rgba(255, 149, 46, 0.2), rgba(255, 149, 46, 0.05));
+  border-color: rgba(255, 149, 46, 0.4);
+  color: #ff952e;
+  box-shadow: 0 4px 12px rgba(255, 149, 46, 0.1);
+}
+
+.recipe-category-count {
+  font-size: 0.75rem;
+  background: rgba(255, 255, 255, 0.08);
+  color: inherit;
+  padding: 2px 6px;
+  border-radius: 10px;
+  font-family: 'Outfit', sans-serif;
+  margin-left: 2px;
+}
+
+.recipe-category-btn--active .recipe-category-count {
+  background: rgba(255, 149, 46, 0.25);
+  color: #fff;
+}
+
+.recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 20px;
+  margin-top: 10px;
+}
+
+.recipe-card {
+  display: flex;
+  flex-direction: column;
+  background: url('/assets/img/recipe/recepie_bg.png') center / 100% 100% no-repeat !important;
+  border: none !important;
+  border-image: none !important;
+  image-rendering: pixelated;
+  border-radius: 8px !important;
+  padding: 16px 14px 14px !important;
+  position: relative;
+  overflow: hidden;
+  height: auto !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  transition: transform 0.2s ease, filter 0.2s ease !important;
+}
+
+.recipe-card-inner {
+  display: flex;
+  flex-direction: column;
+  border: 2px solid #2d1c11;
+  border-radius: 4px;
+  overflow: hidden;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+  width: 100%;
+}
+
+.recipe-card:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.1) !important;
+}
+
+.recipe-card::before {
+  display: none !important;
+}
+
+.recipe-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #2e2117;
+  border-bottom: 2px solid #2d1c11;
+  padding: 8px 12px;
+  margin-bottom: 0 !important;
+  gap: 10px;
+}
+
+.recipe-card-title-wrap {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.recipe-card-title-icon {
+  width: 20px;
+  height: 20px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.recipe-card-title {
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: #f4efe2;
+  margin: 0;
+  font-family: 'Minecraft', sans-serif;
+  text-shadow: 1px 1px 0px #1e140d;
+}
+
+.recipe-station-badge {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.72rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  white-space: nowrap;
+}
+
+.recipe-station-badge--crafting {
+  background: #142407 !important;
+  color: #55b61b !important;
+  border: 1px solid #2f5510 !important;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 0.65rem;
+}
+
+.recipe-station-badge--smithing {
+  background: #2a0707 !important;
+  color: #f87171 !important;
+  border: 1px solid #5c1010 !important;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 0.65rem;
+}
+
+.recipe-station-badge--brewing {
+  background: #1e072a !important;
+  color: #c084fc !important;
+  border: 1px solid #4a105c !important;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 0.65rem;
+}
+
+.recipe-station-badge--smelting {
+  background: #2a1407 !important;
+  color: #fb923c !important;
+  border: 1px solid #5c2c10 !important;
+  font-family: 'Minecraft', sans-serif;
+  font-size: 0.65rem;
+}
+
+.recipe-img-container {
+  position: relative;
+  background: #c6c6c6 !important;
+  border-left: 3px solid #e5e5e5 !important;
+  border-right: 3px solid #555555 !important;
+  border-bottom: 3px solid #555555 !important;
+  box-shadow: inset -2px -2px 0px #555555, inset 2px 2px 0px #e5e5e5;
+  border-radius: 0 !important;
+  width: 100%;
+  height: auto !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  margin-bottom: 0 !important;
+  padding: 16px 8px !important;
+}
+
+.recipe-card .mc-recipe-gui {
+  background: transparent !important;
+  border: none !important;
+  box-shadow: none !important;
+  padding: 0 !important;
+}
+
+.recipe-card:hover .recipe-img-container {
+  border-color: rgba(255, 149, 46, 0.2);
+}
+
+.recipe-img {
+  max-width: 90%;
+  max-height: 90%;
+  object-fit: contain;
+  transition: transform 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.recipe-card:hover .recipe-img {
+  transform: scale(1.08);
+}
+
+
+
+.recipe-card-desc {
+  font-size: 0.82rem;
+  color: #aaa9a6;
+  line-height: 1.5;
+  margin: 0;
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.recipe-no-results {
+  grid-column: 1 / -1;
+  text-align: center;
+  padding: 48px 24px;
+  background: rgba(255, 255, 255, 0.01);
+  border: 1px dashed rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  color: #aaa9a6;
+  font-size: 0.95rem;
+}
+
+.recipe-no-results i {
+  font-size: 2.5rem;
+  color: rgba(255, 255, 255, 0.15);
+  margin-bottom: 12px;
+}
+
+/* ── Recipe Modal Display ── */
+.recipe-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(10, 11, 14, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 9999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  animation: modalFadeIn 0.3s ease-out forwards;
+}
+
+.recipe-modal-content {
+  background: #14161d;
+  border: 1px solid rgba(255, 149, 46, 0.2);
+  border-radius: 16px;
+  max-width: 600px;
+  width: 100%;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.6), 0 0 30px rgba(255, 149, 46, 0.1);
+  overflow: hidden;
+  position: relative;
+  animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+}
+
+.recipe-modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.01);
+}
+
+.recipe-modal-title {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.recipe-modal-title h3 {
+  font-size: 1.2rem;
+  font-weight: 800;
+  color: #fff;
+  margin: 0;
+}
+
+.recipe-modal-close {
+  background: transparent;
+  border: 0;
+  color: #aaa9a6;
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.2s ease, transform 0.2s ease;
+}
+
+.recipe-modal-close:hover {
+  color: #fff;
+  transform: rotate(90deg);
+}
+
+.recipe-modal-body {
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+.recipe-modal-img-wrapper {
+  width: 100%;
+  background: rgba(0, 0, 0, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: inset 0 0 20px rgba(0, 0, 0, 0.5);
+}
+
+.recipe-modal-layout {
+  display: flex;
+  gap: 16px;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.recipe-modal-layout .mc-infobox {
+  flex-shrink: 0;
+}
+
+@media (max-width: 500px) {
+  .recipe-modal-layout {
+    flex-direction: column;
+    align-items: center;
+  }
+  .recipe-modal-layout .mc-infobox {
+    width: 100%;
+  }
+}
+
+.recipe-modal-img {
+  max-width: 100%;
+  max-height: 280px;
+  object-fit: contain;
+}
+
+.recipe-modal-footer-desc {
+  width: 100%;
+  background: rgba(255, 255, 255, 0.02);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  padding: 14px 16px;
+  color: #dfd9ce;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  margin: 0;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes modalSlideUp {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@media (max-width: 600px) {
+  .recipe-controls {
+    padding: 12px;
+  }
+
+  .recipe-categories {
+    gap: 6px;
+  }
+
+  .recipe-category-btn {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+  }
+
+  .recipe-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .recipe-modal-content {
+    max-width: 100%;
+  }
+
+  .recipe-modal-body {
+    padding: 16px;
+  }
+}
+
+/* ── Minecraft Style Crafting Grid (Pure CSS) ── */
+.mc-recipe-gui {
+  display: inline-flex;
+  align-items: center;
+  gap: calc(var(--mc-scale) * 8px);
+  background: #c6c6c6;
+  border-top: calc(var(--mc-scale) * 1px) solid #e5e5e5;
+  border-left: calc(var(--mc-scale) * 1px) solid #e5e5e5;
+  border-bottom: calc(var(--mc-scale) * 1px) solid #555555;
+  border-right: calc(var(--mc-scale) * 1px) solid #555555;
+  padding: calc(var(--mc-scale) * 8px);
+  box-shadow: 
+    inset calc(var(--mc-scale) * -1px) calc(var(--mc-scale) * -1px) 0px #555555,
+    inset calc(var(--mc-scale) * 1px) calc(var(--mc-scale) * 1px) 0px #e5e5e5;
+  border-radius: 0;
+  box-sizing: border-box;
+}
+
+.mc-recipe-gui--smithing {
+  padding: calc(var(--mc-scale) * 8px) calc(var(--mc-scale) * 12px);
+}
+
+.mc-recipe-smithing-body {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--mc-scale) * 8px);
+}
+
+.mc-recipe-grid {
+  display: grid;
+  grid-template-columns: repeat(3, var(--mc-slot-size));
+  grid-template-rows: repeat(3, var(--mc-slot-size));
+  gap: 0;
+}
+
+@font-face {
+  font-family: 'Minecraft';
+  src: url('/assets/fonts/Minecraft.otf') format('opentype');
+  font-weight: normal;
+  font-style: normal;
+}
+
+.mc-recipe-slot {
+  width: var(--mc-slot-size);
+  height: var(--mc-slot-size);
+  background: #8b8b8b;
+  border-top: calc(var(--mc-scale) * 1px) solid #373737;
+  border-left: calc(var(--mc-scale) * 1px) solid #373737;
+  border-bottom: calc(var(--mc-scale) * 1px) solid #ffffff;
+  border-right: calc(var(--mc-scale) * 1px) solid #ffffff;
+  box-sizing: border-box;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  overflow: visible;
+  border-radius: 0;
+  position: relative;
+}
+
+.mc-recipe-slot:hover {
+  z-index: 50;
+}
+
+.mc-recipe-slot img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+  display: block;
+  padding: calc(var(--mc-scale) * 1px);
+  box-sizing: border-box;
+}
+
+.mc-recipe-slot--output {
+  width: calc(var(--mc-slot-size) * 1.5);
+  height: calc(var(--mc-slot-size) * 1.5);
+  border-top-width: calc(var(--mc-scale) * 1px);
+  border-left-width: calc(var(--mc-scale) * 1px);
+  border-bottom-width: calc(var(--mc-scale) * 1px);
+  border-right-width: calc(var(--mc-scale) * 1px);
+}
+
+.mc-recipe-slot--output img {
+  width: calc(100% / 1.5) !important;
+  height: calc(100% / 1.5) !important;
+}
+
+.mc-recipe-arrow {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: calc(var(--mc-scale) * 22px);
+  height: calc(var(--mc-scale) * 15px);
+  line-height: 1;
+  overflow: visible;
+}
+
+.mc-recipe-placeholder {
+  font-family: 'Minecraft', monospace;
+  font-size: calc(var(--mc-scale) * 10px);
+  font-weight: bold;
+  color: #ff952e;
+  text-shadow: 1px 1px 0px #000;
+  line-height: 1;
+}
+
+/* ── Minecraft In-Game Tooltip popup ── */
+.mc-tooltip-fixed {
+  position: fixed;
+  z-index: 9999;
+  background: #100010 !important;
+  border: calc(var(--mc-scale) * 1px) solid #2d0a57 !important;
+  box-shadow: 
+    0 0 0 calc(var(--mc-scale) * 1px) #100010,
+    inset 0 0 0 calc(var(--mc-scale) * 1px) #100010 !important;
+  padding: calc(var(--mc-scale) * 1.5px) calc(var(--mc-scale) * 2.5px) !important;
+  margin: calc(var(--mc-scale) * 1px) !important;
+  border-radius: calc(var(--mc-scale) * 1px) !important;
+  white-space: nowrap;
+  pointer-events: none;
+  font-family: 'Minecraft', monospace !important;
+  text-align: left;
+  line-height: 1 !important;
+}
+
+/* Color codes matching Minecraft colors */
+.mc-tooltip-title {
+  font-size: calc(var(--mc-scale) * 6.4px);
+  font-weight: normal;
+  margin-bottom: calc(var(--mc-scale) * 3px);
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.75);
+  line-height: 1 !important;
+}
+
+.mc-tooltip-title:only-child {
+  margin-bottom: 0 !important;
+}
+
+.mc-tooltip-line {
+  font-size: calc(var(--mc-scale) * 6.4px);
+  font-weight: normal;
+  line-height: 1.2 !important;
+  text-shadow: 1px 1px 0px rgba(0, 0, 0, 0.75);
+}
+
+.mc-tooltip-line--indented {
+  padding-left: calc(var(--mc-scale) * 3px);
+}
+
+.mc-tooltip-text--white { color: #ffffff !important; }
+.mc-tooltip-text--gray { color: #aaaaaa !important; }
+.mc-tooltip-text--blue { color: #5555ff !important; }
+.mc-tooltip-text--green { color: #55ff55 !important; }
+.mc-tooltip-text--aqua { color: #55ffff !important; }
+.mc-tooltip-text--yellow { color: #ffff55 !important; }
+.mc-tooltip-text--magenta { color: #ff55ff !important; }
+.mc-tooltip-text--dark_red { color: #aa0000 !important; }
+.mc-tooltip-text--emerald { color: #55ff55 !important; }
+
+/* ── Minecraft Wiki Infobox ── */
+.mc-infobox {
+  background: #1b1b22;
+  border: 1px solid #2a2a33;
+  border-radius: 6px;
+  overflow: hidden;
+  min-width: 180px;
+  flex-shrink: 0;
+}
+
+.mc-infobox-header {
+  background: #25252d;
+  padding: 8px 12px;
+  border-bottom: 1px solid #2a2a33;
+}
+
+.mc-infobox-header h4 {
+  margin: 0;
+  font-size: 0.9rem;
+  font-weight: 700;
+  color: #e8e4d8;
+}
+
+.mc-infobox-img {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 12px;
+  background: #16161d;
+  border-bottom: 1px solid #2a2a33;
+}
+
+.mc-infobox-img img {
+  width: 40px;
+  height: 40px;
+  object-fit: contain;
+  image-rendering: pixelated;
+  image-rendering: crisp-edges;
+}
+
+.mc-infobox-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.78rem;
+}
+
+.mc-infobox-table tr {
+  border-bottom: 1px solid #25252d;
+}
+
+.mc-infobox-table tr:last-child {
+  border-bottom: none;
+}
+
+.mc-infobox-label {
+  width: 40%;
+  padding: 5px 8px;
+  font-weight: 700;
+  color: #999;
+  background: rgba(255, 255, 255, 0.02);
+  vertical-align: top;
+}
+
+.mc-infobox-value {
+  padding: 5px 8px;
+  color: #e0dcd0;
+  vertical-align: top;
+}
+
+.mc-infobox-value .text-renewable {
+  color: #84ca32;
+}
+
+.mc-infobox-value .text-nonrenewable {
+  color: #f87171;
+}
+
+/* ── Mobile Layout Polish ── */
+@media (max-width: 480px) {
+  .recipe-grid {
+    grid-template-columns: 1fr !important;
+    gap: 12px !important;
+  }
+  .recipe-card {
+    padding: 12px !important;
+  }
+  .recipe-img-container {
+    height: auto !important;
+    padding: 12px 6px !important;
   }
 }

@@ -225,11 +225,13 @@ class DiscordDonationSupportersService
       avatar_url = avatar_url_from_name_part(name_part, mention_profiles)
       banner_url = banner_url_from_name_part(name_part, mention_profiles)
       accent_color = accent_color_from_name_part(name_part, mention_profiles)
+      discord_id = discord_id_from_name_part(name_part, mention_profiles)
 
       {
         display_name: display_name,
         username: minecraft_name.presence || display_name,
         minecraft_name: minecraft_name.presence,
+        discord_id: discord_id,
         role: 'Donator',
         avatar_url: avatar_url,
         banner_url: banner_url,
@@ -255,6 +257,7 @@ class DiscordDonationSupportersService
 
       message['mentions'].to_a.each_with_object({}) do |mention, profiles|
         profiles[mention['id'].to_s] = {
+          discord_id: mention['id'].to_s,
           name: mention['name'].to_s,
           avatar_url: mention['avatar_url'].presence,
           banner_url: mention['banner_url'].presence,
@@ -299,6 +302,11 @@ class DiscordDonationSupportersService
     def accent_color_from_name_part(name_part, mention_profiles = {})
       mention_id = name_part.to_s.match(/<@!?(\d+)>/)&.[](1)
       mention_profiles.dig(mention_id, :accent_color) if mention_id
+    end
+
+    def discord_id_from_name_part(name_part, mention_profiles = {})
+      mention_id = name_part.to_s.match(/<@!?(\d+)>/)&.[](1)
+      mention_profiles.dig(mention_id, :discord_id).presence || mention_id
     end
 
     def fetch_discord_user_profile(user_id)
@@ -366,7 +374,8 @@ class DiscordDonationSupportersService
       merged = {}
 
       supporters.each do |supporter|
-        key_source = generic_display_name?(supporter[:display_name]) ? supporter[:minecraft_name].presence : supporter[:display_name].presence
+        key_source = supporter[:discord_id].presence
+        key_source ||= generic_display_name?(supporter[:display_name]) ? supporter[:minecraft_name].presence : supporter[:display_name].presence
         key = (key_source || supporter[:minecraft_name] || supporter[:username]).to_s.downcase.gsub(/\s+/, ' ').strip
 
         if merged[key]
@@ -374,6 +383,7 @@ class DiscordDonationSupportersService
           merged[key][:entries] += supporter[:entries]
           merged[key][:display_name] = supporter[:display_name] if merged[key][:display_name].blank?
           merged[key][:minecraft_name] ||= supporter[:minecraft_name]
+          merged[key][:discord_id] ||= supporter[:discord_id]
           merged[key][:username] = merged[key][:minecraft_name].presence || merged[key][:display_name]
           merged[key][:role] ||= 'Donator'
           merged[key][:avatar_url] ||= supporter[:avatar_url]
@@ -391,6 +401,7 @@ class DiscordDonationSupportersService
                 display_name: supporter[:display_name],
                 username: supporter[:username],
                 minecraft_name: supporter[:minecraft_name],
+                discord_id: supporter[:discord_id],
                 role: supporter[:role] || 'Donator',
                 amount: supporter[:amount],
                 entries: supporter[:entries],
@@ -419,19 +430,33 @@ class DiscordDonationSupportersService
     end
 
     def database_donation_supporters
+      discord_profiles = {}
+
       Donation.success.includes(:player).each_with_object({}) do |donation, grouped|
         player = donation.player
         next unless player
 
-        key = player.username.to_s.downcase
+        discord_id = player.discord_id.to_s.presence
+        discord_profile = discord_id ? (discord_profiles[discord_id] ||= fetch_discord_user_profile(discord_id)) : nil
+        discord_name = discord_profile&.dig('global_name').presence || discord_profile&.dig('username').presence
+        avatar_url = if discord_profile
+                       discord_avatar_url(discord_profile)
+                     elsif player.avatar_url.present?
+                       player.avatar_url
+                     else
+                       minecraft_avatar_url(player.username)
+                     end
+
+        key = (discord_id || player.username).to_s.downcase
         grouped[key] ||= {
-          display_name: player.username,
-          username: player.username,
+          display_name: discord_name.presence || player.username,
+          username: discord_name.presence || player.username,
           minecraft_name: player.username,
+          discord_id: discord_id,
           role: 'Donator',
-          avatar_url: player.avatar_url,
-          banner_url: nil,
-          accent_color: nil,
+          avatar_url: avatar_url,
+          banner_url: discord_banner_url(discord_profile),
+          accent_color: discord_profile&.dig('accent_color'),
           amount: 0,
           entries: 0
         }
@@ -442,6 +467,12 @@ class DiscordDonationSupportersService
     rescue => e
       Rails.logger.warn("Could not load database donation supporters: #{e.class} - #{e.message}")
       []
+    end
+
+    def minecraft_avatar_url(username)
+      return nil if username.blank?
+
+      "https://minotar.net/avatar/#{username}/120"
     end
 
     def player_avatar_for(supporter)

@@ -4,6 +4,8 @@ import Negotiator from 'negotiator';
 
 const locales = ['vi', 'en'];
 const defaultLocale = 'vi';
+const homeTabRoutes = ['gallery', 'rules', 'wiki', 'donate', 'profile'];
+const discordInviteUrl = 'https://discord.com/invite/znHfuc6hCR';
 
 // Get the preferred locale, similar to above or using a library
 function getLocale(request) {
@@ -25,6 +27,40 @@ function getLocale(request) {
 export function middleware(request) {
   // Check if there is any supported locale in the pathname
   const pathname = request.nextUrl.pathname;
+  const normalizedPathname = pathname.replace(/\/$/, '') || '/';
+  const sectionWithLocale = normalizedPathname.match(/^\/(gallery|rules|wiki|donate|profile|discord)\/(vi|en)$/);
+  const sectionWithoutLocale = normalizedPathname.match(/^\/(gallery|rules|wiki|donate|profile|discord)$/);
+
+  if (sectionWithLocale) {
+    const [, section, locale] = sectionWithLocale;
+
+    if (section === 'discord') {
+      return NextResponse.redirect(discordInviteUrl);
+    }
+
+    const url = request.nextUrl.clone();
+    if (homeTabRoutes.includes(section)) {
+      url.pathname = `/${locale}`;
+      url.searchParams.set('tab', section);
+    } else {
+      url.pathname = `/${locale}/${section}`;
+    }
+
+    return NextResponse.rewrite(url);
+  }
+
+  if (sectionWithoutLocale) {
+    const [, section] = sectionWithoutLocale;
+    if (section === 'discord') {
+      return NextResponse.redirect(discordInviteUrl);
+    }
+
+    const locale = getLocale(request);
+    const url = request.nextUrl.clone();
+    url.pathname = `/${section}/${locale}`;
+    return NextResponse.redirect(url);
+  }
+
   const pathnameIsMissingLocale = locales.every(
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
