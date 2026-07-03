@@ -4770,9 +4770,10 @@ button.inline-nav__link {
 }
 
 .rules-sidebar {
-  padding: 8px 34px 20px 0;
-  border-right: 1px solid rgba(255, 149, 46, 0.13);
+  padding: 8px 34px 20px 16px;
+  border-right: none !important;
   align-self: start;
+  position: relative !important;
 }
 
 .rules-sidebar .rules-card__header {
@@ -5301,8 +5302,8 @@ details:hover {
 }
 
 .wiki-sidebar {
-  padding: 8px 34px 20px 0;
-  border-right: 1px solid rgba(255, 149, 46, 0.13);
+  padding: 8px 34px 20px 16px;
+  border-right: none !important;
   align-self: start;
   background: transparent !important;
   border-top: 0 !important;
@@ -5312,6 +5313,30 @@ details:hover {
   border-radius: 0 !important;
   position: relative !important;
   top: 0 !important;
+}
+
+.wiki-sidebar::before,
+.rules-sidebar::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 149, 46, 0.3) 25%, rgba(255, 149, 46, 0.3) 75%, transparent 100%);
+  pointer-events: none;
+}
+
+.wiki-sidebar::after,
+.rules-sidebar::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  width: 1.5px;
+  background: linear-gradient(180deg, transparent 0%, rgba(255, 149, 46, 0.3) 25%, rgba(255, 149, 46, 0.3) 75%, transparent 100%);
+  pointer-events: none;
 }
 
 .wiki-sidebar .wiki-card__header {
@@ -7094,25 +7119,26 @@ details:hover {
 .recipe-card {
   display: flex;
   flex-direction: column;
-  background: rgba(255, 255, 255, 0.02);
-  border: 1px solid rgba(255, 255, 255, 0.05);
-  border-radius: 12px;
-  padding: 16px;
+  background: url('/assets/img/recipe/recepie_bg.png') repeat !important;
+  border: 6px solid transparent !important;
+  border-image: url('/assets/img/minecraft/stone_type/Cobblestone.png') 16 repeat !important;
+  image-rendering: pixelated;
+  border-radius: 0 !important;
+  padding: 12px !important;
   position: relative;
   overflow: visible;
-  height: 100%;
+  height: auto !important;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.6) !important;
+  transition: transform 0.2s ease, filter 0.2s ease !important;
+}
+
+.recipe-card:hover {
+  transform: translateY(-2px) !important;
+  filter: brightness(1.1) !important;
 }
 
 .recipe-card::before {
-  content: "";
-  position: absolute;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 3px;
-  background: linear-gradient(90deg, #ff952e, transparent);
-  opacity: 0.4;
-  transition: opacity 0.3s ease;
+  display: none !important;
 }
 
 .recipe-card-header {
@@ -7170,17 +7196,17 @@ details:hover {
 
 .recipe-img-container {
   position: relative;
-  background: rgba(0, 0, 0, 0.25);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 8px;
+  background: transparent !important;
+  border: none !important;
+  border-radius: 0 !important;
   width: 100%;
-  height: 160px;
+  height: auto !important;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: visible;
-  margin-bottom: 12px;
-  transition: border-color 0.3s ease;
+  margin-bottom: 0 !important;
+  padding: 4px 0 !important;
 }
 
 .recipe-card:hover .recipe-img-container {

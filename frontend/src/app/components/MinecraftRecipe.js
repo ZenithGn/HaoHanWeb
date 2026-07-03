@@ -74,9 +74,9 @@ const genericItems = {
   iron_spear: "/assets/img/minecraft/item/ItemSprite_iron-spear.webp",
   copper_spear: "/assets/img/minecraft/item/ItemSprite_copper-spear.png",
   golden_spear: "/assets/img/minecraft/item/ItemSprite_golden-spear.png",
-  diamond_spear: "/assets/img/recipe/spear/diamond_spear.png",
+  diamond_spear: "/assets/img/minecraft/item/ItemSprite_diamond-spear.png",
   netherite_spear: "/assets/img/minecraft/item/ItemSprite_netherite-spear.png",
-  bucket: "/assets/img/minecraft/Bucket.png"
+  bucket: "/assets/img/minecraft/item/Bucket.png"
 };
 
 const itemDescriptions = {
@@ -363,8 +363,8 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
         {desc && desc.lines && desc.lines.map((line, lIdx) => {
           const isIndented = line.color === "green";
           return (
-            <div 
-              key={lIdx} 
+            <div
+              key={lIdx}
               className={`mc-tooltip-line mc-tooltip-text--${line.color || 'gray'} ${isIndented ? 'mc-tooltip-line--indented' : ''}`}
             >
               {isVi ? line.text.vi : line.text.en}
