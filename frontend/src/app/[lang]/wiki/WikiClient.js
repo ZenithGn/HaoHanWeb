@@ -112,7 +112,7 @@ export default function WikiClient({ dict, lang }) {
   }, [activeWikiTab]);
 
   return (
-    <div style={{ backgroundColor: "#101115", minHeight: "100vh", padding: "120px 20px 60px" }}>
+    <div style={{ backgroundColor: "#101115", minHeight: "100vh", padding: "64px 20px 60px" }}>
       <div className="wrap wiki-page-wrap">
         <div className="wiki-layout">
           <aside className="wiki-sidebar">
@@ -315,23 +315,36 @@ export default function WikiClient({ dict, lang }) {
                         const displayName = recipe.id === "oak_boat"
                           ? (isVi ? "Thuyền" : "Boat")
                           : (recipe.name[lang] || recipe.name.vi);
+                        const outputId = typeof recipe.recipe?.output === "string" ? recipe.recipe.output : recipe.recipe?.output?.id;
+                        const outputImg = getItemImgPath(outputId);
                         return (
                           <div
                             key={recipe.id}
                             className="recipe-card"
                           >
-                            <div className="recipe-card-header">
-                              <h4 className="recipe-card-title">
-                                {displayName}
-                              </h4>
-                              <span className={`recipe-station-badge ${getStationBadgeClass(recipe.station)}`}>
-                                <i className={getStationIcon(recipe.station)}></i>{" "}
-                                {getStationLabel(recipe.station)}
-                              </span>
-                            </div>
+                            <div className="recipe-card-inner">
+                              <div className="recipe-card-header">
+                                <div className="recipe-card-title-wrap">
+                                  {outputImg && (
+                                    <img
+                                      src={outputImg}
+                                      alt={displayName}
+                                      className="recipe-card-title-icon"
+                                    />
+                                  )}
+                                  <h4 className="recipe-card-title">
+                                    {displayName}
+                                  </h4>
+                                </div>
+                                <span className={`recipe-station-badge ${getStationBadgeClass(recipe.station)}`}>
+                                  <i className={getStationIcon(recipe.station)}></i>{" "}
+                                  {getStationLabel(recipe.station)}
+                                </span>
+                              </div>
 
-                            <div className="recipe-img-container">
-                              <MinecraftRecipe recipe={recipe.recipe} isVi={isVi} size="medium" />
+                              <div className="recipe-img-container">
+                                <MinecraftRecipe recipe={recipe.recipe} isVi={isVi} size="medium" />
+                              </div>
                             </div>
                           </div>
                         );

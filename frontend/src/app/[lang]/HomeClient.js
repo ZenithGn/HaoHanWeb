@@ -2,7 +2,7 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuth } from "../components/AuthContext";
 import Script from "next/script";
-import MinecraftRecipe from "../components/MinecraftRecipe";
+import MinecraftRecipe, { getItemImgPath } from "../components/MinecraftRecipe";
 const serverIp = "haohansmp.io.vn";
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const DISCORD_DEFAULT_BANNER = "linear-gradient(135deg, #111214, #1e1f22)";
@@ -2156,23 +2156,36 @@ export default function HomeClient({ dict, lang }) {
                               const displayName = recipe.id === "oak_boat"
                                 ? (isVi ? "Thuyền" : "Boat")
                                 : (recipe.name[currentLang] || recipe.name.vi);
+                              const outputId = typeof recipe.recipe?.output === "string" ? recipe.recipe.output : recipe.recipe?.output?.id;
+                              const outputImg = getItemImgPath(outputId);
                               return (
                                 <div
                                   key={recipe.id}
                                   className="recipe-card"
                                 >
-                                  <div className="recipe-card-header">
-                                    <h4 className="recipe-card-title">
-                                      {displayName}
-                                    </h4>
-                                    <span className={`recipe-station-badge ${getStationBadgeClass(recipe.station)}`}>
-                                      <i className={getStationIcon(recipe.station)}></i>{" "}
-                                      {getStationLabel(recipe.station)}
-                                    </span>
-                                  </div>
+                                  <div className="recipe-card-inner">
+                                    <div className="recipe-card-header">
+                                      <div className="recipe-card-title-wrap">
+                                        {outputImg && (
+                                          <img
+                                            src={outputImg}
+                                            alt={displayName}
+                                            className="recipe-card-title-icon"
+                                          />
+                                        )}
+                                        <h4 className="recipe-card-title">
+                                          {displayName}
+                                        </h4>
+                                      </div>
+                                      <span className={`recipe-station-badge ${getStationBadgeClass(recipe.station)}`}>
+                                        <i className={getStationIcon(recipe.station)}></i>{" "}
+                                        {getStationLabel(recipe.station)}
+                                      </span>
+                                    </div>
 
-                                  <div className="recipe-img-container">
-                                    <MinecraftRecipe recipe={recipe.recipe} isVi={isVi} size="medium" />
+                                    <div className="recipe-img-container">
+                                      <MinecraftRecipe recipe={recipe.recipe} isVi={isVi} size="medium" />
+                                    </div>
                                   </div>
                                 </div>
                               );
