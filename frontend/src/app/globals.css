@@ -5726,10 +5726,25 @@ details:hover {
     display: grid;
     grid-template-areas:
       "header"
-      "nav"
       "content";
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 28px;
+    align-items: start;
+  }
+
+  .wiki-sidebar,
+  .rules-sidebar {
+    grid-area: header;
+    position: relative !important;
+    top: auto !important;
+    padding: 0 !important;
+  }
+
+  .wiki-content,
+  .rules-content {
+    grid-area: content;
+    padding: 0 !important;
+    min-width: 0;
   }
 
   .wiki-sidebar-nav,
@@ -5739,6 +5754,11 @@ details:hover {
     grid-template-columns: repeat(2, 1fr);
     gap: 8px;
     width: 100%;
+  }
+
+  .wiki-sidebar-nav,
+  .rules-sidebar-nav {
+    display: none;
   }
 
   .wiki-sidebar-link,
