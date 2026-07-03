@@ -1,11 +1,13 @@
 "use client";
 
 import { useState, useRef, useEffect } from "react";
+import MinecraftRecipe, { getItemImgPath } from "../../components/MinecraftRecipe";
+
+
 
 export default function WikiClient({ dict, lang }) {
   const [activeWikiTab, setActiveWikiTab] = useState("intro");
   const [wikiMenuOpen, setWikiMenuOpen] = useState(false);
-  const [selectedRecipe, setSelectedRecipe] = useState(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [activeCategory, setActiveCategory] = useState("all");
   const isVi = lang === "vi";
@@ -47,6 +49,10 @@ export default function WikiClient({ dict, lang }) {
   };
 
   const filteredRecipes = RECIPES_DATA.filter((recipe) => {
+    // Exclude boat variations other than oak_boat and bamboo_raft
+    if (recipe.category === "boats" && recipe.id !== "oak_boat" && recipe.id !== "bamboo_raft") {
+      return false;
+    }
     const name = (recipe.name[lang] || recipe.name.vi).toLowerCase();
     const desc = (recipe.desc[lang] || recipe.desc.vi).toLowerCase();
     const query = searchQuery.toLowerCase();
@@ -57,6 +63,9 @@ export default function WikiClient({ dict, lang }) {
 
   const getCategoryCount = (category) => {
     return RECIPES_DATA.filter((recipe) => {
+      if (recipe.category === "boats" && recipe.id !== "oak_boat" && recipe.id !== "bamboo_raft") {
+        return false;
+      }
       const name = (recipe.name[lang] || recipe.name.vi).toLowerCase();
       const desc = (recipe.desc[lang] || recipe.desc.vi).toLowerCase();
       const query = searchQuery.toLowerCase();
@@ -302,40 +311,31 @@ export default function WikiClient({ dict, lang }) {
 
                   <div className="recipe-grid">
                     {filteredRecipes.length > 0 ? (
-                      filteredRecipes.map((recipe) => (
-                        <div
-                          key={recipe.id}
-                          className="recipe-card"
-                          onClick={() => setSelectedRecipe(recipe)}
-                        >
-                          <div className="recipe-card-header">
-                            <h4 className="recipe-card-title">
-                              {recipe.name[lang] || recipe.name.vi}
-                            </h4>
-                            <span className={`recipe-station-badge ${getStationBadgeClass(recipe.station)}`}>
-                              <i className={getStationIcon(recipe.station)}></i>{" "}
-                              {getStationLabel(recipe.station)}
-                            </span>
-                          </div>
+                      filteredRecipes.map((recipe) => {
+                        const displayName = recipe.id === "oak_boat"
+                          ? (isVi ? "Thuyền" : "Boat")
+                          : (recipe.name[lang] || recipe.name.vi);
+                        return (
+                          <div
+                            key={recipe.id}
+                            className="recipe-card"
+                          >
+                            <div className="recipe-card-header">
+                              <h4 className="recipe-card-title">
+                                {displayName}
+                              </h4>
+                              <span className={`recipe-station-badge ${getStationBadgeClass(recipe.station)}`}>
+                                <i className={getStationIcon(recipe.station)}></i>{" "}
+                                {getStationLabel(recipe.station)}
+                              </span>
+                            </div>
 
-                          <div className="recipe-img-container">
-                            {/* eslint-disable-next-line @next/next/no-img-element */}
-                            <img
-                              src={recipe.image}
-                              alt={recipe.name[lang] || recipe.name.vi}
-                              className="recipe-img"
-                              loading="lazy"
-                            />
-                            <div className="recipe-img-zoom-overlay">
-                              <i className="fa-solid fa-magnifying-glass-plus"></i>
+                            <div className="recipe-img-container">
+                              <MinecraftRecipe recipe={recipe.recipe} isVi={isVi} size="medium" />
                             </div>
                           </div>
-
-                          <p className="recipe-card-desc">
-                            {recipe.desc[lang] || recipe.desc.vi}
-                          </p>
-                        </div>
-                      ))
+                        );
+                      })
                     ) : (
                       <div className="recipe-no-results">
                         <i className="fa-solid fa-magnifying-glass"></i>
@@ -698,43 +698,7 @@ export default function WikiClient({ dict, lang }) {
         )}
       </>
 
-      {/* Recipe Zoom Modal */}
-      {selectedRecipe && (
-        <div className="recipe-modal" onClick={() => setSelectedRecipe(null)}>
-          <div className="recipe-modal-content" onClick={(e) => e.stopPropagation()}>
-            <div className="recipe-modal-header">
-              <div className="recipe-modal-title">
-                <span className={`recipe-station-badge ${getStationBadgeClass(selectedRecipe.station)}`}>
-                  <i className={getStationIcon(selectedRecipe.station)}></i>{" "}
-                  {getStationLabel(selectedRecipe.station)}
-                </span>
-                <h3>{selectedRecipe.name[lang] || selectedRecipe.name.vi}</h3>
-              </div>
-              <button
-                type="button"
-                className="recipe-modal-close"
-                onClick={() => setSelectedRecipe(null)}
-              >
-                <i className="fa-solid fa-xmark"></i>
-              </button>
-            </div>
 
-            <div className="recipe-modal-body">
-              <div className="recipe-modal-img-wrapper">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedRecipe.image}
-                  alt={selectedRecipe.name[lang] || selectedRecipe.name.vi}
-                  className="recipe-modal-img"
-                />
-              </div>
-              <p className="recipe-modal-footer-desc">
-                {selectedRecipe.desc[lang] || selectedRecipe.desc.vi}
-              </p>
-            </div>
-          </div>
-        </div>
-      )}
     </div>
   );
 }
@@ -750,7 +714,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Bàn chế tạo cơ bản để tạo ra hầu hết mọi công cụ và vật phẩm trong Minecraft.",
       en: "The essential crafting table required to build almost all tools and items in Minecraft."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "oak", "spruce", null,
+        "spruce", "oak", null,
+        null, null, null
+      ],
+      output: "crafting_table"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   },
   {
     id: "furnace",
@@ -761,7 +735,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Lò nung dùng để nung quặng thô và nấu các thực phẩm cơ bản.",
       en: "Standard furnace used to smelt raw ores and cook basic food items."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "cobblestone", "cobblestone", "cobblestone",
+        "cobblestone", null, "cobblestone",
+        "cobblestone", "cobblestone", "cobblestone"
+      ],
+      output: "furnace"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   },
   {
     id: "blast_furnace",
@@ -772,7 +756,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Nung quặng và kim loại nhanh gấp đôi so với lò nung thường.",
       en: "Smelts ores and metals twice as fast as a standard furnace."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "iron_ingot", "iron_ingot", "iron_ingot",
+        "iron_ingot", "furnace", "iron_ingot",
+        "smooth_stone", "smooth_stone", "smooth_stone"
+      ],
+      output: "blast_furnace"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   },
   {
     id: "anvil",
@@ -783,7 +777,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Sử dụng để sửa chữa trang bị, đặt tên vật phẩm và kết hợp sách phù phép.",
       en: "Used to repair equipment, rename items, and combine enchanted books."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "block_of_iron", "block_of_iron", "block_of_iron",
+        null, "iron_ingot", null,
+        "iron_ingot", "iron_ingot", "iron_ingot"
+      ],
+      output: "anvil"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   },
   {
     id: "enchanting_table",
@@ -794,7 +798,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Truyền sức mạnh ma thuật vào các công cụ, vũ khí và giáp của bạn.",
       en: "Infuses tools, weapons, and armor pieces with magical enchantments."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "book", null,
+        "diamond", "obsidian", "diamond",
+        "obsidian", "obsidian", "obsidian"
+      ],
+      output: "enchanting_table"
+    },
+    stats: { rarity: "Common", renewable: "No", stackable: "Yes (64)" }
   },
   {
     id: "ender_chest",
@@ -805,7 +819,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Rương chứa đồ kết nối không gian, bảo toàn vật phẩm ở mọi nơi.",
       en: "Interdimensional chest that shares the same inventory space across the world."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "obsidian", "obsidian", "obsidian",
+        "obsidian", "eye_of_ender", "obsidian",
+        "obsidian", "obsidian", "obsidian"
+      ],
+      output: "ender_chest"
+    },
+    stats: { rarity: "Rare", renewable: "No", stackable: "Yes (64)" }
   },
   {
     id: "respawn_anchor",
@@ -816,7 +840,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Đặt điểm hồi sinh tại Địa Ngục (Nether). Cần nạp Đá Phát Sáng để hoạt động.",
       en: "Sets your respawn point in the Nether. Requires Glowstone blocks to charge."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "crying_obsidian", "crying_obsidian", "crying_obsidian",
+        "glowstone", "glowstone", "glowstone",
+        "crying_obsidian", "crying_obsidian", "crying_obsidian"
+      ],
+      output: "respawn_anchor"
+    },
+    stats: { rarity: "Rare", renewable: "No", stackable: "Yes (64)" }
   },
   {
     id: "end_crystal",
@@ -827,7 +861,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Vật phẩm ma thuật dùng để hồi sinh Rồng End hoặc tạo các vụ nổ cực mạnh.",
       en: "Magical crystal used to respawn the Ender Dragon or cause massive explosions."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "glass", "glass", "glass",
+        "glass", "eye_of_ender", "glass",
+        "glass", "ghast_tear", "glass"
+      ],
+      output: "end_crystal"
+    },
+    stats: { rarity: "Rare", renewable: "Yes", stackable: "Yes (64)" }
   },
   {
     id: "ender_eye",
@@ -838,7 +882,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Dùng để định vị và kích hoạt Cổng Stronghold dẫn tới thế giới End.",
       en: "Used to locate and activate Stronghold Portals leading to the End dimension."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, null,
+        "ender_pearl", "blaze_powder", null,
+        null, null, null
+      ],
+      output: "eye_of_ender"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   },
   {
     id: "bucket",
@@ -849,7 +903,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Công cụ chứa nước, dung nham hoặc sữa, cực kỳ quan trọng khi sinh tồn.",
       en: "Essential tool for carrying water, lava, or milk during survival adventure."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, null,
+        "iron_ingot", null, "iron_ingot",
+        null, "iron_ingot", null
+      ],
+      output: "bucket"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (16)" }
   },
   // Combat
   {
@@ -861,7 +925,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Vũ khí cận chiến đặc biệt gây sát thương cực lớn dựa trên độ cao khi rơi xuống.",
       en: "Unique melee weapon that deals devastating damage based on fall height."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "heavy_core", "block_of_netherite",
+        null, "breeze_rod", "heavy_core",
+        "breeze_rod", null, null
+      ],
+      output: "mace_item"
+    },
+    stats: { rarity: "Rare", renewable: "No", stackable: "No", durability: 250 }
   },
   {
     id: "shield",
@@ -872,7 +946,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Lá chắn bảo vệ chống lại các đòn tấn công từ quái vật và người chơi khác.",
       en: "Defensive shield to block incoming attacks from monsters and other players."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "leather", "iron_ingot", "leather",
+        "crimson", "crimson", "crimson",
+        null, "crimson", null
+      ],
+      output: "shield"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "No", durability: 336 }
   },
   {
     id: "haohansmp_super_stick",
@@ -883,7 +967,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Vũ khí huyền thoại của server HaoHanSMP với khả năng đẩy lùi cực mạnh.",
       en: "Legendary staff of HaoHanSMP with extreme knockback and special properties."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, "breeze_rod",
+        null, "stick", null,
+        "blaze_rod", null, null
+      ],
+      output: "haohansmp_super_stick"
+    },
+    stats: { rarity: "Epic", renewable: "No", stackable: "No" }
   },
   // Pickaxes
   {
@@ -895,7 +989,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Công cụ khai thác đá thô sơ đầu tiên của mọi người chơi.",
       en: "The very first mining tool crafted to gather stone resources."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "crimson", "spruce_log", "crimson",
+        null, "stick", null,
+        null, "stick", null
+      ],
+      output: "wooden_pickaxe"
+    },
+    stats: { rarity: "Common", renewable: "No", stackable: "No", durability: 59 }
   },
   {
     id: "stone_pickaxe",
@@ -906,7 +1010,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Cúp đá dùng để khai thác sắt, than và các khối đá cứng hơn.",
       en: "Stone pickaxe used to harvest iron ores, coal, and harder blocks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "obsidian", "obsidian", "obsidian",
+        null, "flint", null,
+        null, "stick", null
+      ],
+      output: "stone_pickaxe"
+    },
+    stats: { rarity: "Common", renewable: "No", stackable: "No", durability: 131 }
   },
   {
     id: "diamond_pickaxe_smithing",
@@ -917,7 +1031,15 @@ const RECIPES_DATA = [
     desc: {
       vi: "Công thức rèn cúp kim cương từ cúp sắt kết hợp phôi nâng cấp trên bàn rèn.",
       en: "Forging a diamond pickaxe from an iron pickaxe and upgrade templates."
-    }
+    },
+    recipe: {
+      type: "smithing",
+      template: "echo_shard",
+      base: "iron_pickaxe",
+      addition: "diamond",
+      output: "diamond_pickaxe"
+    },
+    stats: { rarity: "Rare", renewable: "No", stackable: "No", durability: 1561 }
   },
   // Spears
   {
@@ -929,7 +1051,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Cây giáo thô sơ làm từ gỗ, tầm đánh xa hơn kiếm thường.",
       en: "Rudimentary spear crafted from wood, offers extended attack range."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "oak", "arrow",
+        null, "stick", "oak",
+        "redstone", null, null
+      ],
+      output: "wooden_spear"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "No", durability: 59 }
   },
   {
     id: "stone_spear",
@@ -940,7 +1072,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Giáo đá cải tiến, bền bỉ và gây sát thương cao hơn giáo gỗ.",
       en: "Improved stone spear, offering better durability and damage than wooden tier."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "cobblestone", "spectral_arrow",
+        null, "stick", "cobblestone",
+        "redstone", null, null
+      ],
+      output: "stone_spear"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "No", durability: 131 }
   },
   {
     id: "iron_spear",
@@ -951,7 +1093,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Giáo làm từ sắt rèn, cân bằng tốt giữa tốc độ và lực sát thương.",
       en: "Iron-forged spear, well-balanced between attack speed and damage."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "iron_ingot", "arrow",
+        null, "stick", "iron_ingot",
+        "redstone", null, null
+      ],
+      output: "iron_spear"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "No", durability: 250 }
   },
   {
     id: "copper_spear",
@@ -962,7 +1114,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Cây giáo bằng đồng rèn, tận dụng tốt nguồn tài nguyên đồng dư thừa.",
       en: "Copper-based spear, making excellent use of abundant copper resources."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "copper_ingot", "tipped_arrow",
+        null, "stick", "copper_ingot",
+        "redstone", null, null
+      ],
+      output: "copper_spear"
+    },
+    stats: { rarity: "Uncommon", renewable: "Yes", stackable: "No", durability: 200 }
   },
   {
     id: "golden_spear",
@@ -973,7 +1135,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Cây giáo bằng vàng rực rỡ, độ bền thấp nhưng có khả năng tương tác ma thuật cao.",
       en: "Shiny golden spear, low durability but possesses high enchantability."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "gold_ingot", "tipped_arrow",
+        null, "stick", "gold_ingot",
+        "redstone", null, null
+      ],
+      output: "golden_spear"
+    },
+    stats: { rarity: "Rare", renewable: "Yes", stackable: "No", durability: 32 }
   },
   {
     id: "diamond_spear",
@@ -984,7 +1156,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Vũ khí cận chiến sắc bén và bền bỉ vượt trội làm từ kim cương quý giá.",
       en: "Premium, razor-sharp melee weapon crafted using high-grade diamonds."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, "diamond", "spectral_arrow",
+        null, "stick", "diamond",
+        "redstone", null, null
+      ],
+      output: "diamond_spear"
+    },
+    stats: { rarity: "Rare", renewable: "No", stackable: "No", durability: 1561 }
   },
   {
     id: "netherite_spear_smithing",
@@ -995,7 +1177,15 @@ const RECIPES_DATA = [
     desc: {
       vi: "Rèn từ giáo kim cương trên Bàn Rèn, vũ khí cận chiến mạnh mẽ nhất thế giới.",
       en: "Forged from a diamond spear using the Smithing Table. The ultimate melee weapon."
-    }
+    },
+    recipe: {
+      type: "smithing",
+      template: "echo_shard",
+      base: "diamond_spear",
+      addition: "netherite_ingot",
+      output: "netherite_spear"
+    },
+    stats: { rarity: "Epic", renewable: "No", stackable: "No", durability: 2031 }
   },
   // Boats
   {
@@ -1007,7 +1197,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Phương tiện di chuyển trên nước chế tạo từ gỗ sồi phổ biến.",
       en: "Standard water vehicle crafted from common oak wood planks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "oak", "wooden_shovel", "oak",
+        "oak", "oak", "oak",
+        null, "wooden_shovel", null
+      ],
+      output: "oak_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "spruce_boat",
@@ -1018,7 +1218,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền chế tạo từ gỗ vân sam sẫm màu vùng taiga.",
       en: "Darker boat crafted using spruce wood found in cold taiga biomes."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "spruce", "wooden_shovel", "spruce",
+        "spruce", "spruce", "spruce",
+        null, "wooden_shovel", null
+      ],
+      output: "spruce_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "birch_boat",
@@ -1029,7 +1239,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền gỗ bạch dương màu sáng thanh lịch.",
       en: "Elegant light-colored boat crafted from birch wood planks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "birch", "wooden_shovel", "birch",
+        "birch", "birch", "birch",
+        null, "wooden_shovel", null
+      ],
+      output: "birch_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "jungle_boat",
@@ -1040,7 +1260,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền làm từ gỗ rừng rậm nhiệt đới ấm áp.",
       en: "Warm-colored boat made from jungle wood planks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "jungle", "wooden_shovel", "jungle",
+        "jungle", "jungle", "jungle",
+        null, "wooden_shovel", null
+      ],
+      output: "jungle_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "acacia_boat",
@@ -1051,7 +1281,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền màu cam đặc trưng chế tạo từ gỗ xiêm thảo nguyên.",
       en: "Unique orange boat crafted from savanna acacia wood planks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "acacia", "wooden_shovel", "acacia",
+        "acacia", "acacia", "acacia",
+        null, "wooden_shovel", null
+      ],
+      output: "acacia_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "dark_oak_boat",
@@ -1062,7 +1302,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền gỗ sồi sẫm màu chắc chắn từ những cánh rừng rậm.",
       en: "Sturdy dark oak boat crafted from dense forest wood planks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "dark_oak", "wooden_shovel", "dark_oak",
+        "dark_oak", "dark_oak", "dark_oak",
+        null, "wooden_shovel", null
+      ],
+      output: "dark_oak_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "mangrove_boat",
@@ -1073,7 +1323,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền gỗ đước màu đỏ thẫm từ các khu đầm lầy đước bí ẩn.",
       en: "Deep red boat crafted from mangrove wood found in swamp biomes."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "mangrove", "wooden_shovel", "mangrove",
+        "mangrove", "mangrove", "mangrove",
+        null, "wooden_shovel", null
+      ],
+      output: "mangrove_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "bamboo_raft",
@@ -1084,7 +1344,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Chiếc bè trôi nổi làm từ các khối tre ép độc đáo.",
       en: "A lightweight floating raft crafted from compressed bamboo blocks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "bamboo", "wooden_shovel", "bamboo",
+        "bamboo", "bamboo", "bamboo",
+        null, "wooden_shovel", null
+      ],
+      output: "bamboo_raft"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "cherry_boat",
@@ -1095,7 +1365,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền gỗ anh đào màu hồng mộng mơ quyến rũ.",
       en: "Charming pink-colored boat crafted from cherry wood planks."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "cherry", "wooden_shovel", "cherry",
+        "cherry", "cherry", "cherry",
+        null, "wooden_shovel", null
+      ],
+      output: "cherry_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   },
   {
     id: "pale_oak_boat",
@@ -1106,7 +1386,17 @@ const RECIPES_DATA = [
     desc: {
       vi: "Thuyền làm từ gỗ sồi nhạt huyền bí thu được ở các khu rừng nhạt.",
       en: "Mysterious boat crafted from pale oak wood found in pale gardens."
-    }
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        "pale_oak", "wooden_shovel", "pale_oak",
+        "pale_oak", "pale_oak", "pale_oak",
+        null, "wooden_shovel", null
+      ],
+      output: "pale_oak_boat"
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
   }
 ];
 
