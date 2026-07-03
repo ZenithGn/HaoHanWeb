@@ -344,18 +344,18 @@ function MinecraftSkinViewer({ username }) {
   );
 }
 
-export default function HomeClient({ dict, lang }) {
+export default function HomeClient({ dict, lang, initialTab = "home" }) {
   const [currentLang, setCurrentLang] = useState(lang);
   const [copiedIp, setCopiedIp] = useState(false);
   const [activeImgIndex, setActiveImgIndex] = useState(null);
-  const [activeTab, setActiveTab] = useState("home");
+  const [activeTab, setActiveTab] = useState(initialTab);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const haohanNavRef = useRef(null);
   const topbarNavRef = useRef(null);
   const haohanIndicatorRef = useRef(null);
   const topbarIndicatorRef = useRef(null);
   const isVi = currentLang === "vi";
-  const { user, isLoggedIn, logout, login, getToken } = useAuth();
+  const { user, isLoggedIn, isLoading, logout, login, getToken } = useAuth();
   const [syncing, setSyncing] = useState(false);
   const [syncMsg, setSyncMsg] = useState("");
   const [syncSuccess, setSyncSuccess] = useState(true);
@@ -489,13 +489,8 @@ export default function HomeClient({ dict, lang }) {
     return ROLE_COLORS[roleName] || ROLE_COLORS['default'];
   };
 
-  // Load saved tabs from sessionStorage on mount
+  // Load saved nested tabs from sessionStorage on mount
   useEffect(() => {
-    const savedActiveTab = sessionStorage.getItem('activeTab');
-    if (savedActiveTab) {
-      setActiveTab(savedActiveTab);
-    }
-
     const savedRulesSubTab = sessionStorage.getItem('rulesSubTab');
     if (savedRulesSubTab) {
       setRulesSubTab(savedRulesSubTab);
@@ -511,13 +506,6 @@ export default function HomeClient({ dict, lang }) {
       setProfileSubTab(savedProfileSubTab);
     }
   }, []);
-
-  // Save active tabs to sessionStorage when they change
-  useEffect(() => {
-    if (activeTab) {
-      sessionStorage.setItem('activeTab', activeTab);
-    }
-  }, [activeTab]);
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
@@ -568,6 +556,12 @@ export default function HomeClient({ dict, lang }) {
       setNewEmail(user.email);
     }
   }, [user]);
+
+  useEffect(() => {
+    if (activeTab === "profile" && !isLoading && !isLoggedIn) {
+      window.location.href = `/${currentLang}/login`;
+    }
+  }, [activeTab, currentLang, isLoading, isLoggedIn]);
 
   const formatText = (text) => {
     return text.split('\n').map((line, idx) => {
@@ -850,11 +844,11 @@ export default function HomeClient({ dict, lang }) {
     const topbarNav = topbarNavRef.current;
     const topbar = document.getElementById("topbar");
     const haohan = document.getElementById("home");
-    const haohanLinks = haohanNav ? Array.from(haohanNav.querySelectorAll("a[href^='#']")) : [];
-    const topLinks = topbarNav ? Array.from(topbarNav.querySelectorAll("a[href^='#']")) : [];
-    const setActive = (href) => {
-      haohanLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === href));
-      topLinks.forEach((link) => link.classList.toggle("active", link.getAttribute("href") === href));
+    const haohanLinks = haohanNav ? Array.from(haohanNav.querySelectorAll("a[data-tab]")) : [];
+    const topLinks = topbarNav ? Array.from(topbarNav.querySelectorAll("a[data-tab]")) : [];
+    const setActive = (tab) => {
+      haohanLinks.forEach((link) => link.classList.toggle("active", link.dataset.tab === tab));
+      topLinks.forEach((link) => link.classList.toggle("active", link.dataset.tab === tab));
       requestAnimationFrame(() => {
         const haohanActive = haohanLinks.find((link) => link.classList.contains("active")) || haohanLinks[0];
         const topActive = topLinks.find((link) => link.classList.contains("active")) || topLinks[0];
@@ -862,7 +856,7 @@ export default function HomeClient({ dict, lang }) {
         moveIndicator(topbarIndicatorRef.current, topActive, topbarNav);
       });
     };
-    setActive(`#${activeTab}`);
+    setActive(activeTab);
     [...haohanLinks, ...topLinks].forEach((link) => {
       link.addEventListener("mouseenter", () => {
         const nav = link.closest("nav");
@@ -930,14 +924,14 @@ export default function HomeClient({ dict, lang }) {
     const sectionObserver = new IntersectionObserver((entries) => {
       if (activeTab !== "home") return;
       entries.forEach((entry) => {
-        if (entry.isIntersecting) setActive(`#${entry.target.id}`);
+        if (entry.isIntersecting) setActive(entry.target.id);
       });
     }, { rootMargin: "-25% 0px -65% 0px" });
     if (activeTab === "home" && haohan) haohanObserver.observe(haohan);
     if (activeTab === "home") {
       document.querySelectorAll("section[id], header[id]").forEach((section) => sectionObserver.observe(section));
     }
-    const onResize = () => setActive(`#${activeTab}`);
+    const onResize = () => setActive(activeTab);
     window.addEventListener("resize", onResize);
     return () => {
       haohanObserver.disconnect();
@@ -1296,7 +1290,7 @@ export default function HomeClient({ dict, lang }) {
   const renderTools = (topbar = false) => (
     <div className={`topbar-tools${topbar ? " topbar__actions" : ""}${topbar && mobileMenuOpen ? " topbar__actions--open" : ""}`}>
       {isLoggedIn && user ? (
-        <button className="tool-pill tool-auth" onClick={() => { setActiveTab("profile"); window.scrollTo({ top: 0, behavior: "smooth" }); }} style={{
+        <a className="tool-pill tool-auth" href={`/profile/${currentLang}`} onClick={() => setMobileMenuOpen(false)} style={{
           backgroundColor: 'rgba(255, 255, 255, 0.05)',
           border: '1px solid rgba(255, 255, 255, 0.15)',
           borderRadius: '8px',
@@ -1307,7 +1301,7 @@ export default function HomeClient({ dict, lang }) {
           fontFamily: "'Outfit', 'Inter', sans-serif"
         }}>
           <span className="tool-text">{dict.hero.hello.replace('{name}', user.username)}</span>
-        </button>
+        </a>
       ) : (
         <>
           <a href={`/${currentLang}/login`} className="tool-pill tool-auth btn-login">
@@ -1322,17 +1316,17 @@ export default function HomeClient({ dict, lang }) {
   );
   const navLinks = useMemo(() => {
     const list = [
-      ["#home", labels.navHome, "fa-solid fa-campground"],
-      ["#gallery", labels.navGallery, "fa-solid fa-images"],
-      ["#rules", labels.navRules, "fa-solid fa-scroll"],
-      ["#wiki", labels.navWiki, "fa-solid fa-circle-question"],
-      ["#donate", labels.donate, "fa-solid fa-heart"],
+      [`/${currentLang}`, "home", labels.navHome, "fa-solid fa-campground"],
+      [`/gallery/${currentLang}`, "gallery", labels.navGallery, "fa-solid fa-images"],
+      [`/rules/${currentLang}`, "rules", labels.navRules, "fa-solid fa-scroll"],
+      [`/wiki/${currentLang}`, "wiki", labels.navWiki, "fa-solid fa-circle-question"],
+      [`/donate/${currentLang}`, "donate", labels.donate, "fa-solid fa-heart"],
     ];
     if (isLoggedIn) {
-      list.push(["#profile", labels.navProfile, "fa-solid fa-user"]);
+      list.push([`/profile/${currentLang}`, "profile", labels.navProfile, "fa-solid fa-user"]);
     }
     return list;
-  }, [labels, isLoggedIn]);
+  }, [currentLang, labels, isLoggedIn]);
   return (
     <>
       <div className={`topbar${mobileMenuOpen ? " topbar--menu-open" : ""}`} id="topbar" aria-hidden="true">
@@ -1349,8 +1343,8 @@ export default function HomeClient({ dict, lang }) {
         </button>
         <nav className={`topbar__nav${mobileMenuOpen ? " topbar__nav--open" : ""}`} ref={topbarNavRef} aria-label="Quick navigation">
           <span className="topbar__nav__indicator" ref={topbarIndicatorRef}></span>
-          {navLinks.map(([href, text, icon]) => (
-            <a key={href} href={href} onClick={() => setMobileMenuOpen(false)}>
+          {navLinks.map(([href, tab, text, icon]) => (
+            <a key={href} href={href} data-tab={tab} onClick={() => setMobileMenuOpen(false)}>
               {icon && <i className={icon}></i>}
               <span className="nav-text">{text}</span>
             </a>
@@ -1412,7 +1406,7 @@ export default function HomeClient({ dict, lang }) {
                         setCopiedIp(true);
                         setTimeout(() => setCopiedIp(false), 2000);
                       } else {
-                        window.open("https://discord.com/invite/znHfuc6hCR", "_blank");
+                        window.open("/discord", "_blank");
                       }
                     }}>
                       <div className="mc-server-icon">
@@ -1447,7 +1441,7 @@ export default function HomeClient({ dict, lang }) {
                               <span>{copiedIp ? labels.copiedIpBtn : labels.copyIpBtn}</span>
                             </button>
                           ) : (
-                            <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" className="mc-join-link" onClick={(e) => e.stopPropagation()}>
+                            <a href="/discord" target="_blank" rel="noopener noreferrer" className="mc-join-link" onClick={(e) => e.stopPropagation()}>
                               <i className="fa-brands fa-discord"></i> {labels.joinBtn}
                             </a>
                           )}
@@ -1558,11 +1552,11 @@ export default function HomeClient({ dict, lang }) {
                   </div>
                   <p className="faq-more-questions">
                     {labels.faqMorePrefix}{" "}
-                    <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer">
+                    <a href="/discord" target="_blank" rel="noopener noreferrer">
                       {labels.faqMoreDiscord}
                     </a>{" "}
                     {labels.faqMoreOr}{" "}
-                    <a href="#rules" onClick={(e) => { e.preventDefault(); setActiveTab("rules"); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
+                    <a href={`/rules/${currentLang}`}>
                       {labels.faqMoreTicket}
                     </a>
                     !
@@ -1833,7 +1827,7 @@ export default function HomeClient({ dict, lang }) {
                                 </div>
                               </div>
                               <a
-                                href="https://discord.gg/CbNXADe7ya"
+                                href="/discord"
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className="resolver-btn"
@@ -2035,12 +2029,7 @@ export default function HomeClient({ dict, lang }) {
                           ?.replace("{discord_link}", "")
                           ?.split(dict.wiki_content?.intro_rules_link_text)[0]}
                         <a
-                          href="#rules"
-                          onClick={(e) => {
-                            e.preventDefault();
-                            setActiveTab("rules");
-                            window.scrollTo({ top: 0, behavior: "smooth" });
-                          }}
+                          href={`/rules/${currentLang}`}
                           style={{ color: "#84ca32", fontWeight: "bold" }}
                         >
                           {dict.wiki_content?.intro_rules_link_text}
@@ -2051,7 +2040,7 @@ export default function HomeClient({ dict, lang }) {
                           ?.split(dict.wiki_content?.intro_rules_link_text)[1]
                           ?.split(dict.wiki_content?.intro_discord_link_text)[0]}
                         <a
-                          href="https://discord.com/invite/znHfuc6hCR"
+                          href="/discord"
                           target="_blank"
                           rel="noopener noreferrer"
                           style={{ color: "#84ca32", fontWeight: "bold" }}
@@ -2095,7 +2084,7 @@ export default function HomeClient({ dict, lang }) {
                           </div>
                         </button>
                         <a
-                          href="https://discord.com/invite/znHfuc6hCR"
+                          href="/discord"
                           target="_blank"
                           rel="noopener noreferrer"
                           className="wiki-guide-card"
@@ -3444,16 +3433,16 @@ export default function HomeClient({ dict, lang }) {
               {labels.exploreHeader}
             </strong>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
-              <a href="#home" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+              <a href={`/${currentLang}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fa-solid fa-house" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navHome}
               </a>
-              <a href="#gallery" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+              <a href={`/gallery/${currentLang}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fa-solid fa-images" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navGallery}
               </a>
-              <a href={`/${currentLang}/rules`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+              <a href={`/rules/${currentLang}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fa-solid fa-scroll" style={{ width: '16px', color: '#ff952e' }}></i> {labels.navRules}
               </a>
-              <a href="#donate" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+              <a href={`/donate/${currentLang}`} style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fa-solid fa-heart" style={{ width: '16px', color: '#ff952e' }}></i> {labels.donate}
               </a>
             </div>
@@ -3464,7 +3453,7 @@ export default function HomeClient({ dict, lang }) {
               {labels.communityHeader}
             </strong>
             <div style={{ display: 'flex', flexDirection: 'column', gap: '10px', fontSize: '0.9rem' }}>
-              <a href="https://discord.com/invite/znHfuc6hCR" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
+              <a href="/discord" target="_blank" rel="noopener noreferrer" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>
                 <i className="fab fa-discord" style={{ width: '16px', color: '#ff952e' }}></i> Discord
               </a>
               <a href="#" style={{ display: 'flex', alignItems: 'center', gap: '8px', color: '#c7c8ce', transition: 'color 0.2s' }} onMouseOver={(e) => e.currentTarget.style.color = '#fff'} onMouseOut={(e) => e.currentTarget.style.color = '#c7c8ce'}>

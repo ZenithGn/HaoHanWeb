@@ -1,6 +1,10 @@
 "use client";
 import { usePathname } from 'next/navigation';
 import { useEffect, useState, useRef } from 'react';
+
+const locales = ['vi', 'en'];
+const sectionRoutes = ['gallery', 'rules', 'wiki', 'donate', 'profile'];
+
 export default function LanguageSwitcher({ lang }) {
   const pathname = usePathname();
   const [isOpen, setIsOpen] = useState(false);
@@ -38,7 +42,14 @@ export default function LanguageSwitcher({ lang }) {
     sessionStorage.setItem('scrollPosition', window.scrollY);
 
     const segments = pathname.split('/');
-    segments[1] = locale;
+
+    if (locales.includes(segments[1])) {
+      segments[1] = locale;
+    } else if (sectionRoutes.includes(segments[1]) && locales.includes(segments[2])) {
+      segments[2] = locale;
+    } else {
+      segments[1] = locale;
+    }
 
     const hash = typeof window !== 'undefined' ? window.location.hash : '';
     const newPath = segments.join('/') + hash;
