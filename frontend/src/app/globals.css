@@ -949,6 +949,50 @@ button {
   border-color: rgba(255, 255, 255, 0.08);
 }
 
+.mc-server-row--disabled {
+  cursor: not-allowed;
+  filter: grayscale(1);
+  opacity: 0.48;
+}
+
+.mc-server-row--disabled,
+.mc-server-row--disabled:hover {
+  transform: none;
+  background: rgba(18, 18, 18, 0.64);
+  border-color: rgba(180, 180, 180, 0.16);
+  box-shadow: inset 0 1px rgba(255, 255, 255, 0.03), 0 8px 24px rgba(0, 0, 0, 0.32);
+}
+
+.mc-server-row--disabled:hover::after {
+  border-color: transparent;
+}
+
+.mc-server-row--disabled .mc-server-version {
+  color: #a8a8a8;
+  background: rgba(160, 160, 160, 0.1);
+  border-color: rgba(160, 160, 160, 0.18);
+}
+
+.mc-server-row--disabled .mc-server-title,
+.mc-server-row--disabled .mc-server-motd,
+.mc-server-row--disabled .mc-server-ip,
+.mc-server-row--disabled .mc-player-count {
+  color: #9c9c9c;
+}
+
+.mc-server-row--disabled .mc-copy-ip-btn {
+  cursor: not-allowed;
+  color: #8f8f8f;
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
+.mc-server-row--disabled .mc-copy-ip-btn:hover {
+  color: #8f8f8f;
+  background: rgba(255, 255, 255, 0.025);
+  border-color: rgba(255, 255, 255, 0.06);
+}
+
 .mc-server-icon {
   display: flex;
   align-items: center;
@@ -1005,6 +1049,7 @@ button {
   font-size: 13.5px;
   color: #c7bfae;
   line-height: 1.45;
+  white-space: pre-line;
 }
 
 .mc-server-ip-container {

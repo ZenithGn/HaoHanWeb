@@ -4,6 +4,7 @@ import { useAuth } from "../components/AuthContext";
 import Script from "next/script";
 import MinecraftRecipe, { getItemImgPath } from "../components/MinecraftRecipe";
 const serverIp = "haohansmp.io.vn";
+const SERVER_STATUS_API = `https://api.mcstatus.io/v2/status/java/${serverIp}`;
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:3001';
 const DISCORD_DEFAULT_BANNER = "linear-gradient(135deg, #111214, #1e1f22)";
 
@@ -402,8 +403,8 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
   };
 
   const filteredRecipes = RECIPES_DATA.filter((recipe) => {
-    // Exclude boat variations other than oak_boat and bamboo_raft
-    if (recipe.category === "boats" && recipe.id !== "oak_boat" && recipe.id !== "bamboo_raft") {
+    // Show one cycling boat recipe card, including Bamboo Raft.
+    if (recipe.category === "boats" && recipe.id !== "oak_boat") {
       return false;
     }
     const name = (recipe.name[currentLang] || recipe.name.vi).toLowerCase();
@@ -416,7 +417,7 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
 
   const getCategoryCount = (category) => {
     return RECIPES_DATA.filter((recipe) => {
-      if (recipe.category === "boats" && recipe.id !== "oak_boat" && recipe.id !== "bamboo_raft") {
+      if (recipe.category === "boats" && recipe.id !== "oak_boat") {
         return false;
       }
       const name = (recipe.name[currentLang] || recipe.name.vi).toLowerCase();
@@ -436,6 +437,7 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
   const [supporters, setSupporters] = useState([]);
   const [supporterPage, setSupporterPage] = useState(1);
   const [editingPageInput, setEditingPageInput] = useState(null);
+  const [serverStatus, setServerStatus] = useState(null);
 
   const [profileSubTab, setProfileSubTab] = useState("overview");
   const [selectedTopic, setSelectedTopic] = useState(null);
@@ -646,6 +648,33 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
   useEffect(() => {
     let active = true;
 
+    const loadServerStatus = async () => {
+      try {
+        const response = await fetch(SERVER_STATUS_API);
+        if (!response.ok) return;
+        const sourceData = await response.json();
+        if (active) {
+          setServerStatus({
+            online: Boolean(sourceData.online),
+            playersOnline: sourceData.players?.online ?? null,
+            playersMax: sourceData.players?.max ?? null,
+          });
+        }
+      } catch (error) {
+        console.warn("Could not load Minecraft server status.", error);
+      }
+    };
+
+    loadServerStatus();
+
+    return () => {
+      active = false;
+    };
+  }, []);
+
+  useEffect(() => {
+    let active = true;
+
     const loadSupporters = async () => {
       try {
         const response = await fetch(`${API_BASE}/api/supporters/donations`);
@@ -686,22 +715,34 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
       title: dict.servers.survival_title || "Survival",
       address: serverIp,
       body: dict.servers.survival_desc || "Survival server.",
+      version: dict.servers.java_bedrock_version,
+      playerCount: Number.isFinite(serverStatus?.playersOnline) && Number.isFinite(serverStatus?.playersMax)
+        ? `${serverStatus.playersOnline}/${serverStatus.playersMax}`
+        : "0/200",
+      online: serverStatus?.online ?? false,
       block: "block--grass",
     },
     {
       title: dict.servers.bedrock_title || "Bedrock",
       address: serverIp + ":19132",
       body: dict.servers.bedrock_desc || "Bedrock server.",
+      version: dict.servers.bedrock_port,
+      playerCount: "Offline",
+      online: false,
       block: "block--wood",
+      disabled: true,
     },
     {
       title: dict.servers.community_title || "Community",
       address: "Discord HaoHan SMP",
       body: dict.servers.community_desc || "Discord community.",
+      version: dict.servers.discord_link_label,
+      playerCount: "Online",
+      online: true,
       block: "block--fox",
       oneIcon: true,
     },
-  ], [dict]);
+  ], [dict, serverStatus]);
   const featureCards = useMemo(() => [
     {
       id: "explore",
@@ -1400,7 +1441,11 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                 </div>
                 <div className="mc-server-list">
                   {serverCardsTranslated.map((server, idx) => (
-                    <div className="mc-server-row" key={server.title} onClick={() => {
+                    <div
+                      className={`mc-server-row ${server.disabled ? "mc-server-row--disabled" : ""}`}
+                      key={server.title}
+                      onClick={() => {
+                      if (server.disabled) return;
                       if (idx < 2) {
                         navigator.clipboard.writeText(server.address);
                         setCopiedIp(true);
@@ -1408,7 +1453,8 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                       } else {
                         window.open("/discord", "_blank");
                       }
-                    }}>
+                    }}
+                    >
                       <div className="mc-server-icon">
                         {server.block === "block--fox" ? (
                           /* eslint-disable-next-line @next/next/no-img-element */
@@ -1422,9 +1468,7 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                         <div className="mc-server-top">
                           <h3 className="mc-server-title">{server.title}</h3>
                           <span className="mc-server-version">
-                            {idx === 0 && dict.servers.java_bedrock_version}
-                            {idx === 1 && dict.servers.bedrock_port}
-                            {idx === 2 && dict.servers.discord_link_label}
+                            {server.version}
                           </span>
                         </div>
                         <p className="mc-server-motd">{server.body}</p>
@@ -1433,6 +1477,7 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                           {idx < 2 ? (
                             <button className="mc-copy-ip-btn" onClick={(e) => {
                               e.stopPropagation();
+                              if (server.disabled) return;
                               navigator.clipboard.writeText(server.address);
                               setCopiedIp(true);
                               setTimeout(() => setCopiedIp(false), 2000);
@@ -1450,16 +1495,14 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
 
                       <div className="mc-server-status">
                         <div className="mc-connection-ping">
-                          <span className="mc-ping-bar active"></span>
-                          <span className="mc-ping-bar active"></span>
-                          <span className="mc-ping-bar active"></span>
-                          <span className="mc-ping-bar active"></span>
-                          <span className="mc-ping-bar active"></span>
+                          <span className={`mc-ping-bar ${server.online ? "active" : ""}`}></span>
+                          <span className={`mc-ping-bar ${server.online ? "active" : ""}`}></span>
+                          <span className={`mc-ping-bar ${server.online ? "active" : ""}`}></span>
+                          <span className={`mc-ping-bar ${server.online ? "active" : ""}`}></span>
+                          <span className={`mc-ping-bar ${server.online ? "active" : ""}`}></span>
                         </div>
                         <span className="mc-player-count">
-                          {idx === 0 && "18/150"}
-                          {idx === 1 && "24/150"}
-                          {idx === 2 && "Online"}
+                          {server.playerCount}
                         </span>
                       </div>
                     </div>
@@ -1968,14 +2011,6 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                       <span>{dict.wiki_content?.nav_fishing}</span>
                     </button>
                     <button
-                      className={`wiki-sidebar-link ${activeWikiTab === "items" ? "wiki-sidebar-link--active" : ""}`}
-                      type="button"
-                      onClick={() => setActiveWikiTab("items")}
-                    >
-                      <i className="fa-solid fa-gem"></i>
-                      <span>{dict.wiki_content?.nav_items}</span>
-                    </button>
-                    <button
                       className={`wiki-sidebar-link ${activeWikiTab === "guilds" ? "wiki-sidebar-link--active" : ""}`}
                       type="button"
                       onClick={() => setActiveWikiTab("guilds")}
@@ -2143,7 +2178,7 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                           {filteredRecipes.length > 0 ? (
                             filteredRecipes.map((recipe) => {
                               const displayName = recipe.id === "oak_boat"
-                                ? (isVi ? "Thuyền" : "Boat")
+                                ? (isVi ? "Thuyền / Bè" : "Boat / Raft")
                                 : (recipe.name[currentLang] || recipe.name.vi);
                               const outputId = typeof recipe.recipe?.output === "string" ? recipe.recipe.output : recipe.recipe?.output?.id;
                               const outputImg = getItemImgPath(outputId);
@@ -2393,33 +2428,6 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                           style={{ maxWidth: '100%', height: 'auto', borderRadius: '8px', border: '1px solid rgba(255, 255, 255, 0.15)', boxShadow: '0 4px 12px rgba(0,0,0,0.5)' }}
                         />
                       </div>
-                    </div>
-                  )}
-
-                  {activeWikiTab === "items" && (
-                    <div className="wiki-article">
-                      <h2>
-                        <i className="fa-solid fa-gem text-accent"></i> {dict.wiki_content?.items_title}
-                      </h2>
-                      <p className="wiki-intro-text">{dict.wiki_content?.items_desc}</p>
-                      <ul className="wiki-list">
-                        <li>
-                          <strong>{dict.wiki_content?.items_item1_title}</strong>{" "}
-                          {dict.wiki_content?.items_item1_desc}
-                        </li>
-                        <li>
-                          <strong>{dict.wiki_content?.items_item2_title}</strong>{" "}
-                          {dict.wiki_content?.items_item2_desc}
-                        </li>
-                        <li>
-                          <strong>{dict.wiki_content?.items_item3_title}</strong>{" "}
-                          {dict.wiki_content?.items_item3_desc}
-                        </li>
-                        <li>
-                          <strong>{dict.wiki_content?.items_item4_title}</strong>{" "}
-                          {dict.wiki_content?.items_item4_desc}
-                        </li>
-                      </ul>
                     </div>
                   )}
 
@@ -3343,10 +3351,6 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                       <i className="fa-solid fa-fish"></i>
                       <span>{dict.wiki_content?.nav_fishing}</span>
                     </button>
-                    <button className={`wiki-sidebar-link ${activeWikiTab === "items" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("items"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                      <i className="fa-solid fa-gem"></i>
-                      <span>{dict.wiki_content?.nav_items}</span>
-                    </button>
                     <button className={`wiki-sidebar-link ${activeWikiTab === "guilds" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guilds"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-shield-halved"></i>
                       <span>{dict.wiki_content?.nav_guilds}</span>
@@ -3605,8 +3609,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "oak", "spruce", null,
-        "spruce", "oak", null,
+        "bamboo", "oak_log", null,
+        "oak_log", "bamboo", null,
         null, null, null
       ],
       output: "crafting_table"
@@ -3626,7 +3630,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "cobblestone", "cobblestone", "cobblestone",
-        "cobblestone", null, "cobblestone",
+        "gravel", null, "gravel",
         "cobblestone", "cobblestone", "cobblestone"
       ],
       output: "furnace"
@@ -3645,9 +3649,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "iron_ingot", "iron_ingot", "iron_ingot",
-        "iron_ingot", "furnace", "iron_ingot",
-        "smooth_stone", "smooth_stone", "smooth_stone"
+        "iron_ingot", "block_of_iron", "iron_ingot",
+        "bricks", "furnace", "bricks",
+        "stone", "stone", "stone"
       ],
       output: "blast_furnace"
     }
@@ -3666,7 +3670,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "block_of_iron", "block_of_iron", "block_of_iron",
-        null, "iron_ingot", null,
+        null, "obsidian", null,
         "iron_ingot", "iron_ingot", "iron_ingot"
       ],
       output: "anvil"
@@ -3685,8 +3689,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, "book", null,
-        "diamond", "obsidian", "diamond",
+        "diamond", "book", "diamond",
+        "amethyst_shard", "obsidian", "amethyst_shard",
         "obsidian", "obsidian", "obsidian"
       ],
       output: "enchanting_table"
@@ -3706,7 +3710,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "obsidian", "obsidian", "obsidian",
-        "obsidian", "eye_of_ender", "obsidian",
+        "end_stone", "eye_of_ender", "end_stone",
         "obsidian", "obsidian", "obsidian"
       ],
       output: "ender_chest"
@@ -3717,7 +3721,7 @@ const RECIPES_DATA = [
     category: "utilities",
     station: "crafting",
     image: "/assets/img/recipe/respawn_anchor.png",
-    name: { vi: "Neo Hồi Sinh", en: "Neo Hồi Sinh" },
+    name: { vi: "Neo Hồi Sinh", en: "Respawn Anchor" },
     desc: {
       vi: "Đặt điểm hồi sinh tại Địa Ngục (Nether). Cần nạp Đá Phát Sáng để hoạt động.",
       en: "Sets your respawn point in the Nether. Requires Glowstone blocks to charge."
@@ -3725,9 +3729,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "crying_obsidian", "crying_obsidian", "crying_obsidian",
-        "glowstone", "glowstone", "glowstone",
-        "crying_obsidian", "crying_obsidian", "crying_obsidian"
+        "glowstone", "obsidian", "glowstone",
+        "obsidian", "totem_of_undying", "obsidian",
+        "glowstone", "obsidian", "glowstone"
       ],
       output: "respawn_anchor"
     }
@@ -3745,9 +3749,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "glass", "glass", "glass",
-        "glass", "eye_of_ender", "glass",
-        "glass", "ghast_tear", "glass"
+        "glass", "obsidian", "glass",
+        "obsidian", "eye_of_ender", "obsidian",
+        "glass", "obsidian", "glass"
       ],
       output: "end_crystal"
     }
@@ -3765,8 +3769,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, null, null,
-        "ender_pearl", "blaze_powder", null,
+        "emerald", "blaze_powder", null,
+        null, "ender_pearl", null,
         null, null, null
       ],
       output: "eye_of_ender"
@@ -3785,8 +3789,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, null, null,
         "iron_ingot", null, "iron_ingot",
+        "iron_ingot", "copper_ingot", "iron_ingot",
         null, "iron_ingot", null
       ],
       output: "bucket"
@@ -3847,7 +3851,7 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "crimson", "spruce_log", "crimson",
+        "oak_slab", "oak", "oak_slab",
         null, "stick", null,
         null, "stick", null
       ],
@@ -3867,7 +3871,7 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "obsidian", "obsidian", "obsidian",
+        "cobblestone", "cobblestone", "cobblestone",
         null, "flint", null,
         null, "stick", null
       ],

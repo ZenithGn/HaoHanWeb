@@ -12,7 +12,40 @@ const woodPlanks = {
   bamboo: "/assets/img/minecraft/wood_type/Bamboo_Planks.png",
   cherry: "/assets/img/minecraft/wood_type/Cherry_Planks.png",
   pale_oak: "/assets/img/minecraft/wood_type/Pale_Oak_Planks.png",
-  crimson: "/assets/img/minecraft/wood_type/Crimson_Planks.png"
+  crimson: "/assets/img/minecraft/wood_type/Crimson_Planks.png",
+  warped: "/assets/img/minecraft/wood_type/Warped_Planks.png",
+  poplar: "/assets/img/minecraft/wood_type/Poplar_Planks.webp"
+};
+
+const woodSlabs = {
+  oak_slab: "/assets/img/minecraft/wood_type/Oak_Slab.png",
+  spruce_slab: "/assets/img/minecraft/wood_type/Spruce_Slab.png",
+  birch_slab: "/assets/img/minecraft/wood_type/Birch_Slab.png",
+  jungle_slab: "/assets/img/minecraft/wood_type/Jungle_Slab.png",
+  acacia_slab: "/assets/img/minecraft/wood_type/Acacia_Slab.png",
+  dark_oak_slab: "/assets/img/minecraft/wood_type/Dark_Oak_Slab.png",
+  mangrove_slab: "/assets/img/minecraft/wood_type/Mangrove_Slab.png",
+  bamboo_slab: "/assets/img/minecraft/wood_type/Bamboo_Slab.png",
+  cherry_slab: "/assets/img/minecraft/wood_type/Cherry_Slab.png",
+  pale_oak_slab: "/assets/img/minecraft/wood_type/Pale_Oak_Slab.png",
+  crimson_slab: "/assets/img/minecraft/wood_type/Crimson_Slab.png",
+  warped_slab: "/assets/img/minecraft/wood_type/Warped_Slab.png",
+  poplar_slab: "/assets/img/minecraft/wood_type/Poplar_Slab.webp"
+};
+
+const woodLogs = {
+  oak_log: "/assets/img/minecraft/wood_type/Oak_Log.png",
+  spruce_log: "/assets/img/minecraft/wood_type/Spruce_Log.png",
+  birch_log: "/assets/img/minecraft/wood_type/Birch_Log.png",
+  jungle_log: "/assets/img/minecraft/wood_type/Jungle_Log.png",
+  acacia_log: "/assets/img/minecraft/wood_type/Acacia_Log.png",
+  dark_oak_log: "/assets/img/minecraft/wood_type/Dark_Oak_Log.png",
+  mangrove_log: "/assets/img/minecraft/wood_type/Mangrove_Log.png",
+  cherry_log: "/assets/img/minecraft/wood_type/Cherry_Log.png",
+  pale_oak_log: "/assets/img/minecraft/wood_type/Pale_Oak_Log.png",
+  crimson_stem: "/assets/img/minecraft/wood_type/Crimson_Stem.gif",
+  warped_stem: "/assets/img/minecraft/wood_type/Warped_Stem.gif",
+  poplar_log: "/assets/img/minecraft/wood_type/Poplar_Log.webp"
 };
 
 const boatItems = {
@@ -67,8 +100,14 @@ const genericItems = {
   emerald: "/assets/img/minecraft/item/Emerald.png",
   coal: "/assets/img/minecraft/item/Coal.png",
   amethyst_shard: "/assets/img/minecraft/item/Amethyst_Shard.png",
+  flint: "/assets/img/minecraft/item/Flint.webp",
   gravel: "/assets/img/minecraft/Gravel.png",
   totem_of_undying: "/assets/img/minecraft/item/Totem_of_Undying.webp",
+  stone: "/assets/img/minecraft/stone_type/Stone.png",
+  end_stone: "/assets/img/minecraft/stone_type/End_Stone.png",
+  bricks: "/assets/img/minecraft/stone_type/Bricks.png",
+  oak_log: "/assets/img/minecraft/wood_type/Oak_Log.png",
+  crimson_slab: "/assets/img/minecraft/wood_type/Crimson_Slab.png",
   wooden_spear: "/assets/img/minecraft/item/ItemSprite_wooden-spear.png",
   stone_spear: "/assets/img/minecraft/item/ItemSprite_stone-spear.png",
   iron_spear: "/assets/img/minecraft/item/ItemSprite_iron-spear.webp",
@@ -92,6 +131,38 @@ const itemDescriptions = {
   cherry: { title: { vi: "Ván gỗ anh đào", en: "Cherry Planks" } },
   pale_oak: { title: { vi: "Ván gỗ sồi nhạt", en: "Pale Oak Planks" } },
   crimson: { title: { vi: "Ván gỗ đỏ tươi", en: "Crimson Planks" } },
+
+  warped: { title: { vi: "Ván Gỗ Kì Dị", en: "Warped Planks" } },
+  poplar: { title: { vi: "Ván Gỗ Poplar", en: "Poplar Planks" } },
+
+  // Slabs (Name only)
+  oak_slab: { title: { vi: "Phiến Gỗ Sồi", en: "Oak Slab" } },
+  spruce_slab: { title: { vi: "Phiến Gỗ Vân Sam", en: "Spruce Slab" } },
+  birch_slab: { title: { vi: "Phiến Gỗ Bạch Dương", en: "Birch Slab" } },
+  jungle_slab: { title: { vi: "Phiến Gỗ Rừng", en: "Jungle Slab" } },
+  acacia_slab: { title: { vi: "Phiến Gỗ Keo", en: "Acacia Slab" } },
+  dark_oak_slab: { title: { vi: "Phiến Gỗ Sồi Sẫm", en: "Dark Oak Slab" } },
+  mangrove_slab: { title: { vi: "Phiến Gỗ Đước", en: "Mangrove Slab" } },
+  bamboo_slab: { title: { vi: "Phiến Tre", en: "Bamboo Slab" } },
+  cherry_slab: { title: { vi: "Phiến Gỗ Anh Đào", en: "Cherry Slab" } },
+  pale_oak_slab: { title: { vi: "Phiến Gỗ Sồi Nhạt", en: "Pale Oak Slab" } },
+  crimson_slab: { title: { vi: "Phiến Gỗ Đỏ Tươi", en: "Crimson Slab" } },
+  warped_slab: { title: { vi: "Phiến Gỗ Kì Dị", en: "Warped Slab" } },
+  poplar_slab: { title: { vi: "Phiến Gỗ Poplar", en: "Poplar Slab" } },
+
+  // Logs (Name only)
+  oak_log: { title: { vi: "Thân Cây Sồi", en: "Oak Log" } },
+  spruce_log: { title: { vi: "Thân Cây Vân Sam", en: "Spruce Log" } },
+  birch_log: { title: { vi: "Thân Cây Bạch Dương", en: "Birch Log" } },
+  jungle_log: { title: { vi: "Thân Cây Rừng", en: "Jungle Log" } },
+  acacia_log: { title: { vi: "Thân Cây Keo", en: "Acacia Log" } },
+  dark_oak_log: { title: { vi: "Thân Cây Sồi Sẫm", en: "Dark Oak Log" } },
+  mangrove_log: { title: { vi: "Thân Cây Đước", en: "Mangrove Log" } },
+  cherry_log: { title: { vi: "Thân Cây Anh Đào", en: "Cherry Log" } },
+  pale_oak_log: { title: { vi: "Thân Cây Sồi Nhạt", en: "Pale Oak Log" } },
+  crimson_stem: { title: { vi: "Thân Nấm Đỏ Tươi", en: "Crimson Stem" } },
+  warped_stem: { title: { vi: "Thân Nấm Kì Dị", en: "Warped Stem" } },
+  poplar_log: { title: { vi: "Thân Cây Poplar", en: "Poplar Log" } },
 
   // Boats (Name only)
   oak_boat: { title: { vi: "Thuyền gỗ sồi", en: "Oak Boat" } },
@@ -151,6 +222,11 @@ const itemDescriptions = {
   block_of_netherite: { title: { vi: "Khối Netherite", en: "Block of Netherite" }, titleColor: "aqua" },
   eye_of_ender: { title: { vi: "Mắt Ender", en: "Eye of Ender" }, titleColor: "yellow" },
   totem_of_undying: { title: { vi: "Lá Bùa Trường Sinh", en: "Totem of Undying" }, titleColor: "yellow" },
+
+  end_crystal: { title: { vi: "Tinh Thể End", en: "End Crystal" }, titleColor: "magenta" },
+  respawn_anchor: { title: { vi: "Neo Hồi Sinh", en: "Respawn Anchor" }, titleColor: "magenta" },
+  wooden_pickaxe: { title: { vi: "Cúp Gỗ", en: "Wooden Pickaxe" } },
+  stone_pickaxe: { title: { vi: "Cúp Đá", en: "Stone Pickaxe" } },
 
   // Spears
   wooden_spear: {
@@ -234,12 +310,19 @@ const itemDescriptions = {
   coal: { title: { vi: "Than Đá", en: "Coal" } },
   amethyst_shard: { title: { vi: "Mảnh Thạch Anh Tím", en: "Amethyst Shard" } },
   gravel: { title: { vi: "Sỏi", en: "Gravel" } },
+  stone: { title: { vi: "Đá", en: "Stone" } },
+  end_stone: { title: { vi: "Đá End", en: "End Stone" } },
+  bricks: { title: { vi: "Gạch", en: "Bricks" } },
+  flint: { title: { vi: "Đá Lửa", en: "Flint" } },
+  enchanting_table: { title: { vi: "Bàn Phù Phép", en: "Enchanting Table" } },
   bucket: { title: { vi: "Xô", en: "Bucket" } }
 };
 
 export const getItemImgPath = (itemId) => {
   if (!itemId) return null;
   if (woodPlanks[itemId]) return woodPlanks[itemId];
+  if (woodSlabs[itemId]) return woodSlabs[itemId];
+  if (woodLogs[itemId]) return woodLogs[itemId];
   if (boatItems[itemId]) return boatItems[itemId];
   if (genericItems[itemId]) return genericItems[itemId];
   return null;
@@ -291,26 +374,39 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
   };
 
   const plankKeys = Object.keys(woodPlanks);
+  const slabKeys = Object.keys(woodSlabs);
+  const logKeys = Object.keys(woodLogs);
   const boatKeys = Object.keys(boatItems);
-  const isBoatRecipe = boatKeys.includes(recipe.output) && recipe.output !== "bamboo_raft";
+  const isBoatRecipe = boatKeys.includes(recipe.output);
 
   const getDisplayedItemId = (itemId, isOutputSlot) => {
     if (!itemId) return null;
 
     if (isBoatRecipe) {
-      const woodTypes = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "cherry", "pale_oak"];
+      const woodTypes = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "bamboo", "cherry", "pale_oak"];
       const activeWood = woodTypes[cycleIndex % woodTypes.length];
 
       if (woodPlanks[itemId]) {
         return activeWood;
       }
       if (isOutputSlot && boatKeys.includes(itemId)) {
+        if (activeWood === "bamboo") {
+          return "bamboo_raft";
+        }
         return `${activeWood}_boat`;
       }
     } else {
       if (woodPlanks[itemId]) {
         const activePlank = plankKeys[cycleIndex % plankKeys.length];
         return activePlank;
+      }
+      if (woodSlabs[itemId]) {
+        const activeSlab = slabKeys[cycleIndex % slabKeys.length];
+        return activeSlab;
+      }
+      if (woodLogs[itemId]) {
+        const activeLog = logKeys[cycleIndex % logKeys.length];
+        return activeLog;
       }
     }
 

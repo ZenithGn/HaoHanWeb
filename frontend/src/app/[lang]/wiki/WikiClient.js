@@ -49,8 +49,8 @@ export default function WikiClient({ dict, lang }) {
   };
 
   const filteredRecipes = RECIPES_DATA.filter((recipe) => {
-    // Exclude boat variations other than oak_boat and bamboo_raft
-    if (recipe.category === "boats" && recipe.id !== "oak_boat" && recipe.id !== "bamboo_raft") {
+    // Show one cycling boat recipe card, including Bamboo Raft.
+    if (recipe.category === "boats" && recipe.id !== "oak_boat") {
       return false;
     }
     const name = (recipe.name[lang] || recipe.name.vi).toLowerCase();
@@ -63,7 +63,7 @@ export default function WikiClient({ dict, lang }) {
 
   const getCategoryCount = (category) => {
     return RECIPES_DATA.filter((recipe) => {
-      if (recipe.category === "boats" && recipe.id !== "oak_boat" && recipe.id !== "bamboo_raft") {
+      if (recipe.category === "boats" && recipe.id !== "oak_boat") {
         return false;
       }
       const name = (recipe.name[lang] || recipe.name.vi).toLowerCase();
@@ -165,14 +165,6 @@ export default function WikiClient({ dict, lang }) {
               >
                 <i className="fa-solid fa-fish"></i>
                 <span>{dict.wiki_content?.nav_fishing}</span>
-              </button>
-              <button
-                className={`wiki-sidebar-link ${activeWikiTab === "items" ? "wiki-sidebar-link--active" : ""}`}
-                type="button"
-                onClick={() => setActiveWikiTab("items")}
-              >
-                <i className="fa-solid fa-gem"></i>
-                <span>{dict.wiki_content?.nav_items}</span>
               </button>
               <button
                 className={`wiki-sidebar-link ${activeWikiTab === "guilds" ? "wiki-sidebar-link--active" : ""}`}
@@ -313,7 +305,7 @@ export default function WikiClient({ dict, lang }) {
                     {filteredRecipes.length > 0 ? (
                       filteredRecipes.map((recipe) => {
                         const displayName = recipe.id === "oak_boat"
-                          ? (isVi ? "Thuyền" : "Boat")
+                          ? (isVi ? "Thuyền / Bè" : "Boat / Raft")
                           : (recipe.name[lang] || recipe.name.vi);
                         const outputId = typeof recipe.recipe?.output === "string" ? recipe.recipe.output : recipe.recipe?.output?.id;
                         const outputImg = getItemImgPath(outputId);
@@ -565,28 +557,6 @@ export default function WikiClient({ dict, lang }) {
               </div>
             )}
 
-            {activeWikiTab === "items" && (
-              <div className="wiki-article">
-                <h2>
-                  <i className="fa-solid fa-gem text-accent"></i> {dict.wiki_content?.items_title}
-                </h2>
-                <p className="wiki-intro-text">{dict.wiki_content?.items_desc}</p>
-                <ul className="wiki-list">
-                  <li>
-                    <strong>{dict.wiki_content?.items_item1_title}</strong> {dict.wiki_content?.items_item1_desc}
-                  </li>
-                  <li>
-                    <strong>{dict.wiki_content?.items_item2_title}</strong> {dict.wiki_content?.items_item2_desc}
-                  </li>
-                  <li>
-                    <strong>{dict.wiki_content?.items_item3_title}</strong> {dict.wiki_content?.items_item3_desc}
-                  </li>
-                  <li>
-                    <strong>{dict.wiki_content?.items_item4_title}</strong> {dict.wiki_content?.items_item4_desc}
-                  </li>
-                </ul>
-              </div>
-            )}
 
             {activeWikiTab === "guilds" && (
               <div className="wiki-article">
@@ -693,10 +663,6 @@ export default function WikiClient({ dict, lang }) {
                   <i className="fa-solid fa-fish"></i>
                   <span>{dict.wiki_content?.nav_fishing}</span>
                 </button>
-                <button className={`wiki-sidebar-link ${activeWikiTab === "items" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("items"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                  <i className="fa-solid fa-gem"></i>
-                  <span>{dict.wiki_content?.nav_items}</span>
-                </button>
                 <button className={`wiki-sidebar-link ${activeWikiTab === "guilds" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("guilds"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                   <i className="fa-solid fa-shield-halved"></i>
                   <span>{dict.wiki_content?.nav_guilds}</span>
@@ -731,8 +697,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "oak", "spruce", null,
-        "spruce", "oak", null,
+        "bamboo", "oak_log", null,
+        "oak_log", "bamboo", null,
         null, null, null
       ],
       output: "crafting_table"
@@ -753,7 +719,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "cobblestone", "cobblestone", "cobblestone",
-        "cobblestone", null, "cobblestone",
+        "gravel", null, "gravel",
         "cobblestone", "cobblestone", "cobblestone"
       ],
       output: "furnace"
@@ -773,9 +739,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "iron_ingot", "iron_ingot", "iron_ingot",
-        "iron_ingot", "furnace", "iron_ingot",
-        "smooth_stone", "smooth_stone", "smooth_stone"
+        "iron_ingot", "block_of_iron", "iron_ingot",
+        "bricks", "furnace", "bricks",
+        "stone", "stone", "stone"
       ],
       output: "blast_furnace"
     },
@@ -795,7 +761,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "block_of_iron", "block_of_iron", "block_of_iron",
-        null, "iron_ingot", null,
+        null, "obsidian", null,
         "iron_ingot", "iron_ingot", "iron_ingot"
       ],
       output: "anvil"
@@ -815,8 +781,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, "book", null,
-        "diamond", "obsidian", "diamond",
+        "diamond", "book", "diamond",
+        "amethyst_shard", "obsidian", "amethyst_shard",
         "obsidian", "obsidian", "obsidian"
       ],
       output: "enchanting_table"
@@ -837,7 +803,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "obsidian", "obsidian", "obsidian",
-        "obsidian", "eye_of_ender", "obsidian",
+        "end_stone", "eye_of_ender", "end_stone",
         "obsidian", "obsidian", "obsidian"
       ],
       output: "ender_chest"
@@ -857,9 +823,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "crying_obsidian", "crying_obsidian", "crying_obsidian",
-        "glowstone", "glowstone", "glowstone",
-        "crying_obsidian", "crying_obsidian", "crying_obsidian"
+        "glowstone", "obsidian", "glowstone",
+        "obsidian", "totem_of_undying", "obsidian",
+        "glowstone", "obsidian", "glowstone"
       ],
       output: "respawn_anchor"
     },
@@ -878,9 +844,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "glass", "glass", "glass",
-        "glass", "eye_of_ender", "glass",
-        "glass", "ghast_tear", "glass"
+        "glass", "obsidian", "glass",
+        "obsidian", "eye_of_ender", "obsidian",
+        "glass", "obsidian", "glass"
       ],
       output: "end_crystal"
     },
@@ -899,8 +865,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, null, null,
-        "ender_pearl", "blaze_powder", null,
+        "emerald", "blaze_powder", null,
+        null, "ender_pearl", null,
         null, null, null
       ],
       output: "eye_of_ender"
@@ -920,8 +886,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, null, null,
         "iron_ingot", null, "iron_ingot",
+        "iron_ingot", "copper_ingot", "iron_ingot",
         null, "iron_ingot", null
       ],
       output: "bucket"
@@ -985,7 +951,7 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "crimson", "spruce_log", "crimson",
+        "oak_slab", "oak", "oak_slab",
         null, "stick", null,
         null, "stick", null
       ],
@@ -1006,7 +972,7 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "obsidian", "obsidian", "obsidian",
+        "cobblestone", "cobblestone", "cobblestone",
         null, "flint", null,
         null, "stick", null
       ],
