@@ -61,6 +61,8 @@ const boatItems = {
   pale_oak_boat: "/assets/img/minecraft/entity_type/Pale_Oak_Boat.webp"
 };
 
+const arrowItems = ["arrow", "spectral_arrow", "tipped_arrow"];
+
 const genericItems = {
   stick: "/assets/img/minecraft/item/Stick.png",
   arrow: "/assets/img/minecraft/item/Arrow.png",
@@ -179,6 +181,7 @@ const itemDescriptions = {
   // Items
   stick: { title: { vi: "Gậy", en: "Stick" } },
   arrow: { title: { vi: "Mũi tên", en: "Arrow" } },
+  tipped_arrow: { title: { vi: "Mũi tên tẩm thuốc", en: "Tipped Arrow" } },
   redstone: { title: { vi: "Bụi Đá đỏ", en: "Redstone Dust" } },
   shield: { title: { vi: "Khiên", en: "Shield" } },
   iron_ingot: { title: { vi: "Phôi Sắt", en: "Iron Ingot" } },
@@ -378,9 +381,14 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
   const logKeys = Object.keys(woodLogs);
   const boatKeys = Object.keys(boatItems);
   const isBoatRecipe = boatKeys.includes(recipe.output);
+  const isSpearRecipe = typeof recipe.output === "string" && recipe.output.endsWith("_spear");
 
   const getDisplayedItemId = (itemId, isOutputSlot) => {
     if (!itemId) return null;
+
+    if (isSpearRecipe && arrowItems.includes(itemId)) {
+      return arrowItems[cycleIndex % arrowItems.length];
+    }
 
     if (isBoatRecipe) {
       const woodTypes = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "bamboo", "cherry", "pale_oak"];
