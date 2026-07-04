@@ -61,15 +61,20 @@ const boatItems = {
   pale_oak_boat: "/assets/img/minecraft/entity_type/Pale_Oak_Boat.webp"
 };
 
+const arrowItems = ["arrow", "spectral_arrow", "tipped_arrow"];
+
 const genericItems = {
   stick: "/assets/img/minecraft/item/Stick.png",
   arrow: "/assets/img/minecraft/item/Arrow.png",
   spectral_arrow: "/assets/img/minecraft/item/Spectral_Arrow.png",
+  tipped_arrow: "/assets/img/minecraft/item/tipped_arrow.png",
   redstone: "/assets/img/minecraft/item/Redstone.png",
   shield: "/assets/img/minecraft/item/Shield.png",
   iron_ingot: "/assets/img/minecraft/item/Iron_Ingot.png",
   copper_ingot: "/assets/img/minecraft/item/Copper_Ingot.webp",
   diamond: "/assets/img/minecraft/item/Diamond.png",
+  iron_pickaxe: "/assets/img/minecraft/item/Iron_Pickaxe.webp",
+  diamond_pickaxe: "/assets/img/minecraft/item/Diamond_Pickaxe.webp",
   echo_shard: "/assets/img/minecraft/item/Echo_Shard.webp",
   leather: "/assets/img/minecraft/item/Leather.webp",
   breeze_rod: "/assets/img/minecraft/item/Breeze_Rod.webp",
@@ -92,7 +97,10 @@ const genericItems = {
   furnace: "/assets/img/minecraft/entity_block_type/Furnace.png",
   blast_furnace: "/assets/img/minecraft/entity_block_type/Blast_Furnace.png",
   anvil: "/assets/img/minecraft/entity_block_type/Anvil.webp",
+  enchanting_table: "/assets/img/minecraft/entity_block_type/enchanting_table.png",
   ender_chest: "/assets/img/minecraft/entity_block_type/Ender_Chest.png",
+  respawn_anchor: "/assets/img/minecraft/entity_block_type/Respawn_Anchor.webp",
+  end_crystal: "/assets/img/minecraft/entity_type/End_Crystal.webp",
   gold_ingot: "/assets/img/minecraft/item/Gold_Ingot.webp",
   netherite_ingot: "/assets/img/minecraft/item/Netherite_Ingot.webp",
   glass: "/assets/img/minecraft/Glass.png",
@@ -109,6 +117,8 @@ const genericItems = {
   oak_log: "/assets/img/minecraft/wood_type/Oak_Log.png",
   crimson_slab: "/assets/img/minecraft/wood_type/Crimson_Slab.png",
   wooden_spear: "/assets/img/minecraft/item/ItemSprite_wooden-spear.png",
+  wooden_pickaxe: "/assets/img/minecraft/item/wooden_pickaxe.webp",
+  stone_pickaxe: "/assets/img/minecraft/item/Stone_Pickaxe.png",
   stone_spear: "/assets/img/minecraft/item/ItemSprite_stone-spear.png",
   iron_spear: "/assets/img/minecraft/item/ItemSprite_iron-spear.webp",
   copper_spear: "/assets/img/minecraft/item/ItemSprite_copper-spear.png",
@@ -179,6 +189,7 @@ const itemDescriptions = {
   // Items
   stick: { title: { vi: "Gậy", en: "Stick" } },
   arrow: { title: { vi: "Mũi tên", en: "Arrow" } },
+  tipped_arrow: { title: { vi: "Mũi tên tẩm thuốc", en: "Tipped Arrow" } },
   redstone: { title: { vi: "Bụi Đá đỏ", en: "Redstone Dust" } },
   shield: { title: { vi: "Khiên", en: "Shield" } },
   iron_ingot: { title: { vi: "Phôi Sắt", en: "Iron Ingot" } },
@@ -227,6 +238,8 @@ const itemDescriptions = {
   respawn_anchor: { title: { vi: "Neo Hồi Sinh", en: "Respawn Anchor" }, titleColor: "magenta" },
   wooden_pickaxe: { title: { vi: "Cúp Gỗ", en: "Wooden Pickaxe" } },
   stone_pickaxe: { title: { vi: "Cúp Đá", en: "Stone Pickaxe" } },
+  iron_pickaxe: { title: { vi: "Cúp Sắt", en: "Iron Pickaxe" } },
+  diamond_pickaxe: { title: { vi: "Cúp Kim Cương", en: "Diamond Pickaxe" } },
 
   // Spears
   wooden_spear: {
@@ -378,9 +391,14 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
   const logKeys = Object.keys(woodLogs);
   const boatKeys = Object.keys(boatItems);
   const isBoatRecipe = boatKeys.includes(recipe.output);
+  const isSpearRecipe = typeof recipe.output === "string" && recipe.output.endsWith("_spear");
 
   const getDisplayedItemId = (itemId, isOutputSlot) => {
     if (!itemId) return null;
+
+    if (isSpearRecipe && arrowItems.includes(itemId)) {
+      return arrowItems[cycleIndex % arrowItems.length];
+    }
 
     if (isBoatRecipe) {
       const woodTypes = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "bamboo", "cherry", "pale_oak"];
