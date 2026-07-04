@@ -352,7 +352,7 @@
     "supporters_title": "Supporters",
     "supporters_desc": "Mọi sự đóng góp của bạn đều giúp duy trì, nâng cấp cấu hình máy chủ và phát triển thêm các tính năng độc quyền.",
     "disclaimer_name": "*Tên nhân vật của bạn được sử dụng để xác minh sau khi thanh toán.",
-    "disclaimer_redirect": "Bạn sẽ được chuyển đến PayOS để hoàn tất thanh toán an sau.",
+    "disclaimer_redirect": "Bạn sẽ được chuyển đến cổng thanh toán để hoàn tất phiên ủng hộ an toàn.",
     "creating": "Đang tạo...",
     "support_us": "Ủng hộ chúng tôi",
     "donator_section_title": "Donator",
@@ -748,6 +748,7 @@
           "desc": "Những công trình đơn sơ của các thành viên thời kỳ đầu.",
           "coverIndex": 0,
           "images": [
+<<<<<<< HEAD
             {
               "index": 0,
               "title": "Nhà gỗ bên hồ",
@@ -783,6 +784,15 @@
               "title": "Khu khai thác khoáng sản",
               "desc": "Mỏ đá khai thác vật liệu thô sơ."
             }
+=======
+            { "index": 0, "title": "Bản đồ căn cứ", "desc": "Căn cứ thời kỳ đầu của một số người chơi." },
+            { "index": 1, "title": "Bản đồ căn cứ quân sự", "desc": "Công trình quân sự do một người chơi xây." },
+            { "index": 2, "title": "Bản đồ bán đảo quanh căn cứ", "desc": "Một vùng đất rộng lớn và tràn đầy tiềm năng phát triển." },
+            { "index": 3, "title": "Một góc nhìn về căn cứ quân sự", "desc": "Căn cứ quân sự với các khí tài và công trình quân sự." },
+            { "index": 4, "title": "Tàu chiến", "desc": "Các con tàu hộ tống neo ở cảng." },
+            { "index": 5, "title": "Xe tăng", "desc": "Một khí tài quân sự." },
+            { "index": 6, "title": "Góc nhìn bên vào các con tàu", "desc": "Một góc nhìn khác vào các con tàu hộ tống." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         }
       ]
@@ -798,6 +808,7 @@
           "desc": "Khám phá các căn cứ sinh tồn đầy sáng tạo và hoành tráng.",
           "coverIndex": 7,
           "images": [
+<<<<<<< HEAD
             {
               "index": 7,
               "title": "Căn cứ chính (Toàn cảnh)",
@@ -818,6 +829,12 @@
               "title": "Đại bản doanh",
               "desc": "Căn cứ lớn tích hợp đầy đủ công năng sinh tồn."
             }
+=======
+            { "index": 7, "title": "Căn cứ chính (Toàn cảnh)", "desc": "Hình ảnh toàn cảnh căn cứ chính quy mô lớn của thành viên Season 2." },
+            { "index": 8, "title": "Góc nhìn trên cao của căn cứ", "desc": "Căn cứ rộng lớn với các công trình." },
+            { "index": 9, "title": "Đường hầm", "desc": "Một đường hầm được xây để kết nối các khu." },
+            { "index": 10, "title": "Căn cứ lớn", "desc": "Căn cứ lớn tích hợp đầy đủ công năng sinh tồn." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         },
         {
@@ -825,6 +842,7 @@
           "desc": "Các hoạt động giao lưu và tập trung đông vui.",
           "coverIndex": 11,
           "images": [
+<<<<<<< HEAD
             {
               "index": 11,
               "title": "Họp mặt thành viên",
@@ -850,6 +868,13 @@
               "title": "Du ngoạn thế giới",
               "desc": "Nhóm bạn đồng hành phiêu lưu khám phá vùng đất mới."
             }
+=======
+            { "index": 11, "title": "Họp mặt thành viên", "desc": "Các thành viên tụ họp thảo luận và chụp ảnh lưu niệm." },
+            { "index": 12, "title": "Đua thuyền", "desc": "Một buổi đua thuyền giữa các thành viên server." },
+            { "index": 13, "title": "Nhóm bạn thân thiết", "desc": "Khoảnh khắc vui vẻ đứng cùng nhau trò chuyện." },
+            { "index": 14, "title": "Gặp gỡ", "desc": "Các thành viên ngồi lại với nhau trò chuyện." },
+            { "index": 15, "title": "Du ngoạn thế giới", "desc": "Nhóm bạn đồng hành phiêu lưu khám phá vùng đất mới." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         },
         {
@@ -894,6 +919,7 @@
           "desc": "Toàn cảnh khu vực spawn và căn cứ chính của Season 3.",
           "coverIndex": 19,
           "images": [
+<<<<<<< HEAD
             {
               "index": 19,
               "title": "Tổng quan spawn Season 3",
@@ -924,6 +950,14 @@
               "title": "Hải đăng bờ biển",
               "desc": "Hải đăng phát sáng chỉ đường cho tàu bè cập bến."
             }
+=======
+            { "index": 19, "title": "Tổng quan spawn Season 3", "desc": "Cận cảnh khu vực hồi sinh trung tâm với các lối đi và kiến trúc hiện đại." },
+            { "index": 20, "title": "Bản đồ khu vực spawn season 3", "desc": "Toàn cảnh khu vực spawn season 3." },
+            { "index": 21, "title": "Kiến trúc nhiều tầng đẹp mắt", "desc": "Khu vực spawn được trang trí và xây dựng đẹp mắt." },
+            { "index": 22, "title": "Khu vực công cộng", "desc": "Các công trình khuyến khích sự giao tiếp và trao đổi giữa các player." },
+            { "index": 23, "title": "Một góc trong khu vực spawn", "desc": "Kiến trúc đẹp mắt trong từng góc." },
+            { "index": 24, "title": "Khu vực spawn vào buổi sáng", "desc": "Ánh sáng làm tăng thêm tính thẩm mỹ của công trình." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         },
         {
@@ -931,6 +965,7 @@
           "desc": "Các góc trang trí nội thất chi tiết, sáng tạo của người chơi.",
           "coverIndex": 25,
           "images": [
+<<<<<<< HEAD
             {
               "index": 25,
               "title": "Phòng khách ấm cúng",
@@ -946,6 +981,11 @@
               "title": "Góc học tập",
               "desc": "Trang trí kệ sách và bàn làm việc yên tĩnh."
             }
+=======
+            { "index": 25, "title": "Phòng khách ấm cúng", "desc": "Trang trí lò sưởi và ghế sofa trong phòng khách." },
+            { "index": 26, "title": "Hầm rượu cổ", "desc": "Cách bố trí các thùng ủ rượu bằng gỗ sồi dưới hầm." },
+            { "index": 27, "title": "Khu vực làm việc và sinh hoạt", "desc": "Trang trí kệ sách và bàn làm việc yên tĩnh." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         },
         {
@@ -953,6 +993,7 @@
           "desc": "Các khoảnh khắc tương tác xã hội và giao lưu kinh tế.",
           "coverIndex": 28,
           "images": [
+<<<<<<< HEAD
             {
               "index": 28,
               "title": "Hẹn hò ngắm cảnh",
@@ -963,6 +1004,10 @@
               "title": "Thỏa thuận giao dịch",
               "desc": "Trao đổi vật phẩm giá trị cao tại khu chợ trung tâm."
             }
+=======
+            { "index": 28, "title": "Một cách di chuyển đặc biệt và hài hước", "desc": "Thành viên server di chuyển bằng cách ngồi lên đầu nhau." },
+            { "index": 29, "title": "Thỏa thuận giao dịch", "desc": "Trao đổi vật phẩm giá trị cao tại khu chợ trung tâm." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         },
         {
@@ -970,6 +1015,7 @@
           "desc": "Những lỗi game ngộ nghĩnh và khoảnh khắc trêu đùa nhau.",
           "coverIndex": 30,
           "images": [
+<<<<<<< HEAD
             {
               "index": 30,
               "title": "Lỗi Zombie xếp chồng",
@@ -985,6 +1031,11 @@
               "title": "Admin 'lạm quyền'",
               "desc": "Khoảnh khắc đùa vui khi Admin sử dụng quyền lực tối cao."
             }
+=======
+            { "index": 30, "title": "Lỗi Zombie spawn ra quá nhiều", "desc": "Thành viên server đang cố gắng sống sót giữa bầy zombie." },
+            { "index": 31, "title": "Lỗi Zombie spawn ra quá nhiều", "desc": "Thành viên server đang cố gắng sống sót giữa bầy zombie." },
+            { "index": 32, "title": "Admin 'lạm quyền'", "desc": "Khoảnh khắc đùa vui khi Admin sử dụng quyền lực tối cao." }
+>>>>>>> 55246c1004a42a39ba7ec7f3116abd90104532de
           ]
         }
       ]
@@ -1000,9 +1051,9 @@
   "donate_form_messages": {
     "error_empty_name": "Vui lòng nhập tên nhân vật Minecraft.",
     "error_min_amount": "Số tiền ủng hộ tối thiểu là 2.000 VND.",
-    "error_login_required": "Bạn cần đăng nhập trước khi tạo thanh toán PayOS.",
-    "status_creating_link": "Đang tạo liên kết thanh toán PayOS...",
-    "status_redirecting": "Đã tạo thanh toán, đang chuyển sang PayOS...",
-    "error_create_failed": "Không thể tạo thanh toán PayOS. Vui lòng thử lại."
+    "error_login_required": "Bạn cần đăng nhập trước khi ủng hộ.",
+    "status_creating_link": "Đang tạo phiên ủng hộ...",
+    "status_redirecting": "Đã tạo phiên ủng hộ, đang chuyển đến cổng thanh toán...",
+    "error_create_failed": "Không thể tạo phiên ủng hộ. Vui lòng thử lại."
   }
 }

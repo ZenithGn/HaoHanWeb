@@ -59,7 +59,7 @@ class Api::DonationsController < ApplicationController
         amount: amount
       }, status: :ok
     else
-      render json: { error: "Không thể khởi tạo thanh toán với PayOS: #{res['desc']}" }, status: :unprocessable_entity
+      render json: { error: "Không thể tạo phiên ủng hộ: #{res['desc']}" }, status: :unprocessable_entity
     end
   end
 

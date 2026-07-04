@@ -18,7 +18,7 @@ class Player < ApplicationRecord
                     if: :web_account?
 
   def web_account?
-    password_hash != 'UNREGISTERED_GHOST'
+    password_hash != 'UNREGISTERED_GHOST' && !discord_only_account?
   end
 
   def discord_only_account?

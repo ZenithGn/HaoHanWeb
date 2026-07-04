@@ -352,7 +352,7 @@
     "supporters_title": "Supporters",
     "supporters_desc": "Every contribution helps maintain, upgrade hosting configurations, and develop exclusive features.",
     "disclaimer_name": "*Your character name is used for support verification after payment.",
-    "disclaimer_redirect": "You will be redirected to PayOS to complete the secure checkout.",
+    "disclaimer_redirect": "You will be redirected to the payment gateway to complete the support session securely.",
     "creating": "Creating...",
     "support_us": "Support us",
     "donator_section_title": "Donator",
@@ -750,38 +750,38 @@
           "images": [
             {
               "index": 0,
-              "title": "Lakeside Wooden Cabin",
-              "desc": "A simple cozy wooden base built early on."
+              "title": "A Map Depicting a Base",
+              "desc": "An initial base for multiple players."
             },
             {
               "index": 1,
-              "title": "Stone Watchtower",
-              "desc": "A stone tower looking over the spawn area."
+              "title": "A Map Depicting a Military Base",
+              "desc": "A military base constructed by a player."
             },
             {
               "index": 2,
-              "title": "Early Redstone Base",
-              "desc": "Early simple Redstone farm experimentations."
+              "title": "Map of the Peninsula Encircling the Base",
+              "desc": "A vast area filled with developing potential."
             },
             {
               "index": 3,
-              "title": "Nether Portal Arch",
-              "desc": "A nicely decorated portal leading to the Nether."
+              "title": "A Vantage Point Looking Towards the Military Base",
+              "desc": "The military base, equipped with military apparatus and military facilities."
             },
             {
               "index": 4,
-              "title": "Cozy Warehouse",
-              "desc": "A small resource storage point shared by friends."
+              "title": "Corvette Class Ship",
+              "desc": "Ships anchored in the harbor."
             },
             {
               "index": 5,
-              "title": "Wheat Plantation",
-              "desc": "Small agricultural wheat farm for basic foods."
+              "title": "A Tank",
+              "desc": "A military vehicle."
             },
             {
               "index": 6,
-              "title": "Mining Quarry",
-              "desc": "Raw material mining site near base."
+              "title": "Side View of Warships",
+              "desc": "Another view towards the corvette class ships."
             }
           ]
         }
@@ -805,18 +805,18 @@
             },
             {
               "index": 8,
-              "title": "Base Grounds",
-              "desc": "Close up base view featuring stone and glass architecture."
+              "title": "Aerial Perspective of the Base",
+              "desc": "An expansive base featuring multiple buildings."
             },
             {
               "index": 9,
-              "title": "Lakeside Garden",
-              "desc": "A serene lakeside garden corner."
+              "title": "Tunnel",
+              "desc": "A tunnel constructed to link different areas of the base."
             },
             {
               "index": 10,
-              "title": "Grand Headquarters",
-              "desc": "Fully functional survival grand base."
+              "title": "Big Base",
+              "desc": "Fully functional survival base."
             }
           ]
         },
@@ -832,8 +832,8 @@
             },
             {
               "index": 12,
-              "title": "Boat Port Gathering",
-              "desc": "Relaxing boating and trading activities."
+              "title": "Boat Racing Competition",
+              "desc": "Members of the server compete against one another in a boat race."
             },
             {
               "index": 13,
@@ -842,8 +842,8 @@
             },
             {
               "index": 14,
-              "title": "Campfire Gathering",
-              "desc": "A cozy chat around the glowing campfire."
+              "title": "Friend Gathering",
+              "desc": "Several people sit together and chat."
             },
             {
               "index": 15,
@@ -901,28 +901,28 @@
             },
             {
               "index": 20,
-              "title": "Communal House Area",
-              "desc": "A community pavilion built entirely from dark spruce wood."
+              "title": "Map of Spawn Season 3",
+              "desc": "An overview of Season 3 spawn."
             },
             {
               "index": 21,
-              "title": "Modern Villa Base",
-              "desc": "A sleek luxury glass villa sitting alone on a hill."
+              "title": "Visually Impressive Multi-Tiered Architecture",
+              "desc": "Elegantly crafted and adorned spawn area."
             },
             {
               "index": 22,
-              "title": "Transit Station",
-              "desc": "Underground rail station linking player bases."
+              "title": "Public Space",
+              "desc": "Structures that promote communication and interaction among players."
             },
             {
               "index": 23,
-              "title": "Medieval Castle",
-              "desc": "A fortified stone castle standing tall on a cliffside."
+              "title": "A Viewpoint in the Spawn Area",
+              "desc": "Eye-catching structures at every corner."
             },
             {
               "index": 24,
-              "title": "Seaside Lighthouse",
-              "desc": "A glowing lighthouse guiding boats back to the port."
+              "title": "The Spawn Area During the Morning",
+              "desc": "The illumination accentuates the visual attractiveness of the building."
             }
           ]
         },
@@ -943,8 +943,8 @@
             },
             {
               "index": 27,
-              "title": "Study & Library",
-              "desc": "A quiet corner layout featuring bookshelves and a study desk."
+              "title": "Workspace and Living Area",
+              "desc": "Adorned bookshelf and serene work environment."
             }
           ]
         },
@@ -955,8 +955,8 @@
           "images": [
             {
               "index": 28,
-              "title": "Scenic Date",
-              "desc": "Two players sitting together watching the sunset."
+              "title": "A Unique and Humorous Way of Moving Around",
+              "desc": "Members of the server move by sitting atop one another's heads."
             },
             {
               "index": 29,
@@ -972,13 +972,13 @@
           "images": [
             {
               "index": 30,
-              "title": "Zombie Stacking Bug",
-              "desc": "A funny stacking glitch in the game."
+              "title": "Overabundant Zombie Emergence",
+              "desc": "Server members are trying to survive amidst a horde of zombies."
             },
             {
               "index": 31,
-              "title": "Zombie Stacking Bug",
-              "desc": "A funny stacking glitch in the game."
+              "title": "Overabundant Zombie Emergence",
+              "desc": "Server members are trying to survive amidst a horde of zombies."
             },
             {
               "index": 32,
@@ -1000,9 +1000,9 @@
   "donate_form_messages": {
     "error_empty_name": "Please enter your Minecraft character name.",
     "error_min_amount": "Minimum support amount is 2,000 VND.",
-    "error_login_required": "Please log in before creating a PayOS payment.",
-    "status_creating_link": "Creating PayOS checkout link...",
-    "status_redirecting": "Checkout created, redirecting to PayOS...",
-    "error_create_failed": "Could not create PayOS checkout. Please try again."
+    "error_login_required": "Please log in before supporting us.",
+    "status_creating_link": "Creating support session...",
+    "status_redirecting": "Support session created, redirecting to the payment gateway...",
+    "error_create_failed": "Could not create support session. Please try again."
   }
 }
