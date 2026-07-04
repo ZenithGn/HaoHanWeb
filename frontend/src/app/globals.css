@@ -7655,6 +7655,50 @@ details:hover {
   line-height: 1;
 }
 
+.mc-recipe-slot-count {
+  position: absolute;
+  bottom: calc(var(--mc-scale) * 1px);
+  right: calc(var(--mc-scale) * 2px);
+  font-family: 'Minecraft', monospace;
+  font-size: calc(var(--mc-scale) * 8px);
+  color: #ffffff;
+  text-shadow: calc(var(--mc-scale) * 1px) calc(var(--mc-scale) * 1px) 0px #3f3f3f;
+  pointer-events: none;
+  font-weight: normal;
+  z-index: 10;
+}
+
+.mc-recipe-gui--furnace {
+  padding: calc(var(--mc-scale) * 8px) calc(var(--mc-scale) * 16px);
+}
+
+.mc-recipe-furnace-body {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--mc-scale) * 12px);
+}
+
+.mc-recipe-furnace-left {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: calc(var(--mc-scale) * 2px);
+}
+
+.mc-recipe-furnace-right {
+  display: flex;
+  align-items: center;
+  gap: calc(var(--mc-scale) * 8px);
+}
+
+.mc-recipe-furnace-flame {
+  width: calc(var(--mc-scale) * 14px);
+  height: calc(var(--mc-scale) * 14px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 /* ── Minecraft In-Game Tooltip popup ── */
 .mc-tooltip-fixed {
   position: fixed;

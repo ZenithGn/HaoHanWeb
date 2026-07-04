@@ -82,6 +82,40 @@ const boatItems = {
   pale_oak_boat: "/assets/img/minecraft/entity_type/Pale_Oak_Boat.webp"
 };
 
+const buttonItems = {
+  oak_button: "/assets/img/minecraft/redstone/Oak_Button.png",
+  spruce_button: "/assets/img/minecraft/redstone/Spruce_Button.png",
+  birch_button: "/assets/img/minecraft/redstone/Birch_Button.png",
+  jungle_button: "/assets/img/minecraft/redstone/Jungle_Button.png",
+  acacia_button: "/assets/img/minecraft/redstone/Acacia_Button.png",
+  dark_oak_button: "/assets/img/minecraft/redstone/Dark_Oak_Button.png",
+  mangrove_button: "/assets/img/minecraft/redstone/Mangrove_Button.png",
+  bamboo_button: "/assets/img/minecraft/redstone/Bamboo_Button.png",
+  cherry_button: "/assets/img/minecraft/redstone/Cherry_Button.png",
+  pale_oak_button: "/assets/img/minecraft/redstone/Pale_Oak_Button.png",
+  crimson_button: "/assets/img/minecraft/redstone/Crimson_Button.png",
+  warped_button: "/assets/img/minecraft/redstone/Warped_Button.png",
+  poplar_button: "/assets/img/minecraft/redstone/Poplar_Button.webp",
+  stone_button: "/assets/img/minecraft/redstone/Stone_Button.webp"
+};
+
+const buttonRecipePairs = [
+  { input: "oak", output: "oak_button" },
+  { input: "spruce", output: "spruce_button" },
+  { input: "birch", output: "birch_button" },
+  { input: "jungle", output: "jungle_button" },
+  { input: "acacia", output: "acacia_button" },
+  { input: "dark_oak", output: "dark_oak_button" },
+  { input: "mangrove", output: "mangrove_button" },
+  { input: "bamboo", output: "bamboo_button" },
+  { input: "cherry", output: "cherry_button" },
+  { input: "pale_oak", output: "pale_oak_button" },
+  { input: "crimson", output: "crimson_button" },
+  { input: "warped", output: "warped_button" },
+  { input: "poplar", output: "poplar_button" },
+  { input: "stone", output: "stone_button" }
+];
+
 const arrowItems = ["arrow", "spectral_arrow", "tipped_arrow"];
 
 const genericItems = {
@@ -110,7 +144,7 @@ const genericItems = {
   smooth_stone: "/assets/img/minecraft/stone_type/Smooth_Stone.png",
   glowstone: "/assets/img/minecraft/stone_type/Glowstone.png",
   obsidian: "/assets/img/minecraft/Obsidian.png",
-  crying_obsidian: "/assets/img/minecraft/item/crying_obsidian.png",
+  crying_obsidian: "/assets/img/minecraft/Crying_Obsidian.png",
   block_of_iron: "/assets/img/minecraft/Block_of_Iron.png",
   block_of_netherite: "/assets/img/minecraft/Block_of_Netherite.png",
   tinted_glass: "/assets/img/minecraft/Tinted_Glass.png",
@@ -147,7 +181,11 @@ const genericItems = {
   golden_spear: "/assets/img/minecraft/item/ItemSprite_golden-spear.png",
   diamond_spear: "/assets/img/minecraft/item/ItemSprite_diamond-spear.png",
   netherite_spear: "/assets/img/minecraft/item/ItemSprite_netherite-spear.png",
-  bucket: "/assets/img/minecraft/item/Bucket.png"
+  bucket: "/assets/img/minecraft/item/Bucket.png",
+  bowl: "/assets/img/minecraft/item/Bowl.png",
+  flower_pot: "/assets/img/minecraft/Flower_Pot.png",
+  glass_bottle: "/assets/img/minecraft/item/Glass_Bottle.png",
+  brick: "/assets/img/minecraft/stone_type/Brick.webp"
 };
 
 const itemDescriptions = {
@@ -365,7 +403,25 @@ const itemDescriptions = {
   bricks: { title: { vi: "Gạch", en: "Bricks" } },
   flint: { title: { vi: "Đá Lửa", en: "Flint" } },
   enchanting_table: { title: { vi: "Bàn Phù Phép", en: "Enchanting Table" } },
-  bucket: { title: { vi: "Xô", en: "Bucket" } }
+  bucket: { title: { vi: "Xô", en: "Bucket" } },
+  bowl: { title: { vi: "Bát Gỗ", en: "Bowl" } },
+  flower_pot: { title: { vi: "Chậu Hoa", en: "Flower Pot" } },
+  glass_bottle: { title: { vi: "Chai Thủy Tinh", en: "Glass Bottle" } },
+  brick: { title: { vi: "Gạch", en: "Brick" } },
+  oak_button: { title: { vi: "Nút Gỗ Sồi", en: "Oak Button" } },
+  spruce_button: { title: { vi: "Nút Gỗ Vân Sam", en: "Spruce Button" } },
+  birch_button: { title: { vi: "Nút Gỗ Bạch Dương", en: "Birch Button" } },
+  jungle_button: { title: { vi: "Nút Gỗ Rừng", en: "Jungle Button" } },
+  acacia_button: { title: { vi: "Nút Gỗ Keo", en: "Acacia Button" } },
+  dark_oak_button: { title: { vi: "Nút Gỗ Sồi Sẫm", en: "Dark Oak Button" } },
+  mangrove_button: { title: { vi: "Nút Gỗ Đước", en: "Mangrove Button" } },
+  bamboo_button: { title: { vi: "Nút Tre", en: "Bamboo Button" } },
+  cherry_button: { title: { vi: "Nút Gỗ Anh Đào", en: "Cherry Button" } },
+  pale_oak_button: { title: { vi: "Nút Gỗ Sồi Nhạt", en: "Pale Oak Button" } },
+  crimson_button: { title: { vi: "Nút Gỗ Đỏ Tươi", en: "Crimson Button" } },
+  warped_button: { title: { vi: "Nút Gỗ Kì Dị", en: "Warped Button" } },
+  poplar_button: { title: { vi: "Nút Gỗ Poplar", en: "Poplar Button" } },
+  stone_button: { title: { vi: "Nút Đá", en: "Stone Button" } }
 };
 
 export const getItemImgPath = (itemId) => {
@@ -375,6 +431,7 @@ export const getItemImgPath = (itemId) => {
   if (woodLogs[itemId]) return woodLogs[itemId];
   if (stoneVariants[itemId]) return stoneVariants[itemId];
   if (boatItems[itemId]) return boatItems[itemId];
+  if (buttonItems[itemId]) return buttonItems[itemId];
   if (genericItems[itemId]) return genericItems[itemId];
   return null;
 };
@@ -390,7 +447,207 @@ const CraftingArrow = () => (
   </svg>
 );
 
+const FurnaceFlame = ({ progress = 1 }) => {
+  const h = 14;
+  const clipY = Math.round(h * (1 - progress));
+  return (
+    <svg width="14" height="14" viewBox="0 0 14 14" fill="none" style={{ width: "100%", height: "100%", imageRendering: "pixelated" }}>
+      <defs>
+        <clipPath id={`flame-clip-${clipY}`}>
+          <rect x="0" y={clipY} width="14" height={h - clipY} />
+        </clipPath>
+      </defs>
+      <g clipPath={`url(#flame-clip-${clipY})`}>
+        <rect x="6" y="0" width="1" height="1" fill="#c85410" />
+        <rect x="7" y="0" width="1" height="1" fill="#9c4010" />
+        <rect x="5" y="1" width="1" height="1" fill="#c85410" />
+        <rect x="6" y="1" width="1" height="1" fill="#f0bc00" />
+        <rect x="7" y="1" width="1" height="1" fill="#c85410" />
+        <rect x="4" y="2" width="1" height="1" fill="#9c4010" />
+        <rect x="5" y="2" width="1" height="1" fill="#f0bc00" />
+        <rect x="6" y="2" width="1" height="1" fill="#f0bc00" />
+        <rect x="7" y="2" width="1" height="1" fill="#f0bc00" />
+        <rect x="8" y="2" width="1" height="1" fill="#9c4010" />
+        <rect x="3" y="3" width="1" height="1" fill="#c85410" />
+        <rect x="4" y="3" width="1" height="1" fill="#f0bc00" />
+        <rect x="5" y="3" width="1" height="1" fill="#f8d800" />
+        <rect x="6" y="3" width="1" height="1" fill="#f8d800" />
+        <rect x="7" y="3" width="1" height="1" fill="#f8d800" />
+        <rect x="8" y="3" width="1" height="1" fill="#f0bc00" />
+        <rect x="9" y="3" width="1" height="1" fill="#c85410" />
+        <rect x="10" y="3" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="4" width="1" height="1" fill="#c85410" />
+        <rect x="3" y="4" width="1" height="1" fill="#f0bc00" />
+        <rect x="4" y="4" width="1" height="1" fill="#f8d800" />
+        <rect x="5" y="4" width="1" height="1" fill="#fcfc00" />
+        <rect x="6" y="4" width="1" height="1" fill="#fcfc00" />
+        <rect x="7" y="4" width="1" height="1" fill="#f8d800" />
+        <rect x="8" y="4" width="1" height="1" fill="#f8d800" />
+        <rect x="9" y="4" width="1" height="1" fill="#f0bc00" />
+        <rect x="10" y="4" width="1" height="1" fill="#c85410" />
+        <rect x="11" y="4" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="5" width="1" height="1" fill="#c85410" />
+        <rect x="3" y="5" width="1" height="1" fill="#f0bc00" />
+        <rect x="4" y="5" width="1" height="1" fill="#f8d800" />
+        <rect x="5" y="5" width="1" height="1" fill="#fcfc00" />
+        <rect x="6" y="5" width="1" height="1" fill="#fcfc00" />
+        <rect x="7" y="5" width="1" height="1" fill="#fcfc00" />
+        <rect x="8" y="5" width="1" height="1" fill="#f8d800" />
+        <rect x="9" y="5" width="1" height="1" fill="#f0bc00" />
+        <rect x="10" y="5" width="1" height="1" fill="#c85410" />
+        <rect x="11" y="5" width="1" height="1" fill="#9c4010" />
+        <rect x="1" y="6" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="6" width="1" height="1" fill="#c85410" />
+        <rect x="3" y="6" width="1" height="1" fill="#f0bc00" />
+        <rect x="4" y="6" width="1" height="1" fill="#f8d800" />
+        <rect x="5" y="6" width="1" height="1" fill="#fcfc00" />
+        <rect x="6" y="6" width="1" height="1" fill="#fcfc54" />
+        <rect x="7" y="6" width="1" height="1" fill="#fcfc54" />
+        <rect x="8" y="6" width="1" height="1" fill="#fcfc00" />
+        <rect x="9" y="6" width="1" height="1" fill="#f0bc00" />
+        <rect x="10" y="6" width="1" height="1" fill="#c85410" />
+        <rect x="11" y="6" width="1" height="1" fill="#9c4010" />
+        <rect x="1" y="7" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="7" width="1" height="1" fill="#c85410" />
+        <rect x="3" y="7" width="1" height="1" fill="#f0bc00" />
+        <rect x="4" y="7" width="1" height="1" fill="#f8d800" />
+        <rect x="5" y="7" width="1" height="1" fill="#fcfc00" />
+        <rect x="6" y="7" width="1" height="1" fill="#fcfc54" />
+        <rect x="7" y="7" width="1" height="1" fill="#fcfc54" />
+        <rect x="8" y="7" width="1" height="1" fill="#fcfc00" />
+        <rect x="9" y="7" width="1" height="1" fill="#f8d800" />
+        <rect x="10" y="7" width="1" height="1" fill="#c85410" />
+        <rect x="11" y="7" width="1" height="1" fill="#9c4010" />
+        <rect x="1" y="8" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="8" width="1" height="1" fill="#c85410" />
+        <rect x="3" y="8" width="1" height="1" fill="#f0bc00" />
+        <rect x="4" y="8" width="1" height="1" fill="#f8d800" />
+        <rect x="5" y="8" width="1" height="1" fill="#fcfc00" />
+        <rect x="6" y="8" width="1" height="1" fill="#fcfc54" />
+        <rect x="7" y="8" width="1" height="1" fill="#fcfc00" />
+        <rect x="8" y="8" width="1" height="1" fill="#f8d800" />
+        <rect x="9" y="8" width="1" height="1" fill="#f0bc00" />
+        <rect x="10" y="8" width="1" height="1" fill="#c85410" />
+        <rect x="1" y="9" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="9" width="1" height="1" fill="#c85410" />
+        <rect x="3" y="9" width="1" height="1" fill="#f0bc00" />
+        <rect x="4" y="9" width="1" height="1" fill="#f8d800" />
+        <rect x="5" y="9" width="1" height="1" fill="#fcfc00" />
+        <rect x="6" y="9" width="1" height="1" fill="#fcfc00" />
+        <rect x="7" y="9" width="1" height="1" fill="#f8d800" />
+        <rect x="8" y="9" width="1" height="1" fill="#f0bc00" />
+        <rect x="9" y="9" width="1" height="1" fill="#c85410" />
+        <rect x="10" y="9" width="1" height="1" fill="#9c4010" />
+        <rect x="2" y="10" width="1" height="1" fill="#9c4010" />
+        <rect x="3" y="10" width="1" height="1" fill="#c85410" />
+        <rect x="4" y="10" width="1" height="1" fill="#f0bc00" />
+        <rect x="5" y="10" width="1" height="1" fill="#f8d800" />
+        <rect x="6" y="10" width="1" height="1" fill="#f8d800" />
+        <rect x="7" y="10" width="1" height="1" fill="#f0bc00" />
+        <rect x="8" y="10" width="1" height="1" fill="#c85410" />
+        <rect x="9" y="10" width="1" height="1" fill="#9c4010" />
+        <rect x="3" y="11" width="1" height="1" fill="#9c4010" />
+        <rect x="4" y="11" width="1" height="1" fill="#c85410" />
+        <rect x="5" y="11" width="1" height="1" fill="#f0bc00" />
+        <rect x="6" y="11" width="1" height="1" fill="#f0bc00" />
+        <rect x="7" y="11" width="1" height="1" fill="#c85410" />
+        <rect x="8" y="11" width="1" height="1" fill="#9c4010" />
+        <rect x="4" y="12" width="1" height="1" fill="#9c4010" />
+        <rect x="5" y="12" width="1" height="1" fill="#c85410" />
+        <rect x="6" y="12" width="1" height="1" fill="#c85410" />
+        <rect x="7" y="12" width="1" height="1" fill="#9c4010" />
+        <rect x="5" y="13" width="1" height="1" fill="#9c4010" />
+        <rect x="6" y="13" width="1" height="1" fill="#9c4010" />
+      </g>
+    </svg>
+  );
+};
+
+const FurnaceFlameGrid = ({ progress = 1 }) => {
+  return (
+    <div className="mc-recipe-furnace-flame-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <img
+        src="/assets/img/recipe/Grid_layout_Fire_(in-active).png"
+        alt="fire inactive"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          imageRendering: 'pixelated',
+          objectFit: 'contain'
+        }}
+      />
+      <img
+        src="/assets/img/recipe/Grid_layout_Fire_(active).png"
+        alt="fire active"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          imageRendering: 'pixelated',
+          objectFit: 'contain',
+          clipPath: `inset(${(1 - progress) * 100}% 0% 0% 0%)`
+        }}
+      />
+    </div>
+  );
+};
+
+const FurnaceArrowGrid = ({ progress = 1 }) => {
+  return (
+    <div className="mc-recipe-furnace-arrow-container" style={{ position: 'relative', width: '100%', height: '100%' }}>
+      <img
+        src="/assets/img/recipe/Grid_layout_Furnace_Progress_(in-active).png"
+        alt="furnace arrow inactive"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          imageRendering: 'pixelated',
+          objectFit: 'contain'
+        }}
+      />
+      <img
+        src="/assets/img/recipe/Grid_layout_Furnace_Progress_(in-active).png"
+        alt="furnace arrow active"
+        style={{
+          position: 'absolute',
+          top: 0,
+          left: 0,
+          width: '100%',
+          height: '100%',
+          imageRendering: 'pixelated',
+          objectFit: 'contain',
+          filter: 'brightness(1.8) contrast(1.2)',
+          clipPath: `inset(0% ${(1 - progress) * 100}% 0% 0%)`
+        }}
+      />
+    </div>
+  );
+};
+
 export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
+  const [hoveredRaw, setHoveredRaw] = React.useState(null);
+  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
+  const [cycleIndex, setCycleIndex] = React.useState(0);
+  const [isMounted, setIsMounted] = React.useState(false);
+
+  React.useEffect(() => {
+    setTimeout(() => {
+      setIsMounted(true);
+    }, 0);
+    const timer = setInterval(() => {
+      setCycleIndex(prev => prev + 1);
+    }, 120);
+    return () => clearInterval(timer);
+  }, []);
+
   if (!recipe) return null;
 
   const sizes = { small: 32, medium: 40, large: 56 };
@@ -401,19 +658,6 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
     "--mc-scale": scale,
     "--mc-slot-size": `${slotSize}px`,
   };
-
-  const [hoveredRaw, setHoveredRaw] = React.useState(null);
-  const [mousePos, setMousePos] = React.useState({ x: 0, y: 0 });
-  const [cycleIndex, setCycleIndex] = React.useState(0);
-  const [isMounted, setIsMounted] = React.useState(false);
-
-  React.useEffect(() => {
-    setIsMounted(true);
-    const timer = setInterval(() => {
-      setCycleIndex(prev => prev + 1);
-    }, 1500);
-    return () => clearInterval(timer);
-  }, []);
 
   const handleMouseMove = (e, rawId, isOutput) => {
     setMousePos({ x: e.clientX, y: e.clientY });
@@ -429,19 +673,23 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
   const logKeys = Object.keys(woodLogs);
   const stoneVariantKeys = Object.keys(stoneVariants).filter((key) => key !== "stone_variant");
   const boatKeys = Object.keys(boatItems);
+  const buttonKeys = Object.keys(buttonItems);
   const isBoatRecipe = boatKeys.includes(recipe.output);
+  const isButtonRecipe = buttonKeys.includes(recipe.output);
   const isSpearRecipe = typeof recipe.output === "string" && recipe.output.endsWith("_spear");
 
   const getDisplayedItemId = (itemId, isOutputSlot) => {
     if (!itemId) return null;
 
     if (isSpearRecipe && arrowItems.includes(itemId)) {
-      return arrowItems[cycleIndex % arrowItems.length];
+      const ci = Math.floor(cycleIndex / 12);
+      return arrowItems[ci % arrowItems.length];
     }
 
     if (isBoatRecipe) {
+      const ci = Math.floor(cycleIndex / 12);
       const woodTypes = ["oak", "spruce", "birch", "jungle", "acacia", "dark_oak", "mangrove", "bamboo", "cherry", "pale_oak"];
-      const activeWood = woodTypes[cycleIndex % woodTypes.length];
+      const activeWood = woodTypes[ci % woodTypes.length];
 
       if (woodPlanks[itemId]) {
         return activeWood;
@@ -452,29 +700,38 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
         }
         return `${activeWood}_boat`;
       }
+    } else if (isButtonRecipe) {
+      const ci = Math.floor(cycleIndex / 12);
+      const activePair = buttonRecipePairs[ci % buttonRecipePairs.length];
+      if (woodPlanks[itemId] || itemId === "stone") {
+        return activePair.input;
+      }
+      if (isOutputSlot && buttonItems[itemId]) {
+        return activePair.output;
+      }
     } else {
+      const ci = Math.floor(cycleIndex / 12);
       if (woodPlanks[itemId]) {
-        const activePlank = plankKeys[cycleIndex % plankKeys.length];
-        return activePlank;
+        return plankKeys[ci % plankKeys.length];
       }
       if (woodSlabs[itemId]) {
-        const activeSlab = slabKeys[cycleIndex % slabKeys.length];
-        return activeSlab;
+        return slabKeys[ci % slabKeys.length];
       }
       if (woodLogs[itemId]) {
-        const activeLog = logKeys[cycleIndex % logKeys.length];
-        return activeLog;
+        return logKeys[ci % logKeys.length];
+      }
+      if (buttonItems[itemId]) {
+        return buttonKeys[ci % buttonKeys.length];
       }
       if (itemId === "stone_variant") {
-        const activeStone = stoneVariantKeys[cycleIndex % stoneVariantKeys.length];
-        return activeStone;
+        return stoneVariantKeys[ci % stoneVariantKeys.length];
       }
     }
 
     return itemId;
   };
 
-  const renderSlot = (rawId, isOutput = false) => {
+  const renderSlot = (rawId, isOutput = false, count = 1) => {
     if (!rawId) {
       return <div className={`mc-recipe-slot ${isOutput ? 'mc-recipe-slot--output' : ''}`} />;
     }
@@ -489,6 +746,7 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
         onMouseLeave={handleMouseLeave}
       >
         {imgPath ? <img src={imgPath} alt={displayedId} /> : <span className="mc-recipe-placeholder">?</span>}
+        {count > 1 && <span className="mc-recipe-slot-count">{count}</span>}
       </div>
     );
   };
@@ -541,10 +799,82 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
           {renderSlot(recipe.template, false)}
           {renderSlot(recipe.base, false)}
           {renderSlot(recipe.addition, false)}
-          <div className="mc-recipe-arrow">
-            <CraftingArrow />
+          <div className="mc-recipe-arrow" style={{ width: "calc(var(--mc-scale) * 22px)", height: "calc(var(--mc-scale) * 18px)" }}>
+            <img
+              src="/assets/img/recipe/Grid_layout_Furnace_Progress_(in-active).png"
+              alt="arrow"
+              style={{
+                width: '100%',
+                height: '100%',
+                imageRendering: 'pixelated',
+                objectFit: 'contain'
+              }}
+            />
           </div>
           {renderSlot(recipe.output, false)}
+        </div>
+        {renderTooltipPortal()}
+      </div>
+    );
+  }
+
+  if (recipe.type === "blasting") {
+    const flameCycleDuration = 24;
+    const flameFrame = cycleIndex % flameCycleDuration;
+    const flameProgress = flameFrame < (flameCycleDuration / 2)
+      ? 1 - (flameFrame / (flameCycleDuration / 2))
+      : (flameFrame - flameCycleDuration / 2) / (flameCycleDuration / 2);
+
+    const arrowCycleDuration = 40;
+    const arrowProgress = (cycleIndex % arrowCycleDuration) / arrowCycleDuration;
+
+    return (
+      <div className="mc-recipe-gui mc-recipe-gui--furnace" style={containerStyle}>
+        <div className="mc-recipe-furnace-body">
+          <div className="mc-recipe-furnace-left">
+            {renderSlot(recipe.input, false, recipe.inputCount)}
+            <div className="mc-recipe-furnace-flame">
+              <FurnaceFlameGrid progress={flameProgress} />
+            </div>
+          </div>
+          <div className="mc-recipe-furnace-right">
+            <div className="mc-recipe-arrow" style={{ width: "calc(var(--mc-scale) * 22px)", height: "calc(var(--mc-scale) * 18px)" }}>
+              <FurnaceArrowGrid progress={arrowProgress} />
+            </div>
+            {renderSlot(recipe.output, true, recipe.outputCount)}
+          </div>
+        </div>
+        {renderTooltipPortal()}
+      </div>
+    );
+  }
+
+  if (recipe.type === "smelting") {
+    const flameCycleDuration = 24;
+    const flameFrame = cycleIndex % flameCycleDuration;
+    const flameProgress = flameFrame < (flameCycleDuration / 2)
+      ? 1 - (flameFrame / (flameCycleDuration / 2))
+      : (flameFrame - flameCycleDuration / 2) / (flameCycleDuration / 2);
+
+    const arrowCycleDuration = 40;
+    const arrowProgress = (cycleIndex % arrowCycleDuration) / arrowCycleDuration;
+
+    return (
+      <div className="mc-recipe-gui mc-recipe-gui--furnace" style={containerStyle}>
+        <div className="mc-recipe-furnace-body">
+          <div className="mc-recipe-furnace-left">
+            {renderSlot(recipe.input, false, recipe.inputCount)}
+            <div className="mc-recipe-furnace-flame">
+              <FurnaceFlameGrid progress={flameProgress} />
+            </div>
+            {renderSlot(null, false)}
+          </div>
+          <div className="mc-recipe-furnace-right">
+            <div className="mc-recipe-arrow" style={{ width: "calc(var(--mc-scale) * 22px)", height: "calc(var(--mc-scale) * 18px)" }}>
+              <FurnaceArrowGrid progress={arrowProgress} />
+            </div>
+            {renderSlot(recipe.output, true, recipe.outputCount)}
+          </div>
         </div>
         {renderTooltipPortal()}
       </div>
@@ -560,10 +890,19 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
           </React.Fragment>
         ))}
       </div>
-      <div className="mc-recipe-arrow">
-        <CraftingArrow />
+      <div className="mc-recipe-arrow" style={{ width: "calc(var(--mc-scale) * 22px)", height: "calc(var(--mc-scale) * 18px)" }}>
+        <img
+          src="/assets/img/recipe/Grid_layout_Furnace_Progress_(in-active).png"
+          alt="arrow"
+          style={{
+            width: '100%',
+            height: '100%',
+            imageRendering: 'pixelated',
+            objectFit: 'contain'
+          }}
+        />
       </div>
-      {renderSlot(recipe.output, true)}
+      {renderSlot(recipe.output, true, recipe.outputCount)}
       {renderTooltipPortal()}
     </div>
   );

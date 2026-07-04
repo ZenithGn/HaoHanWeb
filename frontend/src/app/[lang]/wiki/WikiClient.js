@@ -24,7 +24,8 @@ export default function WikiClient({ dict, lang }) {
     switch (station) {
       case "smithing": return "recipe-station-badge--smithing";
       case "brewing": return "recipe-station-badge--brewing";
-      case "smelting": return "recipe-station-badge--smelting";
+      case "smelting":
+      case "blasting": return "recipe-station-badge--smelting";
       default: return "recipe-station-badge--crafting";
     }
   };
@@ -34,6 +35,7 @@ export default function WikiClient({ dict, lang }) {
       case "smithing": return isVi ? "Bàn Rèn" : "Smithing Table";
       case "brewing": return isVi ? "Bệ Pha Thuốc" : "Brewing Stand";
       case "smelting": return isVi ? "Lò Nung" : "Furnace";
+      case "blasting": return isVi ? "Lò Luyện Kim" : "Blast Furnace";
       default: return isVi ? "Bàn Chế Tạo" : "Crafting Table";
     }
   };
@@ -42,7 +44,8 @@ export default function WikiClient({ dict, lang }) {
     switch (station) {
       case "smithing": return "fa-solid fa-screwdriver-wrench";
       case "brewing": return "fa-solid fa-flask";
-      case "smelting": return "fa-solid fa-fire";
+      case "smelting":
+      case "blasting": return "fa-solid fa-fire";
       default: return "fa-solid fa-hammer";
     }
   };
@@ -872,27 +875,6 @@ const RECIPES_DATA = [
     },
     stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   },
-  {
-    id: "bucket",
-    category: "utilities",
-    station: "crafting",
-    image: "/assets/img/recipe/bucket.png",
-    name: { vi: "Xô Sắt", en: "Iron Bucket" },
-    desc: {
-      vi: "Công cụ chứa nước, dung nham hoặc sữa, cực kỳ quan trọng khi sinh tồn.",
-      en: "Essential tool for carrying water, lava, or milk during survival adventure."
-    },
-    recipe: {
-      type: "crafting",
-      grid: [
-        "iron_ingot", null, "iron_ingot",
-        "iron_ingot", "copper_ingot", "iron_ingot",
-        null, "iron_ingot", null
-      ],
-      output: "bucket"
-    },
-    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (16)" }
-  },
   // Combat
   {
     id: "mace",
@@ -1354,6 +1336,113 @@ const RECIPES_DATA = [
       output: "pale_oak_boat"
     },
     stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (1)" }
+  },
+  {
+    id: "bowl",
+    category: "utilities",
+    station: "crafting",
+    image: "/assets/img/recipe/bowl.png",
+    name: { vi: "Bát Gỗ", en: "Wooden Bowl" },
+    desc: {
+      vi: "Dùng để đựng các loại súp và hầm ngon lành.",
+      en: "Used to hold delicious stews and soups."
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, null,
+        "oak_slab", null, "oak_slab",
+        "oak_slab", "oak", "oak_slab"
+      ],
+      output: "bowl",
+      outputCount: 4
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
+  },
+  {
+    id: "flower_pot",
+    category: "utilities",
+    station: "crafting",
+    image: "/assets/img/recipe/flower_pot.png",
+    name: { vi: "Chậu Hoa", en: "Flower Pot" },
+    desc: {
+      vi: "Khối trang trí dùng để cắm các loại hoa, nấm hoặc cây cảnh.",
+      en: "A decorative block used to display flowers, mushrooms, or saplings."
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, null,
+        "brick", "iron_ingot", "brick",
+        "brick", "bowl", "brick"
+      ],
+      output: "flower_pot",
+      outputCount: 1
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
+  },
+  {
+    id: "glass_bottle",
+    category: "utilities",
+    station: "crafting",
+    image: "/assets/img/recipe/glass_bottle.png",
+    name: { vi: "Chai Thủy Tinh", en: "Glass Bottle" },
+    desc: {
+      vi: "Dùng để đựng nước, mật ong hoặc pha chế thuốc.",
+      en: "Used to hold water, honey, or craft potions."
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, null,
+        "glass", "oak_button", "glass",
+        null, "glass", null
+      ],
+      output: "glass_bottle",
+      outputCount: 3
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
+  },
+  {
+    id: "bucket_from_blasting",
+    category: "utilities",
+    station: "blasting",
+    image: "/assets/img/recipe/bucket_from_blasting.png",
+    name: { vi: "Xô Sắt (Luyện kim)", en: "Iron Bucket (Blasting)" },
+    desc: {
+      vi: "Đúc xô sắt trực tiếp bằng cách luyện sắt nóng chảy trong lò luyện kim.",
+      en: "Cast an iron bucket directly using a blast furnace."
+    },
+    recipe: {
+      type: "blasting",
+      input: "flower_pot",
+      inputCount: 1,
+      output: "bucket",
+      outputCount: 1
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (16)" }
+  },
+  {
+    id: "button",
+    category: "utilities",
+    station: "crafting",
+    image: "",
+    name: { vi: "Nút", en: "Button" },
+    desc: {
+      vi: "Nút bấm dùng để kích hoạt tín hiệu đá đỏ trong thời gian ngắn.",
+      en: "A button used to activate redstone signals briefly."
+    },
+    recipe: {
+      type: "crafting",
+      grid: [
+        null, null, null,
+        null, "oak", null,
+        null, "redstone", null
+      ],
+      output: "oak_button",
+      outputCount: 1
+    },
+    stats: { rarity: "Common", renewable: "Yes", stackable: "Yes (64)" }
   }
 ];
 
