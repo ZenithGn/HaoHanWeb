@@ -7,7 +7,6 @@ const defaultLocale = 'vi';
 const homeTabRoutes = ['gallery', 'rules', 'wiki', 'donate', 'profile'];
 const discordInviteUrl = 'https://discord.com/invite/znHfuc6hCR';
 
-// Get the preferred locale, similar to above or using a library
 function getLocale(request) {
   const negotiatorHeaders = {};
   request.headers.forEach((value, key) => (negotiatorHeaders[key] = value));
@@ -24,8 +23,7 @@ function getLocale(request) {
   }
 }
 
-export function middleware(request) {
-  // Check if there is any supported locale in the pathname
+export function proxy(request) {
   const pathname = request.nextUrl.pathname;
   const normalizedPathname = pathname.replace(/\/$/, '') || '/';
   const sectionWithLocale = normalizedPathname.match(/^\/(gallery|rules|wiki|donate|profile|discord)\/(vi|en)$/);
@@ -65,26 +63,22 @@ export function middleware(request) {
     (locale) => !pathname.startsWith(`/${locale}/`) && pathname !== `/${locale}`
   );
 
-  // Redirect if there is no locale
   if (pathnameIsMissingLocale) {
-    // Ignore internal requests
     if (pathname.startsWith('/_next') || pathname.startsWith('/assets') || pathname.startsWith('/favicon')) {
       return NextResponse.next();
     }
 
     const locale = getLocale(request);
-
-    // e.g. incoming request is /signup
-    // The new URL is now /vi/signup
     return NextResponse.redirect(
       new URL(`/${locale}${pathname === '/' ? '' : pathname}`, request.url)
     );
   }
+
+  return NextResponse.next();
 }
 
 export const config = {
   matcher: [
-    // Skip all internal paths (_next)
     '/((?!_next|assets|favicon|api).*)',
   ],
 };

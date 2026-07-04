@@ -522,11 +522,11 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
         const normalizedStatus = donateStatus.toLowerCase();
         const orderText = orderCode ? ` #${orderCode}` : '';
         if (normalizedStatus === 'success' || normalizedStatus === 'paid') {
-          setDonateResult(`${isVi ? 'Thanh toán PayOS thành công' : 'PayOS payment completed'}${orderText}.`);
+          setDonateResult(`${isVi ? 'Ủng hộ thành công' : 'Support payment completed'}${orderText}.`);
         } else if (normalizedStatus === 'cancel' || normalizedStatus === 'cancelled') {
-          setDonateResult(`${isVi ? 'Bạn đã hủy thanh toán PayOS' : 'PayOS payment was cancelled'}${orderText}.`);
+          setDonateResult(isVi ? 'Bạn đã hủy phiên ủng hộ.' : 'You cancelled the support session.');
         } else {
-          setDonateResult(`${isVi ? 'Đã quay lại từ PayOS' : 'Returned from PayOS'}${orderText}.`);
+          setDonateResult(`${isVi ? 'Đã quay lại phiên ủng hộ' : 'Returned from the support session'}${orderText}.`);
         }
       }
     }, 0);
