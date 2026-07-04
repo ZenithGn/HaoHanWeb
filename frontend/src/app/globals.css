@@ -5740,6 +5740,13 @@ details:hover {
     padding: 0 !important;
   }
 
+  .wiki-sidebar::before,
+  .wiki-sidebar::after,
+  .rules-sidebar::before,
+  .rules-sidebar::after {
+    display: none !important;
+  }
+
   .wiki-content,
   .rules-content {
     grid-area: content;
@@ -7613,6 +7620,7 @@ details:hover {
   padding: calc(var(--mc-scale) * 1px);
   box-sizing: border-box;
 }
+
 
 .mc-recipe-slot--output {
   width: calc(var(--mc-slot-size) * 1.5);

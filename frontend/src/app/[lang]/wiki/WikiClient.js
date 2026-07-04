@@ -15,9 +15,8 @@ export default function WikiClient({ dict, lang }) {
   const categories = [
     { id: "all", icon: "fa-solid fa-list-ul", label: isVi ? "Tất cả" : "All" },
     { id: "utilities", icon: "fa-solid fa-screwdriver-wrench", label: isVi ? "Tiện ích & Khác" : "Utilities & Others" },
-    { id: "combat", icon: "fa-solid fa-shield-halved", label: isVi ? "Chiến đấu" : "Combat" },
-    { id: "pickaxes", icon: "fa-solid fa-hammer", label: isVi ? "Cúp" : "Pickaxes" },
-    { id: "spears", icon: "fa-solid fa-crosshairs", label: isVi ? "Vũ khí Giáo" : "Spears" },
+    { id: "weapon", icon: "fa-solid fa-shield-halved", label: isVi ? "Vũ khí" : "Weapons" },
+    { id: "tool", icon: "fa-solid fa-hammer", label: isVi ? "Công cụ" : "Tools" },
     { id: "boats", icon: "fa-solid fa-ship", label: isVi ? "Thuyền bè" : "Boats" }
   ];
 
@@ -897,7 +896,7 @@ const RECIPES_DATA = [
   // Combat
   {
     id: "mace",
-    category: "combat",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/mace.png",
     name: { vi: "Chùy (Mace)", en: "Mace" },
@@ -918,7 +917,7 @@ const RECIPES_DATA = [
   },
   {
     id: "shield",
-    category: "combat",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/shield.png",
     name: { vi: "Khiên", en: "Shield" },
@@ -940,7 +939,7 @@ const RECIPES_DATA = [
   // Pickaxes
   {
     id: "wooden_pickaxe",
-    category: "pickaxes",
+    category: "tool",
     station: "crafting",
     image: "/assets/img/recipe/pickaxe/wooden_pickaxe.png",
     name: { vi: "Cúp Gỗ", en: "Wooden Pickaxe" },
@@ -961,7 +960,7 @@ const RECIPES_DATA = [
   },
   {
     id: "stone_pickaxe",
-    category: "pickaxes",
+    category: "tool",
     station: "crafting",
     image: "/assets/img/recipe/pickaxe/stone_pickaxe.png",
     name: { vi: "Cúp Đá", en: "Stone Pickaxe" },
@@ -982,7 +981,7 @@ const RECIPES_DATA = [
   },
   {
     id: "diamond_pickaxe_smithing",
-    category: "pickaxes",
+    category: "tool",
     station: "smithing",
     image: "/assets/img/recipe/pickaxe/diamond_pickaxe_smithing.png",
     name: { vi: "Cúp Kim Cương (Rèn)", en: "Diamond Pickaxe (Smithing)" },
@@ -1002,7 +1001,7 @@ const RECIPES_DATA = [
   // Spears
   {
     id: "wooden_spear",
-    category: "spears",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/spear/wooden_spear.png",
     name: { vi: "Giáo Gỗ", en: "Wooden Spear" },
@@ -1023,7 +1022,7 @@ const RECIPES_DATA = [
   },
   {
     id: "stone_spear",
-    category: "spears",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/spear/stone_spear.png",
     name: { vi: "Giáo Đá", en: "Stone Spear" },
@@ -1034,8 +1033,8 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        null, "cobblestone", "spectral_arrow",
-        null, "stick", "cobblestone",
+        null, "stone_variant", "spectral_arrow",
+        null, "stick", "stone_variant",
         "redstone", null, null
       ],
       output: "stone_spear"
@@ -1044,7 +1043,7 @@ const RECIPES_DATA = [
   },
   {
     id: "iron_spear",
-    category: "spears",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/spear/iron_spear.png",
     name: { vi: "Giáo Sắt", en: "Iron Spear" },
@@ -1065,7 +1064,7 @@ const RECIPES_DATA = [
   },
   {
     id: "copper_spear",
-    category: "spears",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/spear/copper_spear.png",
     name: { vi: "Giáo Đồng", en: "Copper Spear" },
@@ -1086,7 +1085,7 @@ const RECIPES_DATA = [
   },
   {
     id: "golden_spear",
-    category: "spears",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/spear/golden_spear.png",
     name: { vi: "Giáo Vàng", en: "Golden Spear" },
@@ -1107,7 +1106,7 @@ const RECIPES_DATA = [
   },
   {
     id: "diamond_spear",
-    category: "spears",
+    category: "weapon",
     station: "crafting",
     image: "/assets/img/recipe/spear/diamond_spear.png",
     name: { vi: "Giáo Kim Cương", en: "Diamond Spear" },
@@ -1128,7 +1127,7 @@ const RECIPES_DATA = [
   },
   {
     id: "netherite_spear_smithing",
-    category: "spears",
+    category: "weapon",
     station: "smithing",
     image: "/assets/img/recipe/spear/netherite_spear_smithing.png",
     name: { vi: "Giáo Netherite (Rèn)", en: "Netherite Spear (Smithing)" },

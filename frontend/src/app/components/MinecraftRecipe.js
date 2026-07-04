@@ -35,17 +35,29 @@ const woodSlabs = {
 
 const woodLogs = {
   oak_log: "/assets/img/minecraft/wood_type/Oak_Log.png",
+  stripped_oak_log: "/assets/img/minecraft/wood_type/Stripped_Oak_Log.png",
   spruce_log: "/assets/img/minecraft/wood_type/Spruce_Log.png",
+  stripped_spruce_log: "/assets/img/minecraft/wood_type/Stripped_Spruce_Log.png",
   birch_log: "/assets/img/minecraft/wood_type/Birch_Log.png",
+  stripped_birch_log: "/assets/img/minecraft/wood_type/Stripped_Birch_Log.png",
   jungle_log: "/assets/img/minecraft/wood_type/Jungle_Log.png",
+  stripped_jungle_log: "/assets/img/minecraft/wood_type/Stripped_Jungle_Log.png",
   acacia_log: "/assets/img/minecraft/wood_type/Acacia_Log.png",
+  stripped_acacia_log: "/assets/img/minecraft/wood_type/Stripped_Acacia_Log.png",
   dark_oak_log: "/assets/img/minecraft/wood_type/Dark_Oak_Log.png",
+  stripped_dark_oak_log: "/assets/img/minecraft/wood_type/Stripped_Dark_Oak_Log.png",
   mangrove_log: "/assets/img/minecraft/wood_type/Mangrove_Log.png",
+  stripped_mangrove_log: "/assets/img/minecraft/wood_type/Stripped_Mangrove_Log.png",
   cherry_log: "/assets/img/minecraft/wood_type/Cherry_Log.png",
+  stripped_cherry_log: "/assets/img/minecraft/wood_type/Stripped_Cherry_Log.png",
   pale_oak_log: "/assets/img/minecraft/wood_type/Pale_Oak_Log.png",
+  stripped_pale_oak_log: "/assets/img/minecraft/wood_type/Stripped_Pale_Oak_Log.png",
   crimson_stem: "/assets/img/minecraft/wood_type/Crimson_Stem.gif",
+  stripped_crimson_stem: "/assets/img/minecraft/wood_type/Stripped_Crimson_Stem.png",
   warped_stem: "/assets/img/minecraft/wood_type/Warped_Stem.gif",
-  poplar_log: "/assets/img/minecraft/wood_type/Poplar_Log.webp"
+  stripped_warped_stem: "/assets/img/minecraft/wood_type/Stripped_Warped_Stem.png",
+  poplar_log: "/assets/img/minecraft/wood_type/Poplar_Log.webp",
+  stripped_poplar_log: "/assets/img/minecraft/wood_type/Stripped_Poplar_Log.webp"
 };
 
 const stoneVariants = {
@@ -53,7 +65,8 @@ const stoneVariants = {
   cobblestone: "/assets/img/minecraft/stone_type/Cobblestone.png",
   stone: "/assets/img/minecraft/stone_type/Stone.png",
   smooth_stone: "/assets/img/minecraft/stone_type/Smooth_Stone.png",
-  cobbled_deepslate: "/assets/img/minecraft/stone_type/Cobbled_Deepslate.png"
+  cobbled_deepslate: "/assets/img/minecraft/stone_type/Cobbled_Deepslate.png",
+  blackstone: "/assets/img/minecraft/stone_type/Blackstone.webp"
 };
 
 const boatItems = {
@@ -182,6 +195,18 @@ const itemDescriptions = {
   crimson_stem: { title: { vi: "Thân Nấm Đỏ Tươi", en: "Crimson Stem" } },
   warped_stem: { title: { vi: "Thân Nấm Kì Dị", en: "Warped Stem" } },
   poplar_log: { title: { vi: "Thân Cây Poplar", en: "Poplar Log" } },
+  stripped_oak_log: { title: { vi: "Thân Cây Sồi Bóc Vỏ", en: "Stripped Oak Log" } },
+  stripped_spruce_log: { title: { vi: "Thân Cây Vân Sam Bóc Vỏ", en: "Stripped Spruce Log" } },
+  stripped_birch_log: { title: { vi: "Thân Cây Bạch Dương Bóc Vỏ", en: "Stripped Birch Log" } },
+  stripped_jungle_log: { title: { vi: "Thân Cây Rừng Bóc Vỏ", en: "Stripped Jungle Log" } },
+  stripped_acacia_log: { title: { vi: "Thân Cây Keo Bóc Vỏ", en: "Stripped Acacia Log" } },
+  stripped_dark_oak_log: { title: { vi: "Thân Cây Sồi Sẫm Bóc Vỏ", en: "Stripped Dark Oak Log" } },
+  stripped_mangrove_log: { title: { vi: "Thân Cây Đước Bóc Vỏ", en: "Stripped Mangrove Log" } },
+  stripped_cherry_log: { title: { vi: "Thân Cây Anh Đào Bóc Vỏ", en: "Stripped Cherry Log" } },
+  stripped_pale_oak_log: { title: { vi: "Thân Cây Sồi Nhạt Bóc Vỏ", en: "Stripped Pale Oak Log" } },
+  stripped_crimson_stem: { title: { vi: "Thân Nấm Đỏ Tươi Bóc Vỏ", en: "Stripped Crimson Stem" } },
+  stripped_warped_stem: { title: { vi: "Thân Nấm Kì Dị Bóc Vỏ", en: "Stripped Warped Stem" } },
+  stripped_poplar_log: { title: { vi: "Thân Cây Poplar Bóc Vỏ", en: "Stripped Poplar Log" } },
 
   // Boats (Name only)
   oak_boat: { title: { vi: "Thuyền gỗ sồi", en: "Oak Boat" } },
@@ -316,6 +341,7 @@ const itemDescriptions = {
   // Blocks (Name only)
   cobblestone: { title: { vi: "Đá Cuội", en: "Cobblestone" } },
   cobbled_deepslate: { title: { vi: "Đá Sâu Cuội", en: "Cobbled Deepslate" } },
+  blackstone: { title: { vi: "Đá Đen", en: "Blackstone" } },
   smooth_stone: { title: { vi: "Đá Mịn", en: "Smooth Stone" } },
   glowstone: { title: { vi: "Đá Phát Sáng", en: "Glowstone" } },
   obsidian: { title: { vi: "Hắc Diện Thạch", en: "Obsidian" } },
