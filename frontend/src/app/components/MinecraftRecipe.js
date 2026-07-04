@@ -48,6 +48,14 @@ const woodLogs = {
   poplar_log: "/assets/img/minecraft/wood_type/Poplar_Log.webp"
 };
 
+const stoneVariants = {
+  stone_variant: "/assets/img/minecraft/stone_type/Cobblestone.png",
+  cobblestone: "/assets/img/minecraft/stone_type/Cobblestone.png",
+  stone: "/assets/img/minecraft/stone_type/Stone.png",
+  smooth_stone: "/assets/img/minecraft/stone_type/Smooth_Stone.png",
+  cobbled_deepslate: "/assets/img/minecraft/stone_type/Cobbled_Deepslate.png"
+};
+
 const boatItems = {
   oak_boat: "/assets/img/minecraft/entity_type/Oak_Boat.webp",
   spruce_boat: "/assets/img/minecraft/entity_type/Spruce_Boat.webp",
@@ -89,7 +97,7 @@ const genericItems = {
   smooth_stone: "/assets/img/minecraft/stone_type/Smooth_Stone.png",
   glowstone: "/assets/img/minecraft/stone_type/Glowstone.png",
   obsidian: "/assets/img/minecraft/Obsidian.png",
-  crying_obsidian: "/assets/img/minecraft/Crying_Obsidian.png",
+  crying_obsidian: "/assets/img/minecraft/item/crying_obsidian.png",
   block_of_iron: "/assets/img/minecraft/Block_of_Iron.png",
   block_of_netherite: "/assets/img/minecraft/Block_of_Netherite.png",
   tinted_glass: "/assets/img/minecraft/Tinted_Glass.png",
@@ -103,6 +111,7 @@ const genericItems = {
   end_crystal: "/assets/img/minecraft/entity_type/End_Crystal.webp",
   gold_ingot: "/assets/img/minecraft/item/Gold_Ingot.webp",
   netherite_ingot: "/assets/img/minecraft/item/Netherite_Ingot.webp",
+  nether_star: "/assets/img/minecraft/item/Nether_Star.webp",
   glass: "/assets/img/minecraft/Glass.png",
   book: "/assets/img/minecraft/item/Book.webp",
   emerald: "/assets/img/minecraft/item/Emerald.png",
@@ -230,6 +239,7 @@ const itemDescriptions = {
   echo_shard: { title: { vi: "Mảnh Vỡ Vang Vọng", en: "Echo Shard" }, titleColor: "aqua" },
   heavy_core: { title: { vi: "Lõi Nặng", en: "Heavy Core" }, titleColor: "magenta" },
   netherite_ingot: { title: { vi: "Phôi Netherite", en: "Netherite Ingot" }, titleColor: "aqua" },
+  nether_star: { title: { vi: "Sao Nether", en: "Nether Star" }, titleColor: "yellow" },
   block_of_netherite: { title: { vi: "Khối Netherite", en: "Block of Netherite" }, titleColor: "aqua" },
   eye_of_ender: { title: { vi: "Mắt Ender", en: "Eye of Ender" }, titleColor: "yellow" },
   totem_of_undying: { title: { vi: "Lá Bùa Trường Sinh", en: "Totem of Undying" }, titleColor: "yellow" },
@@ -305,6 +315,7 @@ const itemDescriptions = {
 
   // Blocks (Name only)
   cobblestone: { title: { vi: "Đá Cuội", en: "Cobblestone" } },
+  cobbled_deepslate: { title: { vi: "Đá Sâu Cuội", en: "Cobbled Deepslate" } },
   smooth_stone: { title: { vi: "Đá Mịn", en: "Smooth Stone" } },
   glowstone: { title: { vi: "Đá Phát Sáng", en: "Glowstone" } },
   obsidian: { title: { vi: "Hắc Diện Thạch", en: "Obsidian" } },
@@ -336,6 +347,7 @@ export const getItemImgPath = (itemId) => {
   if (woodPlanks[itemId]) return woodPlanks[itemId];
   if (woodSlabs[itemId]) return woodSlabs[itemId];
   if (woodLogs[itemId]) return woodLogs[itemId];
+  if (stoneVariants[itemId]) return stoneVariants[itemId];
   if (boatItems[itemId]) return boatItems[itemId];
   if (genericItems[itemId]) return genericItems[itemId];
   return null;
@@ -389,6 +401,7 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
   const plankKeys = Object.keys(woodPlanks);
   const slabKeys = Object.keys(woodSlabs);
   const logKeys = Object.keys(woodLogs);
+  const stoneVariantKeys = Object.keys(stoneVariants).filter((key) => key !== "stone_variant");
   const boatKeys = Object.keys(boatItems);
   const isBoatRecipe = boatKeys.includes(recipe.output);
   const isSpearRecipe = typeof recipe.output === "string" && recipe.output.endsWith("_spear");
@@ -425,6 +438,10 @@ export default function MinecraftRecipe({ recipe, isVi, size = 'small' }) {
       if (woodLogs[itemId]) {
         const activeLog = logKeys[cycleIndex % logKeys.length];
         return activeLog;
+      }
+      if (itemId === "stone_variant") {
+        const activeStone = stoneVariantKeys[cycleIndex % stoneVariantKeys.length];
+        return activeStone;
       }
     }
 

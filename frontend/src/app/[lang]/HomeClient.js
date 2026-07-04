@@ -3729,9 +3729,9 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "glowstone", "obsidian", "glowstone",
-        "obsidian", "totem_of_undying", "obsidian",
-        "glowstone", "obsidian", "glowstone"
+        "glowstone", "crying_obsidian", "glowstone",
+        "crying_obsidian", "totem_of_undying", "crying_obsidian",
+        "glowstone", "crying_obsidian", "glowstone"
       ],
       output: "respawn_anchor"
     }
@@ -3750,7 +3750,7 @@ const RECIPES_DATA = [
       type: "crafting",
       grid: [
         "glass", "obsidian", "glass",
-        "obsidian", "eye_of_ender", "obsidian",
+        "obsidian", "nether_star", "obsidian",
         "glass", "obsidian", "glass"
       ],
       output: "end_crystal"
@@ -3871,7 +3871,7 @@ const RECIPES_DATA = [
     recipe: {
       type: "crafting",
       grid: [
-        "cobblestone", "cobblestone", "cobblestone",
+        "stone_variant", "stone_variant", "stone_variant",
         null, "flint", null,
         null, "stick", null
       ],
