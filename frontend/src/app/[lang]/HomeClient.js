@@ -1989,12 +1989,12 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                       <span>{dict.wiki_content?.nav_recipes}</span>
                     </button>
                     <button
-                      className={`wiki-sidebar-link ${activeWikiTab === "mobs" ? "wiki-sidebar-link--active" : ""}`}
+                      className={`wiki-sidebar-link ${activeWikiTab === "enchants" ? "wiki-sidebar-link--active" : ""}`}
                       type="button"
-                      onClick={() => setActiveWikiTab("mobs")}
+                      onClick={() => setActiveWikiTab("enchants")}
                     >
-                      <i className="fa-solid fa-skull"></i>
-                      <span>{dict.wiki_content?.nav_mobs}</span>
+                      <i className="fa-solid fa-wand-magic-sparkles"></i>
+                      <span>{dict.wiki_content?.nav_enchants}</span>
                     </button>
                     <button
                       className={`wiki-sidebar-link ${activeWikiTab === "villagers" ? "wiki-sidebar-link--active" : ""}`}
@@ -2231,14 +2231,34 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                     </div>
                   )}
 
-                  {activeWikiTab === "mobs" && (
+                  {activeWikiTab === "enchants" && (
                     <div className="wiki-article">
                       <h2>
-                        <i className="fa-solid fa-skull text-accent"></i> {dict.wiki_content?.mobs_title}
+                        <i className="fa-solid fa-wand-magic-sparkles text-accent"></i> {dict.wiki_content?.enchants_title}
                       </h2>
+                      <p className="wiki-intro-text">{dict.wiki_content?.enchants_desc}</p>
+
+                      <h3 className="wiki-subtitle">
+                        <i className="fa-solid fa-layer-group text-accent"></i>{" "}
+                        {dict.wiki_content?.enchants_progression_title}
+                      </h3>
+                      <p className="wiki-intro-text">{dict.wiki_content?.enchants_progression_desc}</p>
+
+                      <h3 className="wiki-subtitle">
+                        <i className="fa-solid fa-book-open text-accent"></i>{" "}
+                        {dict.wiki_content?.enchants_sources_title}
+                      </h3>
+                      <p className="wiki-intro-text">{dict.wiki_content?.enchants_sources_desc}</p>
+
+                      <h3 className="wiki-subtitle">
+                        <i className="fa-solid fa-screwdriver-wrench text-accent"></i>{" "}
+                        {dict.wiki_content?.enchants_combine_title}
+                      </h3>
+                      <p className="wiki-intro-text">{dict.wiki_content?.enchants_combine_desc}</p>
+
                       <div className="wiki-alert">
                         <i className="fa-solid fa-circle-info"></i>
-                        <span>{dict.wiki_content?.mobs_notice}</span>
+                        <span>{dict.wiki_content?.enchants_tip}</span>
                       </div>
                     </div>
                   )}
@@ -3341,9 +3361,9 @@ export default function HomeClient({ dict, lang, initialTab = "home" }) {
                       <i className="fa-solid fa-receipt"></i>
                       <span>{dict.wiki_content?.nav_recipes}</span>
                     </button>
-                    <button className={`wiki-sidebar-link ${activeWikiTab === "mobs" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("mobs"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
-                      <i className="fa-solid fa-skull"></i>
-                      <span>{dict.wiki_content?.nav_mobs}</span>
+                    <button className={`wiki-sidebar-link ${activeWikiTab === "enchants" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("enchants"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
+                      <i className="fa-solid fa-wand-magic-sparkles"></i>
+                      <span>{dict.wiki_content?.nav_enchants}</span>
                     </button>
                     <button className={`wiki-sidebar-link ${activeWikiTab === "villagers" ? "wiki-sidebar-link--active" : ""}`} type="button" onClick={() => { setActiveWikiTab("villagers"); setWikiMenuOpen(false); window.scrollTo({ top: 0, behavior: 'smooth' }); }}>
                       <i className="fa-solid fa-people-arrows"></i>
@@ -3653,7 +3673,7 @@ const RECIPES_DATA = [
       grid: [
         "iron_ingot", "block_of_iron", "iron_ingot",
         "bricks", "furnace", "bricks",
-        "stone", "stone", "stone"
+        "smooth_stone", "smooth_stone", "smooth_stone"
       ],
       output: "blast_furnace"
     }
