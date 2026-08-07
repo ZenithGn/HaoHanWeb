@@ -1,26 +1,39 @@
+<div align="center">
+
 # HaoHanWeb
 
-Website cho cộng đồng Minecraft HaoHan SMP. Dự án gồm frontend Next.js và backend Ruby on Rails API, dùng SQL Server cho dữ liệu.
+[![Next.js](https://img.shields.io/badge/Next.js-16-000000?style=for-the-badge&logo=next.js&logoColor=white)](https://nextjs.org/)
+[![React](https://img.shields.io/badge/React-19-61DAFB?style=for-the-badge&logo=react&logoColor=black)](https://react.dev/)
+[![Ruby on Rails](https://img.shields.io/badge/Rails-8.0-CC0000?style=for-the-badge&logo=rubyonrails&logoColor=white)](https://rubyonrails.org/)
+[![SQL Server](https://img.shields.io/badge/SQL_Server-2022-CC292B?style=for-the-badge&logo=microsoftsqlserver&logoColor=white)](https://www.microsoft.com/sql-server)
+[![Docker](https://img.shields.io/badge/Docker-Enabled-2496ED?style=for-the-badge&logo=docker&logoColor=white)](https://www.docker.com/)
+[![License](https://img.shields.io/badge/License-MIT-blue.svg?style=for-the-badge)](LICENSE)
 
-## Tổng Quan
+Ngôn ngữ: Tiếng Việt
 
-- Frontend: Next.js 16, React 19, CSS thuần.
-- Backend: Ruby on Rails 8 API.
-- Database: Microsoft SQL Server.
-- Tích hợp: Discord OAuth/Webhook, PayOS, RCON, JWT.
-- Docker: `docker-compose.yml` hiện chạy SQL Server và backend.
+</div>
+
+## Giới thiệu
+
+**HaoHanWeb** là hệ thống trang web chính thức dành cho cộng đồng Minecraft HaoHan SMP. Dự án bao gồm frontend Next.js hiện đại và backend Ruby on Rails API mạnh mẽ, sử dụng SQL Server làm cơ sở dữ liệu.
+
+- **Frontend:** Next.js 16, React 19, Vanilla CSS với thiết kế hiện đại, responsive.
+- **Backend:** Ruby on Rails 8 API cho hiệu năng tối ưu.
+- **Database:** Microsoft SQL Server quản lý dữ liệu người chơi, giao dịch và hệ thống.
+- **Tích hợp:** OAuth/Webhook Discord, thanh toán tự động PayOS, RCON điều khiển máy chủ Minecraft, xác thực an toàn bằng JWT.
+- **Containerization:** Sẵn sàng triển khai nhanh qua Docker & Docker Compose.
 
 ## Cấu Trúc Dự Án
 
 ```text
 HaoHanWeb/
-├── backend/              # Rails API
+├── backend/              # Rails API Backend
 │   ├── app/
 │   ├── config/
 │   ├── db/
 │   ├── Gemfile
 │   └── Dockerfile
-├── frontend/             # Next.js app
+├── frontend/             # Next.js Frontend
 │   ├── public/
 │   ├── src/
 │   └── package.json
@@ -31,66 +44,61 @@ HaoHanWeb/
 
 ## Yêu Cầu
 
-- Node.js 20+ khuyến nghị cho frontend.
-- Ruby 3.4.x cho backend.
-- Bundler.
-- Docker Desktop nếu chạy bằng Docker.
-- SQL Server hoặc container SQL Server từ `docker-compose.yml`.
+- **Node.js**: 20+ khuyến nghị cho frontend.
+- **Ruby**: 3.4.x cho backend.
+- **Bundler**: Cho quản lý Gem backend.
+- **Docker Desktop**: Nếu chạy bằng Docker Compose.
+- **SQL Server**: Phiên bản 2019/2022 hoặc container Docker.
 
 ## Cấu Hình Môi Trường
 
-Tạo file môi trường từ file mẫu:
+Tạo các file môi trường từ mẫu:
 
 ```bash
 cp backend/.env.example backend/.env
 cp frontend/.env.example frontend/.env.local
 ```
 
-Các biến Backend quan trọng (`backend/.env`):
+### Biến Backend quan trọng (`backend/.env`):
 
 ```env
-DB_HOST=
+DB_HOST=localhost
 DB_PORT=1433
-DB_NAME=
-DB_USERNAME=
-DB_PASSWORD=
+DB_NAME=HaoHanDB
+DB_USERNAME=sa
+DB_PASSWORD=YourPassword123!
 
-DISCORD_WEBHOOK_URL=
-RCON_HOST=
+DISCORD_WEBHOOK_URL=https://discord.com/api/webhooks/...
+RCON_HOST=127.0.0.1
 RCON_PORT=25575
-RCON_PASSWORD=
+RCON_PASSWORD=your_rcon_password
 
-PAYOS_CLIENT_ID=
-PAYOS_API_KEY=
-PAYOS_CHECKSUM_KEY=
+PAYOS_CLIENT_ID=your_client_id
+PAYOS_API_KEY=your_api_key
+PAYOS_CHECKSUM_KEY=your_checksum_key
 
-GAME_SERVER_TOKEN=
-JWT_SECRET=
+GAME_SERVER_TOKEN=your_token
+JWT_SECRET=your_jwt_secret
 ```
 
-Các biến Frontend quan trọng (`frontend/.env.local`):
+### Biến Frontend quan trọng (`frontend/.env.local`):
 
 ```env
 NEXT_PUBLIC_API_URL=http://localhost:3001
 BACKEND_URL=http://localhost:3001
 ```
 
-## Setup Và Chạy Nhanh Bằng Script
+## Chạy Nhanh Bằng Script Automate
 
-Ở thư mục gốc dự án có sẵn script cho Windows:
+Dự án đi kèm các script tự động hóa cho Windows:
 
-- `build.bat`
-- `build.ps1`
-- `run.bat`
-- `run.ps1`
-
-### Build Và Chạy Bằng CMD
+### Build & Chạy bằng Script CMD
 
 ```bat
 build.bat
 ```
 
-Script sẽ hiện menu:
+Menu điều khiển sẽ xuất hiện:
 
 ```text
 [1] Build toàn bộ hệ thống local
@@ -100,65 +108,46 @@ Script sẽ hiện menu:
 [5] Chỉ khởi động hệ thống, không build lại
 ```
 
-Sau khi build local xong, script có thể mở backend và frontend trong cửa sổ mới.
-
-### Build Và Chạy Bằng PowerShell
+### Build & Chạy bằng PowerShell
 
 ```powershell
 .\build.ps1
 ```
 
-Nếu PowerShell chặn script, có thể chạy:
+Nếu gặp vấn đề về Execution Policy:
 
 ```powershell
 powershell -ExecutionPolicy Bypass -File .\build.ps1
 ```
 
-### Chỉ Khởi Động Project
-
-CMD:
+### Khởi Động Nhanh (Không Build)
 
 ```bat
 run.bat
 ```
 
-PowerShell:
+Địa chỉ truy cập mặc định:
 
-```powershell
-.\run.ps1
-```
+- **Backend Rails API**: `http://localhost:3001`
+- **Frontend Next.js**: `http://localhost:3000`
 
-Các script khởi động:
+## Chạy Bằng Docker Compose
 
-- Backend Rails: `http://localhost:3001`
-- Frontend Next.js: `http://localhost:3000`
-
-## Chạy Bằng Docker
-
-Docker Compose hiện khởi động SQL Server và Rails backend:
+Dễ dàng khởi động SQL Server và Rails API với một lệnh:
 
 ```bash
 docker compose up -d --build
 ```
 
-Các service mặc định:
-
-- SQL Server: `localhost:1433`
-- Backend API: `http://localhost:3001`
-
-Dừng container:
+Dừng dịch vụ:
 
 ```bash
 docker compose down
 ```
 
-Dừng và xoá volume database local:
+## Thao Tác Thủ Công
 
-```bash
-docker compose down -v
-```
-
-## Chạy Backend Thủ Công
+### Backend (Ruby on Rails)
 
 ```bash
 cd backend
@@ -168,24 +157,12 @@ bin/rails db:migrate
 bin/rails server -p 3001
 ```
 
-Backend chạy tại:
-
-```text
-http://localhost:3001
-```
-
-## Chạy Frontend
+### Frontend (Next.js)
 
 ```bash
 cd frontend
 npm install
 npm run dev
-```
-
-Frontend chạy tại:
-
-```text
-http://localhost:3000
 ```
 
 Build production:
@@ -195,52 +172,3 @@ cd frontend
 npm run build
 npm run start
 ```
-
-Kiểm tra lint:
-
-```bash
-cd frontend
-npm run lint
-```
-
-## Scripts Hữu Ích
-
-Backend:
-
-```bash
-cd backend
-bin/rails db:migrate
-bin/rails db:seed
-bin/rails test
-```
-
-Frontend:
-
-```bash
-cd frontend
-npm run dev
-npm run build
-npm run lint
-```
-
-Docker:
-
-```bash
-docker compose up -d --build
-docker compose logs -f backend
-docker compose logs -f db
-```
-
-## Ghi Chú Phát Triển
-
-- Không commit file `.env`, key, token, database dump hoặc file build.
-- Giữ backend/.env.example và frontend/.env.example được cập nhật khi thêm biến môi trường mới.
-- File SQL dump local như `HaoHanDB.sql` đang được ignore.
-- Frontend assets nằm trong `frontend/public/assets`.
-- Nội dung đa ngôn ngữ nằm trong `frontend/src/dictionaries`.
-
-## Đóng Góp
-
-1. Tạo branch mới cho thay đổi.
-2. Chạy build/test phù hợp trước khi mở pull request.
-3. Mô tả ngắn gọn thay đổi và ảnh hưởng nếu có.
