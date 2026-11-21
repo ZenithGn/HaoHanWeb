@@ -1,3 +1,4 @@
+pub mod cache;
 pub mod donations;
 pub mod outbox;
 pub mod players;

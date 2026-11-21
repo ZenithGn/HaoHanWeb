@@ -39,6 +39,8 @@ pub fn build_router(state: SharedState) -> Router {
         .merge(routes::discord::router(&cfg))
         .merge(routes::donations::router())
         .merge(routes::server_status::router())
+        .merge(routes::leaderboards::router())
+        .merge(routes::supporters::router())
         .with_state(state);
 
     apply_http_layers(app, &cfg)
