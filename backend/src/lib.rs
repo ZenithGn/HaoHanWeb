@@ -3,6 +3,7 @@ pub mod db;
 pub mod domain;
 pub mod error;
 pub mod extract;
+pub mod integrations;
 pub mod middleware;
 pub mod router;
 pub mod routes;

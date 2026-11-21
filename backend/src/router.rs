@@ -34,6 +34,7 @@ pub fn build_router(state: SharedState) -> Router {
     let cfg = state.cfg.clone();
     let app = Router::new()
         .route("/up", get(routes::health::health_check))
+        .merge(routes::auth::router(&cfg))
         .with_state(state);
 
     apply_http_layers(app, &cfg)
