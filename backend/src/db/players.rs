@@ -114,6 +114,84 @@ pub async fn find_by_username_tx(
         .await
 }
 
+/// Fetches a player by `discord_id`.
+pub async fn find_by_discord_id(
+    pool: &SqlitePool,
+    discord_id: &str,
+) -> Result<Option<PlayerRow>, sqlx::Error> {
+    let sql = format!("SELECT {PLAYER_COLUMNS} FROM players WHERE discord_id = ?1");
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(discord_id)
+        .fetch_optional(pool)
+        .await
+}
+
+/// Fetches a player by `discord_id` inside an open write transaction.
+pub async fn find_by_discord_id_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    discord_id: &str,
+) -> Result<Option<PlayerRow>, sqlx::Error> {
+    let sql = format!("SELECT {PLAYER_COLUMNS} FROM players WHERE discord_id = ?1");
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(discord_id)
+        .fetch_optional(&mut **tx)
+        .await
+}
+
+/// Finds a distinct player record with an existing Minecraft `uuid` matching either
+/// `current_username` (`COLLATE NOCASE`) or `discord_id`, used during Discord linking merge.
+pub async fn find_minecraft_merge_candidate_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    exclude_player_id: i64,
+    current_username: &str,
+    discord_id: &str,
+) -> Result<Option<PlayerRow>, sqlx::Error> {
+    let sql = format!(
+        "SELECT {PLAYER_COLUMNS} FROM players \
+         WHERE id != ?1 AND uuid IS NOT NULL AND (username = ?2 OR discord_id = ?3) \
+         LIMIT 1"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(exclude_player_id)
+        .bind(current_username)
+        .bind(discord_id)
+        .fetch_optional(&mut **tx)
+        .await
+}
+
+/// Returns `true` if any player has the given `username` (`COLLATE NOCASE`) inside a transaction.
+pub async fn username_exists_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    username: &str,
+) -> Result<bool, sqlx::Error> {
+    let exists: i64 =
+        sqlx::query_scalar("SELECT EXISTS(SELECT 1 FROM players WHERE username = ?1)")
+            .bind(username)
+            .fetch_one(&mut **tx)
+            .await?;
+    Ok(exists != 0)
+}
+
+/// Lists existing usernames sharing a case-insensitive prefix (`LIKE prefix% ESCAPE '\'`).
+pub async fn list_usernames_with_prefix_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    prefix: &str,
+) -> Result<Vec<String>, sqlx::Error> {
+    let mut escaped = String::with_capacity(prefix.len() + 4);
+    for ch in prefix.chars() {
+        if matches!(ch, '\\' | '%' | '_') {
+            escaped.push('\\');
+        }
+        escaped.push(ch);
+    }
+    escaped.push('%');
+
+    sqlx::query_scalar("SELECT username FROM players WHERE username LIKE ?1 ESCAPE '\\'")
+        .bind(escaped)
+        .fetch_all(&mut **tx)
+        .await
+}
+
 /// Fetches a player by `email` using the `COLLATE NOCASE` unique index.
 pub async fn find_by_email(
     pool: &SqlitePool,
@@ -342,6 +420,150 @@ pub async fn apply_game_link_merge_tx(
         .bind(discord_id)
         .bind(avatar_url)
         .bind(player_id)
+        .fetch_one(&mut **tx)
+        .await
+}
+
+/// Updates Discord link fields for an existing player inside a transaction.
+#[allow(clippy::too_many_arguments)]
+pub async fn update_discord_link_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    player_id: i64,
+    discord_id: &str,
+    avatar_url: &str,
+    role: &str,
+    total_donated: i64,
+    play_time: i64,
+    is_linked: i64,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = format!(
+        "UPDATE players \
+         SET discord_id = ?1, avatar_url = ?2, role = ?3, total_donated = ?4, play_time = ?5, is_linked = ?6 \
+         WHERE id = ?7 \
+         RETURNING {PLAYER_COLUMNS}"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(discord_id)
+        .bind(avatar_url)
+        .bind(role)
+        .bind(total_donated)
+        .bind(play_time)
+        .bind(is_linked)
+        .bind(player_id)
+        .fetch_one(&mut **tx)
+        .await
+}
+
+/// Updates a player's Discord role and avatar URL during manual sync.
+pub async fn update_discord_sync(
+    pool: &SqlitePool,
+    player_id: i64,
+    role: &str,
+    avatar_url: Option<&str>,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = format!(
+        "UPDATE players SET role = ?1, avatar_url = ?2 WHERE id = ?3 RETURNING {PLAYER_COLUMNS}"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(role)
+        .bind(avatar_url)
+        .bind(player_id)
+        .fetch_one(pool)
+        .await
+}
+
+/// Updates only a player's role (used by bot role-update webhook).
+pub async fn update_role(
+    pool: &SqlitePool,
+    player_id: i64,
+    role: &str,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = format!("UPDATE players SET role = ?1 WHERE id = ?2 RETURNING {PLAYER_COLUMNS}");
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(role)
+        .bind(player_id)
+        .fetch_one(pool)
+        .await
+}
+
+/// Updates an existing player logging in via Discord (`ghost` rows are promoted to `discord`).
+pub async fn update_existing_discord_login_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    player_id: i64,
+    promote_ghost: bool,
+    role: &str,
+    avatar_url: &str,
+    is_linked: i64,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = if promote_ghost {
+        format!(
+            "UPDATE players \
+             SET kind = 'discord', password_hash = NULL, role = ?1, avatar_url = ?2, is_linked = ?3 \
+             WHERE id = ?4 \
+             RETURNING {PLAYER_COLUMNS}"
+        )
+    } else {
+        format!(
+            "UPDATE players \
+             SET role = ?1, avatar_url = ?2, is_linked = ?3 \
+             WHERE id = ?4 \
+             RETURNING {PLAYER_COLUMNS}"
+        )
+    };
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(role)
+        .bind(avatar_url)
+        .bind(is_linked)
+        .bind(player_id)
+        .fetch_one(&mut **tx)
+        .await
+}
+
+/// Claims a `kind = 'ghost'` player row as a `kind = 'discord'` account.
+pub async fn claim_ghost_as_discord_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    player_id: i64,
+    discord_id: &str,
+    avatar_url: &str,
+    role: &str,
+    is_linked: i64,
+) -> Result<Option<PlayerRow>, sqlx::Error> {
+    let sql = format!(
+        "UPDATE players \
+         SET kind = 'discord', password_hash = NULL, discord_id = ?1, avatar_url = ?2, role = ?3, is_linked = ?4 \
+         WHERE id = ?5 AND kind = 'ghost' \
+         RETURNING {PLAYER_COLUMNS}"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(discord_id)
+        .bind(avatar_url)
+        .bind(role)
+        .bind(is_linked)
+        .bind(player_id)
+        .fetch_optional(&mut **tx)
+        .await
+}
+
+/// Inserts a new `kind = 'discord'` player row and returns the created record.
+pub async fn insert_discord_player_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    username: &str,
+    uuid: &str,
+    discord_id: &str,
+    avatar_url: &str,
+    role: &str,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = format!(
+        "INSERT INTO players (username, uuid, kind, password_hash, discord_id, avatar_url, role, is_linked) \
+         VALUES (?1, ?2, 'discord', NULL, ?3, ?4, ?5, 0) \
+         RETURNING {PLAYER_COLUMNS}"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(username)
+        .bind(uuid)
+        .bind(discord_id)
+        .bind(avatar_url)
+        .bind(role)
         .fetch_one(&mut **tx)
         .await
 }

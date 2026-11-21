@@ -36,6 +36,7 @@ pub fn build_router(state: SharedState) -> Router {
         .route("/up", get(routes::health::health_check))
         .merge(routes::auth::router(&cfg))
         .merge(routes::game_link::router(&cfg))
+        .merge(routes::discord::router(&cfg))
         .with_state(state);
 
     apply_http_layers(app, &cfg)
