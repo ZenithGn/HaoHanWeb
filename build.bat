@@ -1,14 +1,15 @@
 @echo off
 setlocal enabledelayedexpansion
+set "ROOT_DIR=%~dp0"
 
 echo ===================================================
-echo     HAO HAN WEB - AUTOMATIC BUILD & RUN SYSTEM
+echo     HAO HAN WEB - AUTOMATIC BUILD ^& RUN SYSTEM
 echo ===================================================
 echo.
 echo Vui long chon che do:
-echo [1] Build toan bo he thong (Local) - Mac dinh
+echo [1] Build toan bo he thong (Local: Rust + Next.js) - Mac dinh
 echo [2] Build toan bo he thong (Docker Compose)
-echo [3] Chi Build Backend (Rails)
+echo [3] Chi Build ^& Test Backend (Rust)
 echo [4] Chi Build Frontend (Next.js)
 echo [5] Chi khoi dong he thong (Khong build lai)
 echo.
@@ -25,31 +26,23 @@ goto error_choice
 :build_local
 echo.
 echo ===================================================
-echo [1/2] Dang build Backend (Ruby on Rails)...
+echo [1/2] Dang chay Unit Tests ^& Build Backend (Rust)...
 echo ===================================================
-cd backend
-call bundle install
+powershell -ExecutionPolicy Bypass -File "%ROOT_DIR%backend\scripts\test_and_build.ps1"
 if %ERRORLEVEL% neq 0 (
-    echo [LOI] bundle install that bai!
-    cd ..
+    echo [LOI] Test hoac Build Backend Rust that bai!
     goto end
 )
-echo Cau hinh Database...
-call bundle exec rails db:prepare
-if %ERRORLEVEL% neq 0 (
-    echo [CANH BAO] rails db:prepare that bai! (Bo qua neu chua cau hinh DB hoac DB chua chay)
-)
-cd ..
 
 echo.
 echo ===================================================
 echo [2/2] Dang build Frontend (Next.js)...
 echo ===================================================
-cd frontend
+pushd "%ROOT_DIR%frontend"
 call npm install
 if %ERRORLEVEL% neq 0 (
     echo [LOI] npm install that bai!
-    cd ..
+    popd
     goto end
 )
 echo Dang xoa cache build cu cua Frontend...
@@ -58,10 +51,10 @@ if exist .turbo rmdir /s /q .turbo
 call npm run build
 if %ERRORLEVEL% neq 0 (
     echo [LOI] npm run build that bai!
-    cd ..
+    popd
     goto end
 )
-cd ..
+popd
 
 echo.
 echo ===================================================
@@ -70,12 +63,10 @@ echo ===================================================
 set /p run_opt="Ban co muon khoi dong ca Backend va Frontend ngay bay gio? [Y/N] (Mac dinh la Y): "
 if "%run_opt%"=="" set run_opt=Y
 if /I "%run_opt%"=="Y" (
-    echo Dang khoi dong Backend va Frontend...
-    start "HaoHanWeb Backend" cmd /k "echo --- KHOI DONG BACKEND --- && cd backend && bundle exec rails s -p 3001"
-    start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run dev"
+    call :launch_both
 ) else (
     echo De chay ung dung thu cong:
-    echo - Backend: cd backend ^&^& bundle exec rails s -p 3001
+    echo - Backend : cd backend ^&^& target\release\haohan-backend.exe ^(hoac cargo run^)
     echo - Frontend: cd frontend ^&^& npm run dev
 )
 goto end
@@ -85,9 +76,11 @@ echo.
 echo ===================================================
 echo Dang build he thong bang Docker Compose...
 echo ===================================================
-docker-compose build
+pushd "%ROOT_DIR%"
+docker compose build
 if %ERRORLEVEL% neq 0 (
     echo [LOI] Docker build that bai!
+    popd
     goto end
 )
 echo.
@@ -95,30 +88,27 @@ echo [THANH CONG] Docker build thanh cong!
 set /p run_opt="Ban co muon khoi dong Docker Containers ngay bay gio? [Y/N] (Mac dinh la Y): "
 if "%run_opt%"=="" set run_opt=Y
 if /I "%run_opt%"=="Y" (
-    docker-compose up -d
+    docker compose up -d
     echo Da khoi dong cac Docker Containers!
 )
+popd
 goto end
 
 :build_backend
 echo.
 echo ===================================================
-echo Dang build Backend (Ruby on Rails)...
+echo Dang chay Unit Tests ^& Build Backend (Rust)...
 echo ===================================================
-cd backend
-call bundle install
+powershell -ExecutionPolicy Bypass -File "%ROOT_DIR%backend\scripts\test_and_build.ps1"
 if %ERRORLEVEL% neq 0 (
-    echo [LOI] bundle install that bai!
-    cd ..
+    echo [LOI] Test hoac Build Backend Rust that bai!
     goto end
 )
-call bundle exec rails db:prepare
-cd ..
-echo [THANH CONG] Build Backend hoan tat!
+echo [THANH CONG] Build Backend Rust hoan tat!
 set /p run_opt="Ban co muon khoi dong Backend ngay bay gio? [Y/N] (Mac dinh la Y): "
 if "%run_opt%"=="" set run_opt=Y
 if /I "%run_opt%"=="Y" (
-    start "HaoHanWeb Backend" cmd /k "echo --- KHOI DONG BACKEND --- && cd backend && bundle exec rails s -p 3001"
+    call :launch_backend
 )
 goto end
 
@@ -127,11 +117,11 @@ echo.
 echo ===================================================
 echo Dang build Frontend (Next.js)...
 echo ===================================================
-cd frontend
+pushd "%ROOT_DIR%frontend"
 call npm install
 if %ERRORLEVEL% neq 0 (
     echo [LOI] npm install that bai!
-    cd ..
+    popd
     goto end
 )
 echo Dang xoa cache build cu cua Frontend...
@@ -140,26 +130,44 @@ if exist .turbo rmdir /s /q .turbo
 call npm run build
 if %ERRORLEVEL% neq 0 (
     echo [LOI] npm run build that bai!
-    cd ..
+    popd
     goto end
 )
-cd ..
+popd
 echo [THANH CONG] Build Frontend hoan tat!
 set /p run_opt="Ban co muon khoi dong Frontend ngay bay gio? [Y/N] (Mac dinh la Y): "
 if "%run_opt%"=="" set run_opt=Y
 if /I "%run_opt%"=="Y" (
-    start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run dev"
+    call :launch_frontend
 )
 goto end
 
 :run_system
 echo.
 echo ===================================================
-echo Dang khoi dong Backend va Frontend...
+echo Dang khoi dong Backend (Rust) va Frontend (Next.js)...
 echo ===================================================
-start "HaoHanWeb Backend" cmd /k "echo --- KHOI DONG BACKEND --- && cd backend && bundle exec rails s -p 3001"
-start "HaoHanWeb Frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && cd frontend && npm run dev"
+call :launch_both
 goto end
+
+:launch_backend
+if exist "%ROOT_DIR%backend\target\release\haohan-backend.exe" (
+    start "HaoHanWeb Backend (Rust)" /D "%ROOT_DIR%backend" cmd /k "echo --- KHOI DONG BACKEND RUST (RELEASE) --- && target\release\haohan-backend.exe"
+) else (
+    start "HaoHanWeb Backend (Rust)" /D "%ROOT_DIR%backend" cmd /k "echo --- KHOI DONG BACKEND RUST (CARGO RUN) --- && cargo run"
+)
+exit /b 0
+
+:launch_frontend
+start "HaoHanWeb Frontend (Next.js)" /D "%ROOT_DIR%frontend" cmd /k "echo --- KHOI DONG FRONTEND --- && npm run dev"
+exit /b 0
+
+:launch_both
+call :launch_backend
+call :launch_frontend
+echo - Backend : http://localhost:3001
+echo - Frontend: http://localhost:3000
+exit /b 0
 
 :error_choice
 echo Lua chon khong hop le.
