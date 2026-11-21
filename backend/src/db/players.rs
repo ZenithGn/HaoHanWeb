@@ -66,6 +66,30 @@ pub async fn find_by_id(pool: &SqlitePool, id: i64) -> Result<Option<PlayerRow>,
         .await
 }
 
+/// Fetches a player by primary key `id` inside an open write transaction.
+pub async fn find_by_id_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    id: i64,
+) -> Result<Option<PlayerRow>, sqlx::Error> {
+    let sql = format!("SELECT {PLAYER_COLUMNS} FROM players WHERE id = ?1");
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(id)
+        .fetch_optional(&mut **tx)
+        .await
+}
+
+/// Fetches a player by `uuid` inside an open write transaction.
+pub async fn find_by_uuid_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    uuid: &str,
+) -> Result<Option<PlayerRow>, sqlx::Error> {
+    let sql = format!("SELECT {PLAYER_COLUMNS} FROM players WHERE uuid = ?1");
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(uuid)
+        .fetch_optional(&mut **tx)
+        .await
+}
+
 /// Fetches a player by `username` using the `COLLATE NOCASE` unique index.
 pub async fn find_by_username(
     pool: &SqlitePool,
@@ -245,4 +269,79 @@ pub async fn enqueue_outbox_tx(
         .execute(&mut **tx)
         .await?;
     Ok(())
+}
+
+/// Transfers all donations belonging to `from_player_id` to `to_player_id` inside a transaction.
+pub async fn transfer_donations_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    from_player_id: i64,
+    to_player_id: i64,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("UPDATE donations SET player_id = ?1 WHERE player_id = ?2")
+        .bind(to_player_id)
+        .bind(from_player_id)
+        .execute(&mut **tx)
+        .await?;
+    Ok(())
+}
+
+/// Deletes a player record inside a transaction (used to free UNIQUE constraints before updating target).
+pub async fn delete_player_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    player_id: i64,
+) -> Result<(), sqlx::Error> {
+    sqlx::query("DELETE FROM players WHERE id = ?1")
+        .bind(player_id)
+        .execute(&mut **tx)
+        .await?;
+    Ok(())
+}
+
+/// Sets `uuid` and `is_linked = 1` on a player during in-game account linking.
+pub async fn set_game_uuid_linked_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    player_id: i64,
+    uuid: &str,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = format!(
+        "UPDATE players SET uuid = ?1, is_linked = 1 WHERE id = ?2 RETURNING {PLAYER_COLUMNS}"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(uuid)
+        .bind(player_id)
+        .fetch_one(&mut **tx)
+        .await
+}
+
+/// Updates a player with merged ghost profile stats after the ghost record has been deleted.
+#[allow(clippy::too_many_arguments)]
+pub async fn apply_game_link_merge_tx(
+    tx: &mut Transaction<'_, Sqlite>,
+    player_id: i64,
+    uuid: &str,
+    username: &str,
+    total_donated: i64,
+    role: &str,
+    play_time: i64,
+    discord_id: Option<&str>,
+    avatar_url: Option<&str>,
+) -> Result<PlayerRow, sqlx::Error> {
+    let sql = format!(
+        "UPDATE players \
+         SET uuid = ?1, username = ?2, total_donated = ?3, role = ?4, play_time = ?5, \
+             discord_id = ?6, avatar_url = ?7, is_linked = 1 \
+         WHERE id = ?8 \
+         RETURNING {PLAYER_COLUMNS}"
+    );
+    sqlx::query_as::<_, PlayerRow>(&sql)
+        .bind(uuid)
+        .bind(username)
+        .bind(total_donated)
+        .bind(role)
+        .bind(play_time)
+        .bind(discord_id)
+        .bind(avatar_url)
+        .bind(player_id)
+        .fetch_one(&mut **tx)
+        .await
 }
