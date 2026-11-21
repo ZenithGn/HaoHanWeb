@@ -1,3 +1,6 @@
+# Render Blueprint for HaoHanWeb Rust + SQLite Backend
+# Note: SQLite persistence across redeploys requires a Render paid plan with a persistent disk
+# mounted at /data (or external S3/R2 replication via LITESTREAM_*).
 services:
   - type: web
     name: haohanweb-api
@@ -8,23 +11,17 @@ services:
     plan: free
     healthCheckPath: /up
     envVars:
-      - key: RAILS_ENV
+      - key: APP_ENV
         value: production
-      - key: RAILS_LOG_LEVEL
-        value: info
+      - key: PORT
+        value: 3001
+      - key: RUST_LOG
+        value: info,sqlx=warn
+      - key: DATABASE_URL
+        value: sqlite:///data/haohan.db
+      - key: PUBLIC_API_URL
+        sync: false
       - key: FRONTEND_URL
-        sync: false
-      - key: RAILS_MASTER_KEY
-        sync: false
-      - key: DB_HOST
-        sync: false
-      - key: DB_PORT
-        value: 1433
-      - key: DB_NAME
-        sync: false
-      - key: DB_USERNAME
-        sync: false
-      - key: DB_PASSWORD
         sync: false
       - key: JWT_SECRET
         sync: false
@@ -65,4 +62,10 @@ services:
       - key: CLOUDINARY_API_KEY
         sync: false
       - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: LITESTREAM_REPLICA_URL
+        sync: false
+      - key: LITESTREAM_ACCESS_KEY_ID
+        sync: false
+      - key: LITESTREAM_SECRET_ACCESS_KEY
         sync: false

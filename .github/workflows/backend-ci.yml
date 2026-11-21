@@ -1,0 +1,87 @@
+name: Backend CI/CD
+
+on:
+  push:
+    branches:
+      - master
+      - rebuild-rework-merged
+      - rust-backend-rebuild
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+      - "render.yaml"
+      - "docker-compose.yml"
+  pull_request:
+    branches:
+      - master
+      - rebuild-rework-merged
+      - rust-backend-rebuild
+    paths:
+      - "backend/**"
+      - ".github/workflows/backend-ci.yml"
+      - "render.yaml"
+      - "docker-compose.yml"
+
+jobs:
+  test-and-build:
+    name: Format, Test, Clippy & Release Build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Rust toolchain
+        uses: dtolnay/rust-toolchain@stable
+        with:
+          components: rustfmt, clippy
+
+      - name: Cache Cargo dependencies
+        uses: Swatinem/rust-cache@v2
+        with:
+          workspaces: backend
+
+      - name: Check formatting
+        run: cargo fmt --manifest-path backend/Cargo.toml --check
+
+      - name: Run pytest-style tests, clippy, and release build
+        run: chmod +x backend/scripts/test_and_build.sh && ./backend/scripts/test_and_build.sh
+
+  docker-build:
+    name: Docker Image Build Validation
+    needs: test-and-build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Build Rust backend Docker image
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          push: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: haohanweb-backend:ci
+
+  deploy-render:
+    name: Trigger Render Deploy
+    needs:
+      - test-and-build
+      - docker-build
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && (github.ref == 'refs/heads/master' || github.ref == 'refs/heads/rust-backend-rebuild')
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+    steps:
+      - name: Trigger Render Deploy Hook
+        run: |
+          if [ -n "${RENDER_DEPLOY_HOOK_URL:-}" ]; then
+            curl -fsS -X POST "$RENDER_DEPLOY_HOOK_URL" >/dev/null
+            echo "Render deploy hook triggered successfully."
+          else
+            echo "RENDER_DEPLOY_HOOK_URL secret is not configured; skipping automatic Render deploy."
+          fi

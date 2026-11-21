@@ -1,19 +1,4 @@
-version: '3.8'
-
 services:
-  db:
-    image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: haohan-mssql
-    environment:
-      - ACCEPT_EULA=Y
-      - MSSQL_SA_PASSWORD=${DB_PASSWORD:-YourPassword123}
-      - MSSQL_PID=Developer
-    ports:
-      - "1433:1433"
-    volumes:
-      - mssql_data:/var/opt/mssql
-    restart: always
-
   backend:
     build:
       context: ./backend
@@ -25,11 +10,13 @@ services:
       - ./backend/.env
     environment:
       - PORT=3001
-      - DB_HOST=db
-      - DB_PORT=1433
-    depends_on:
-      - db
+      - DATABASE_URL=sqlite:///data/haohan.db
+    volumes:
+      - ./backend/data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://127.0.0.1:3001/up"]
+      interval: 30s
+      timeout: 5s
+      retries: 3
+      start_period: 10s
     restart: always
-
-volumes:
-  mssql_data:

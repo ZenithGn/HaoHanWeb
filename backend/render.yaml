@@ -1,0 +1,70 @@
+# Render Blueprint (when deploying directly from rootDir: backend)
+# Note: SQLite persistence across redeploys requires a Render paid plan with a persistent disk
+# mounted at /data (or external S3/R2 replication via LITESTREAM_*).
+services:
+  - type: web
+    name: haohanweb-api
+    runtime: docker
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    plan: free
+    healthCheckPath: /up
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: PORT
+        value: 3001
+      - key: RUST_LOG
+        value: info,sqlx=warn
+      - key: DATABASE_URL
+        value: sqlite:///data/haohan.db
+      - key: PUBLIC_API_URL
+        sync: false
+      - key: FRONTEND_URL
+        sync: false
+      - key: JWT_SECRET
+        sync: false
+      - key: GAME_SERVER_TOKEN
+        sync: false
+      - key: DISCORD_WEBHOOK_URL
+        sync: false
+      - key: DISCORD_CLIENT_ID
+        sync: false
+      - key: DISCORD_CLIENT_SECRET
+        sync: false
+      - key: DISCORD_REDIRECT_URI
+        sync: false
+      - key: DISCORD_BOT_TOKEN
+        sync: false
+      - key: DISCORD_GUILD_ID
+        sync: false
+      - key: DISCORD_DONATION_CHANNEL_ID
+        sync: false
+      - key: DISCORD_DONATION_AUTO_REFRESH
+        value: true
+      - key: DISCORD_DONATION_REFRESH_INTERVAL_SECONDS
+        value: 86400
+      - key: PAYOS_CLIENT_ID
+        sync: false
+      - key: PAYOS_API_KEY
+        sync: false
+      - key: PAYOS_CHECKSUM_KEY
+        sync: false
+      - key: RCON_HOST
+        sync: false
+      - key: RCON_PORT
+        value: 25575
+      - key: RCON_PASSWORD
+        sync: false
+      - key: CLOUDINARY_CLOUD_NAME
+        sync: false
+      - key: CLOUDINARY_API_KEY
+        sync: false
+      - key: CLOUDINARY_API_SECRET
+        sync: false
+      - key: LITESTREAM_REPLICA_URL
+        sync: false
+      - key: LITESTREAM_ACCESS_KEY_ID
+        sync: false
+      - key: LITESTREAM_SECRET_ACCESS_KEY
+        sync: false

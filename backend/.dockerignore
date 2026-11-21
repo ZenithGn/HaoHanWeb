@@ -1,0 +1,21 @@
+# Git & secrets
+.git
+.env
+.env.*
+!.env.example
+
+# Rust build artifacts & local SQLite data
+target/
+data/
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+*.sqlite3
+*.sqlite3-*
+*.sql
+!migrations/*.sql
+*.log
