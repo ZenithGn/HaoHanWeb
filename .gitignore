@@ -78,6 +78,7 @@ playwright-report/
 *.sqlite3
 *.sqlite3-*
 *.sql
+!backend/migrations/*.sql
 *.bak
 *.dump
 HaoHanDB.sql

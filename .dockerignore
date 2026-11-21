@@ -52,6 +52,8 @@ backend/public/uploads
 *.sqlite3
 *.sqlite3-*
 *.sql
+!backend/migrations/*.sql
+!migrations/*.sql
 *.bak
 *.dump
 HaoHanDB.sql
