@@ -1,3 +1,7 @@
+use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering};
+use std::time::Duration;
+
 use axum::body::Body;
 use axum::http::{Method, Request, StatusCode, header};
 use bytes::Bytes;
@@ -6,6 +10,7 @@ use serde_json::{Value, json};
 use sqlx::Row;
 use tokio::io::{AsyncRead, AsyncReadExt, AsyncWriteExt};
 use tokio::net::TcpListener;
+use tokio::sync::Mutex;
 use tower::ServiceExt;
 
 use haohan_backend::config::Config;
@@ -13,8 +18,13 @@ use haohan_backend::db::Db;
 use haohan_backend::integrations::minecraft_ping::{
     MinecraftServerStatus, encode_varint, ping_server, ping_server_checked, read_varint,
 };
+use haohan_backend::integrations::rcon::{
+    RconClient, RconError, encode_rcon_packet, read_rcon_packet,
+};
 use haohan_backend::router::build_router;
 use haohan_backend::state::{AppState, SharedState};
+use haohan_backend::tasks::spawn_background_tasks;
+use haohan_backend::tasks::status_poller::log_status_snapshot_once;
 
 async fn response_json(resp: axum::response::Response) -> (StatusCode, Value) {
     let status = resp.status();
@@ -342,4 +352,173 @@ async fn sync_playtime_handles_auth_single_batch_ghost_and_discord_link_backfill
             .unwrap();
     assert!(anon_name.starts_with("Player_"));
     assert!(anon_name.len() <= 16);
+}
+
+#[tokio::test]
+async fn rcon_binary_codec_handles_auth_success_minus_one_failure_and_persistent_reconnect() {
+    // 1. Direct binary codec check (little-endian signed i32 + 2 null bytes)
+    let encoded = encode_rcon_packet(-1, 2, "ok");
+    let expected_len: i32 = 4 + 4 + 2 + 2;
+    assert_eq!(&encoded[0..4], &expected_len.to_le_bytes());
+    assert_eq!(&encoded[4..8], &(-1i32).to_le_bytes());
+    assert_eq!(&encoded[8..12], &2i32.to_le_bytes());
+    assert_eq!(&encoded[12..], b"ok\0\0");
+
+    let mut cursor = &encoded[..];
+    let decoded = read_rcon_packet(&mut cursor).await.unwrap();
+    assert_eq!(decoded.id, -1);
+    assert_eq!(decoded.packet_type, 2);
+    assert_eq!(decoded.payload, "ok");
+
+    // 2. Mock TCP RCON server validating auth -1 rejection, persistent reuse, and reconnect
+    let listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let port = listener.local_addr().unwrap().port();
+    let accepted_conns = Arc::new(AtomicUsize::new(0));
+    let executed_cmds = Arc::new(Mutex::new(Vec::<String>::new()));
+
+    let conns_clone = accepted_conns.clone();
+    let cmds_clone = executed_cmds.clone();
+    let server_task = tokio::spawn(async move {
+        loop {
+            let Ok((mut socket, _)) = listener.accept().await else {
+                break;
+            };
+            let conn_idx = conns_clone.fetch_add(1, Ordering::SeqCst);
+            let cmds = cmds_clone.clone();
+            tokio::spawn(async move {
+                let Ok(auth_pkt) = read_rcon_packet(&mut socket).await else {
+                    return;
+                };
+                assert_eq!(auth_pkt.packet_type, 3);
+
+                if auth_pkt.payload != "secret123" {
+                    // Send signed -1 (0xFFFFFFFF) auth failure packet
+                    let fail = encode_rcon_packet(-1, 2, "");
+                    let _ = socket.write_all(&fail).await;
+                    let _ = socket.flush().await;
+                    return;
+                }
+
+                // Send RESPONSE_VALUE (type 0) + AUTH_RESPONSE (type 2)
+                let _ = socket
+                    .write_all(&encode_rcon_packet(auth_pkt.id, 0, ""))
+                    .await;
+                let _ = socket
+                    .write_all(&encode_rcon_packet(auth_pkt.id, 2, ""))
+                    .await;
+                let _ = socket.flush().await;
+
+                // Handle commands; simulate server closing after 2 commands on conn #1 to test reconnect
+                let mut count = 0;
+                while let Ok(cmd_pkt) = read_rcon_packet(&mut socket).await {
+                    assert_eq!(cmd_pkt.packet_type, 2);
+                    cmds.lock().await.push(cmd_pkt.payload.clone());
+                    let resp =
+                        encode_rcon_packet(cmd_pkt.id, 0, &format!("ran: {}", cmd_pkt.payload));
+                    let _ = socket.write_all(&resp).await;
+                    let _ = socket.flush().await;
+                    count += 1;
+                    if conn_idx == 1 && count >= 2 {
+                        break;
+                    }
+                }
+            });
+        }
+    });
+
+    // Wrong password -> RconError::AuthFailed (-1 detected properly)
+    let mut bad_client = RconClient::new("127.0.0.1", port, "wrong_pass");
+    let auth_err = bad_client.execute("say hello").await.unwrap_err();
+    assert!(matches!(auth_err, RconError::AuthFailed));
+
+    // Valid password -> reuses single persistent connection for cmd 1 & 2, then reconnects for cmd 3
+    let mut client = RconClient::new("127.0.0.1", port, "secret123");
+    assert_eq!(
+        client
+            .execute("lp user Steve parent add vip")
+            .await
+            .unwrap(),
+        "ran: lp user Steve parent add vip"
+    );
+    assert_eq!(
+        client.execute("say Steve donated").await.unwrap(),
+        "ran: say Steve donated"
+    );
+    // Allow server task to drop conn #1 before sending cmd #3
+    tokio::time::sleep(Duration::from_millis(50)).await;
+    assert_eq!(
+        client.execute("say reconnected").await.unwrap(),
+        "ran: say reconnected"
+    );
+
+    assert_eq!(accepted_conns.load(Ordering::SeqCst), 3); // 1 failed + 1 initial + 1 reconnect
+    let cmds = executed_cmds.lock().await;
+    assert_eq!(
+        *cmds,
+        vec![
+            "lp user Steve parent add vip",
+            "say Steve donated",
+            "say reconnected"
+        ]
+    );
+    client.disconnect().await;
+    server_task.abort();
+}
+
+#[tokio::test]
+async fn background_tasks_poller_logger_snapshot_and_graceful_shutdown() {
+    let db = Db::connect_in_memory().await.unwrap();
+    sqlx::query(
+        "INSERT INTO players (username, kind, password_hash, total_donated, play_time) \
+         VALUES ('TopGuy', 'web', '$argon2id$h', 250000, 4200)",
+    )
+    .execute(&db.write)
+    .await
+    .unwrap();
+
+    // Closed MC port for fast offline ping
+    let closed_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let closed_port = closed_listener.local_addr().unwrap().port();
+    drop(closed_listener);
+
+    let cfg = Config::from_pairs([
+        ("APP_ENV", "test"),
+        ("JWT_SECRET", "test_jwt"),
+        ("GAME_SERVER_TOKEN", "test_gst"),
+        ("RATE_LIMIT_ENABLED", "false"),
+        ("MINECRAFT_HOST", "127.0.0.1"),
+        ("MINECRAFT_PORT", &closed_port.to_string()),
+        ("DISCORD_DONATION_AUTO_REFRESH", "true"),
+        ("DISCORD_DONATION_REFRESH_INTERVAL_SECONDS", "3600"),
+    ])
+    .unwrap();
+
+    let state: SharedState = AppState::new(cfg, db).unwrap();
+    let handles = spawn_background_tasks(state.clone());
+    assert_eq!(handles.len(), 6); // poller + logger + snapshot_builder + outbox_worker + cleanup + 1 supporters_refresher
+
+    // Wait briefly for initial snapshot_builder build on startup
+    tokio::time::sleep(Duration::from_millis(150)).await;
+    let lb_bytes = state.leaderboards.load_full();
+    let lb_json: Value = serde_json::from_slice(&lb_bytes).unwrap();
+    assert_eq!(lb_json["top_donors"][0]["username"], "TopGuy");
+    assert_eq!(lb_json["top_donors"][0]["total_donated"], json!(250_000));
+
+    // Verify status logger writes to server_status_logs
+    log_status_snapshot_once(&state).await.unwrap();
+    let log_count: i64 = sqlx::query_scalar("SELECT COUNT(*) FROM server_status_logs")
+        .fetch_one(&state.db.read)
+        .await
+        .unwrap();
+    assert_eq!(log_count, 1);
+
+    // Trigger graceful shutdown and verify all 6 tasks exit promptly
+    state.shutdown.cancel();
+    tokio::time::timeout(Duration::from_secs(2), async {
+        for handle in handles {
+            handle.await.unwrap();
+        }
+    })
+    .await
+    .expect("all background tasks must shut down cleanly");
 }

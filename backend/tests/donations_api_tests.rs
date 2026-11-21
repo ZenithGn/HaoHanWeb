@@ -1,4 +1,5 @@
 use std::sync::Arc;
+use std::sync::atomic::{AtomicUsize, Ordering};
 use std::time::{SystemTime, UNIX_EPOCH};
 
 use axum::body::Body;
@@ -11,6 +12,7 @@ use jsonwebtoken::{Algorithm, EncodingKey, Header};
 use serde::Serialize;
 use serde_json::{Map, Value, json};
 use sqlx::Row;
+use tokio::io::AsyncWriteExt;
 use tokio::net::TcpListener;
 use tokio::sync::Mutex;
 use tower::ServiceExt;
@@ -19,8 +21,13 @@ use haohan_backend::config::Config;
 use haohan_backend::db::Db;
 use haohan_backend::domain::payos_crypto::{sign_payment_request, sign_payos_data_map};
 use haohan_backend::integrations::payos::PayOsBaseUrl;
+use haohan_backend::integrations::rcon::{RconClient, encode_rcon_packet, read_rcon_packet};
 use haohan_backend::router::build_router;
 use haohan_backend::state::{AppState, SharedState};
+use haohan_backend::tasks::cleanup::run_cleanup_once;
+use haohan_backend::tasks::outbox_worker::{
+    next_backoff_secs, process_due_outbox_once, validate_rcon_outbox_command,
+};
 
 const TEST_CHECKSUM: &str = "payos_test_checksum_key_123";
 
@@ -730,4 +737,247 @@ async fn test_payos_signature_works_in_dev_and_returns_403_in_production() {
         prod_body["error"],
         "Only available in development environment"
     );
+}
+
+#[tokio::test]
+async fn outbox_worker_delivers_rcon_webhook_retries_with_backoff_and_dead_letters() {
+    assert_eq!(next_backoff_secs(1), 5);
+    assert_eq!(next_backoff_secs(2), 30);
+    assert_eq!(next_backoff_secs(3), 120);
+    assert_eq!(next_backoff_secs(4), 600);
+    assert_eq!(next_backoff_secs(5), 3600);
+
+    assert!(validate_rcon_outbox_command("lp user Steve_1 parent add vip").is_ok());
+    assert!(validate_rcon_outbox_command("say Steve_1 da donate thanh cong 50000 VND!").is_ok());
+    assert!(validate_rcon_outbox_command("lp user bad;op parent add vip").is_err());
+    assert!(validate_rcon_outbox_command("say Steve\nop Admin").is_err());
+    assert!(validate_rcon_outbox_command("stop").is_err());
+
+    let db = Db::connect_in_memory().await.unwrap();
+    let state: SharedState = AppState::new(test_config("test", None), db).unwrap();
+
+    // 1. Mock RCON TCP server
+    let rcon_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let rcon_port = rcon_listener.local_addr().unwrap().port();
+    let rcon_cmds = Arc::new(Mutex::new(Vec::<String>::new()));
+    let rcon_cmds_clone = rcon_cmds.clone();
+    let rcon_server = tokio::spawn(async move {
+        let (mut socket, _) = rcon_listener.accept().await.unwrap();
+        let auth = read_rcon_packet(&mut socket).await.unwrap();
+        let _ = socket.write_all(&encode_rcon_packet(auth.id, 2, "")).await;
+        let _ = socket.flush().await;
+        while let Ok(pkt) = read_rcon_packet(&mut socket).await {
+            rcon_cmds_clone.lock().await.push(pkt.payload);
+            let _ = socket.write_all(&encode_rcon_packet(pkt.id, 0, "ok")).await;
+            let _ = socket.flush().await;
+        }
+    });
+
+    // 2. Mock Discord webhook HTTP server (returns 500 on 1st call, 204 on 2nd call)
+    let wh_calls = Arc::new(AtomicUsize::new(0));
+    let wh_bodies = Arc::new(Mutex::new(Vec::<Value>::new()));
+    let wh_calls_clone = wh_calls.clone();
+    let wh_bodies_clone = wh_bodies.clone();
+    let wh_app = Router::new().route(
+        "/webhook",
+        post(move |Json(body): Json<Value>| {
+            let calls = wh_calls_clone.clone();
+            let bodies = wh_bodies_clone.clone();
+            async move {
+                let idx = calls.fetch_add(1, Ordering::SeqCst);
+                bodies.lock().await.push(body);
+                if idx == 0 {
+                    StatusCode::INTERNAL_SERVER_ERROR
+                } else {
+                    StatusCode::NO_CONTENT
+                }
+            }
+        }),
+    );
+    let wh_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let wh_addr = wh_listener.local_addr().unwrap();
+    let wh_server = tokio::spawn(async move {
+        let _ = axum::serve(wh_listener, wh_app).await;
+    });
+    let wh_url = format!("http://{wh_addr}/webhook");
+
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64;
+
+    // Seed: valid rcon, unsafe rcon, failing-once webhook, and >24h stale failing webhook
+    sqlx::query(
+        "INSERT INTO outbox (kind, payload) VALUES ('rcon', 'lp user Steve parent add vip')",
+    )
+    .execute(&state.db.write)
+    .await
+    .unwrap();
+    sqlx::query(
+        "INSERT INTO outbox (kind, payload) VALUES ('rcon', 'lp user bad;op parent add vip')",
+    )
+    .execute(&state.db.write)
+    .await
+    .unwrap();
+    let retry_wh_id = sqlx::query_scalar::<_, i64>(
+        "INSERT INTO outbox (kind, payload) VALUES ('discord_webhook', '{\"embeds\":[]}') RETURNING id",
+    )
+    .fetch_one(&state.db.write)
+    .await
+    .unwrap();
+    let stale_dead_id = sqlx::query_scalar::<_, i64>(
+        "INSERT INTO outbox (kind, payload, created_at) \
+         VALUES ('rcon', 'lp user Ghost1 parent add vip', ?1) RETURNING id",
+    )
+    .bind(now - 90_000)
+    .fetch_one(&state.db.write)
+    .await
+    .unwrap();
+
+    // First pass: valid rcon -> DONE, unsafe rcon -> DEAD, webhook -> PENDING with attempts=1 & backoff,
+    // stale rcon against closed port? Wait: let's run stale item with a disconnected bad RCON client!
+    let mut rcon = RconClient::new("127.0.0.1", rcon_port, "rcon_pass");
+    // Temporarily exclude stale_dead_id by running it on a closed port below; first verify valid + unsafe + retry:
+    sqlx::query("UPDATE outbox SET next_attempt_at = ?1 WHERE id = ?2")
+        .bind(now + 1000)
+        .bind(stale_dead_id)
+        .execute(&state.db.write)
+        .await
+        .unwrap();
+
+    let processed = process_due_outbox_once(&state, &mut rcon, Some(&wh_url))
+        .await
+        .unwrap();
+    assert_eq!(processed, 3);
+    assert_eq!(
+        *rcon_cmds.lock().await,
+        vec!["lp user Steve parent add vip"]
+    );
+
+    let unsafe_status: String = sqlx::query_scalar("SELECT status FROM outbox WHERE id = 2")
+        .fetch_one(&state.db.read)
+        .await
+        .unwrap();
+    assert_eq!(unsafe_status, "DEAD");
+
+    let retry_row = sqlx::query(
+        "SELECT status, attempts, next_attempt_at, last_error FROM outbox WHERE id = ?1",
+    )
+    .bind(retry_wh_id)
+    .fetch_one(&state.db.read)
+    .await
+    .unwrap();
+    assert_eq!(retry_row.try_get::<String, _>("status").unwrap(), "PENDING");
+    assert_eq!(retry_row.try_get::<i64, _>("attempts").unwrap(), 1);
+    assert!(retry_row.try_get::<i64, _>("next_attempt_at").unwrap() >= now + 4);
+    assert!(
+        retry_row
+            .try_get::<Option<String>, _>("last_error")
+            .unwrap()
+            .unwrap()
+            .contains("500")
+    );
+
+    // Make retry_wh_id due again -> succeeds on 2nd attempt -> DONE
+    sqlx::query("UPDATE outbox SET next_attempt_at = ?1 WHERE id = ?2")
+        .bind(now - 1)
+        .bind(retry_wh_id)
+        .execute(&state.db.write)
+        .await
+        .unwrap();
+    process_due_outbox_once(&state, &mut rcon, Some(&wh_url))
+        .await
+        .unwrap();
+    let retry_done: String = sqlx::query_scalar("SELECT status FROM outbox WHERE id = ?1")
+        .bind(retry_wh_id)
+        .fetch_one(&state.db.read)
+        .await
+        .unwrap();
+    assert_eq!(retry_done, "DONE");
+
+    // Now test 24h stale item failing against closed port -> marked DEAD
+    let closed_listener = TcpListener::bind("127.0.0.1:0").await.unwrap();
+    let closed_port = closed_listener.local_addr().unwrap().port();
+    drop(closed_listener);
+    let mut dead_rcon = RconClient::new("127.0.0.1", closed_port, "rcon_pass");
+    sqlx::query("UPDATE outbox SET next_attempt_at = ?1 WHERE id = ?2")
+        .bind(now - 1)
+        .bind(stale_dead_id)
+        .execute(&state.db.write)
+        .await
+        .unwrap();
+    process_due_outbox_once(&state, &mut dead_rcon, Some(&wh_url))
+        .await
+        .unwrap();
+    let dead_status: String = sqlx::query_scalar("SELECT status FROM outbox WHERE id = ?1")
+        .bind(stale_dead_id)
+        .fetch_one(&state.db.read)
+        .await
+        .unwrap();
+    assert_eq!(dead_status, "DEAD");
+
+    rcon.disconnect().await;
+    rcon_server.abort();
+    wh_server.abort();
+}
+
+#[tokio::test]
+async fn cleanup_deletes_stale_pending_donations_and_old_done_outbox() {
+    let db = Db::connect_in_memory().await.unwrap();
+    let player_id = seed_player(&db, "CleanupPlayer").await;
+    let now = SystemTime::now()
+        .duration_since(UNIX_EPOCH)
+        .unwrap()
+        .as_secs() as i64;
+
+    // 1. Old PENDING donation (3 days old) -> deleted
+    // 2. Fresh PENDING donation (1 hour old) -> kept
+    // 3. Old SUCCESS donation (10 days old) -> kept
+    sqlx::query(
+        "INSERT INTO donations (player_id, method, amount, tx_ref, status, created_at) VALUES \
+         (?1, 'PAYOS', 10000, 'old_pending', 'PENDING', ?2), \
+         (?1, 'PAYOS', 20000, 'fresh_pending', 'PENDING', ?3), \
+         (?1, 'PAYOS', 50000, 'old_success', 'SUCCESS', ?4)",
+    )
+    .bind(player_id)
+    .bind(now - 3 * 86_400)
+    .bind(now - 3600)
+    .bind(now - 10 * 86_400)
+    .execute(&db.write)
+    .await
+    .unwrap();
+
+    // 1. Old DONE outbox (8 days old) -> deleted
+    // 2. Recent DONE outbox (1 day old) -> kept
+    // 3. Old PENDING outbox (10 days old) -> kept
+    sqlx::query(
+        "INSERT INTO outbox (kind, payload, status, created_at) VALUES \
+         ('rcon', 'say old', 'DONE', ?1), \
+         ('rcon', 'say recent', 'DONE', ?2), \
+         ('rcon', 'say pending', 'PENDING', ?3)",
+    )
+    .bind(now - 8 * 86_400)
+    .bind(now - 86_400)
+    .bind(now - 10 * 86_400)
+    .execute(&db.write)
+    .await
+    .unwrap();
+
+    let report = run_cleanup_once(&db.write).await.unwrap();
+    assert_eq!(report.deleted_pending_donations, 1);
+    assert_eq!(report.deleted_done_outbox, 1);
+
+    let remaining_donations: Vec<String> =
+        sqlx::query_scalar("SELECT tx_ref FROM donations ORDER BY id ASC")
+            .fetch_all(&db.read)
+            .await
+            .unwrap();
+    assert_eq!(remaining_donations, vec!["fresh_pending", "old_success"]);
+
+    let remaining_outbox: Vec<String> =
+        sqlx::query_scalar("SELECT payload FROM outbox ORDER BY id ASC")
+            .fetch_all(&db.read)
+            .await
+            .unwrap();
+    assert_eq!(remaining_outbox, vec!["say recent", "say pending"]);
 }

@@ -26,6 +26,7 @@ async fn main() -> anyhow::Result<()> {
         .context("Failed to initialize SQLite database")?;
 
     let state = AppState::new(cfg.clone(), db)?;
+    let task_handles = haohan_backend::tasks::spawn_background_tasks(state.clone());
     let app = build_router(state.clone());
 
     let listener = TcpListener::bind(&cfg.bind_addr)
@@ -45,6 +46,12 @@ async fn main() -> anyhow::Result<()> {
     .with_graceful_shutdown(shutdown_signal(state.shutdown.clone()))
     .await
     .context("HTTP server terminated unexpectedly")?;
+
+    for handle in task_handles {
+        if let Err(err) = handle.await {
+            tracing::error!(error = %err, "Background task panicked during shutdown");
+        }
+    }
 
     state.db.close().await;
     tracing::info!("Server shutdown complete");
