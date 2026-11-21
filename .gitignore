@@ -45,6 +45,24 @@ backend/config/credentials/*.key
 !frontend/.env.example
 !backend/.env.example
 
+# Docs (internal design/backend docs - keep only assets like preview.jpg tracked)
+docs/*.md
+docs/**/*.md
+
+# Rust backend build output & local data
+target/
+backend/target/
+**/*.rs.bk
+backend/data/
+data/
+*.db
+*.db-wal
+*.db-shm
+*.db-journal
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
 # Logs and reports
 *.log
 npm-debug.log*

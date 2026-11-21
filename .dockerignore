@@ -41,6 +41,13 @@ backend/public/uploads
 !backend/log/.keep
 !backend/tmp/.keep
 
+# Rust build output & local data
+**/target
+**/data
+*.db
+*.db-wal
+*.db-shm
+
 # Databases, dumps, and local artifacts
 *.sqlite3
 *.sqlite3-*
