@@ -3,3 +3,4 @@ pub mod discord;
 pub mod donations;
 pub mod game_link;
 pub mod health;
+pub mod server_status;
